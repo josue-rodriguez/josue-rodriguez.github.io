@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Recent &amp; Upcoming Talks | Josue Rodriguez</title>
-    <link>https://josue.rbind.io/talk/</link>
-      <atom:link href="https://josue.rbind.io/talk/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://josue-rodriguez.github.io/talk/</link>
+      <atom:link href="https://josue-rodriguez.github.io/talk/index.xml" rel="self" type="application/rss+xml" />
     <description>Recent &amp; Upcoming Talks</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://josue.rbind.io/img/icon.png</url>
+      <url>https://josue-rodriguez.github.io/img/icon.png</url>
       <title>Recent &amp; Upcoming Talks</title>
-      <link>https://josue.rbind.io/talk/</link>
+      <link>https://josue-rodriguez.github.io/talk/</link>
     </image>
     
     <item>
       <title>Example Talk</title>
-      <link>https://josue.rbind.io/talk/example/</link>
+      <link>https://josue-rodriguez.github.io/talk/example/</link>
       <pubDate>Sat, 01 Jun 2030 13:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/talk/example/</guid>
+      <guid>https://josue-rodriguez.github.io/talk/example/</guid>
       <description>&lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Slides can be added in a few ways:&lt;/p&gt;
 &lt;ul&gt;

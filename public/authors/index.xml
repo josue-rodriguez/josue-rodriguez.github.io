@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Authors | Josue Rodriguez</title>
-    <link>https://josue.rbind.io/authors/</link>
-      <atom:link href="https://josue.rbind.io/authors/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://josue-rodriguez.github.io/authors/</link>
+      <atom:link href="https://josue-rodriguez.github.io/authors/index.xml" rel="self" type="application/rss+xml" />
     <description>Authors</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://josue.rbind.io/img/icon.png</url>
+      <url>https://josue-rodriguez.github.io/img/icon.png</url>
       <title>Authors</title>
-      <link>https://josue.rbind.io/authors/</link>
+      <link>https://josue-rodriguez.github.io/authors/</link>
     </image>
     
     <item>
       <title></title>
-      <link>https://josue.rbind.io/authors/admin/</link>
+      <link>https://josue-rodriguez.github.io/authors/admin/</link>
       <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/authors/admin/</guid>
+      <guid>https://josue-rodriguez.github.io/authors/admin/</guid>
       <description>&lt;p&gt;Hi! My name is Josue. I&amp;rsquo;m a data scientist at McGraw Hill where I&amp;rsquo;m helping build personalized learning experiences at scale. Previously, I completed my PhD in Quantitative Psychology at UC Davis where I focused on developing Bayesian models for social-behavior science.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 </description>
@@ -24,9 +24,9 @@
     
     <item>
       <title>Robert Ford</title>
-      <link>https://josue.rbind.io/authors/robert-ford/</link>
+      <link>https://josue-rodriguez.github.io/authors/robert-ford/</link>
       <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/authors/robert-ford/</guid>
+      <guid>https://josue-rodriguez.github.io/authors/robert-ford/</guid>
       <description></description>
     </item>
     

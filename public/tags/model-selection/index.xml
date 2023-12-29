@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>model selection | Josue Rodriguez</title>
-    <link>https://josue.rbind.io/tags/model-selection/</link>
-      <atom:link href="https://josue.rbind.io/tags/model-selection/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://josue-rodriguez.github.io/tags/model-selection/</link>
+      <atom:link href="https://josue-rodriguez.github.io/tags/model-selection/index.xml" rel="self" type="application/rss+xml" />
     <description>model selection</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 18 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://josue.rbind.io/img/icon.png</url>
+      <url>https://josue-rodriguez.github.io/img/icon.png</url>
       <title>model selection</title>
-      <link>https://josue.rbind.io/tags/model-selection/</link>
+      <link>https://josue-rodriguez.github.io/tags/model-selection/</link>
     </image>
     
     <item>
       <title>Model Selection Bias</title>
-      <link>https://josue.rbind.io/post/model-selection-bias/</link>
+      <link>https://josue-rodriguez.github.io/post/model-selection-bias/</link>
       <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/post/model-selection-bias/</guid>
+      <guid>https://josue-rodriguez.github.io/post/model-selection-bias/</guid>
       <description>
 
 
@@ -73,13 +73,13 @@ researched as a technology. (p. 802)&lt;/p&gt;
 &lt;div id=&#34;coverage&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Coverage&lt;/h2&gt;
 &lt;p&gt;After running the simulations, taking the means of &lt;code&gt;covered_condit&lt;/code&gt; and &lt;code&gt;covered_full&lt;/code&gt; yields the proportion of times that the credible interval covered the true parameter value when a model was selected and when it was not.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://josue.rbind.io/post/model-selection-bias_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://josue-rodriguez.github.io/post/model-selection-bias_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;It is clear to see from this plot that when a model is not selected, the coverage rate is just about what we would expect — approximately 90 in every 100 credible intervals contained the true value for expected influence. But, when the model was selected prior to computing this interval, the true value was covered much less frequently. Only about 70 in 100 times!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;sampling-distribution&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Sampling Distribution&lt;/h2&gt;
 &lt;p&gt;Recall that model selection also distorts the sampling distribution of parameters. In the simulations, I kept track of the partial correlation between variables 1 and 6. On each simulation trial, I simply took the mean of the posterior distribution for this parameter. While we would expect to see the means normally distributed around the true value (red line), the distribution is truncated when a model is selected.&lt;a href=&#34;#fn6&#34; class=&#34;footnote-ref&#34; id=&#34;fnref6&#34;&gt;&lt;sup&gt;6&lt;/sup&gt;&lt;/a&gt; This results in overconfident inferences about the population value. Also notice that parameters estimated after model selection are biased towards large effects. This makes sense as larger effects are more likely to be “significant”.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://josue.rbind.io/post/model-selection-bias_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://josue-rodriguez.github.io/post/model-selection-bias_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The simulations and plots are simple, but they convey a powerful idea. Model selection distorts inferential properties such as coverage rates and sampling distributions.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;

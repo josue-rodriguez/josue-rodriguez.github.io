@@ -2,61 +2,61 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Josue Rodriguez</title>
-    <link>https://josue.rbind.io/</link>
-      <atom:link href="https://josue.rbind.io/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://josue-rodriguez.github.io/</link>
+      <atom:link href="https://josue-rodriguez.github.io/index.xml" rel="self" type="application/rss+xml" />
     <description>Josue Rodriguez</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://josue.rbind.io/img/icon.png</url>
+      <url>https://josue-rodriguez.github.io/img/icon.png</url>
       <title>Josue Rodriguez</title>
-      <link>https://josue.rbind.io/</link>
+      <link>https://josue-rodriguez.github.io/</link>
     </image>
     
     <item>
       <title>Recent &amp; Upcoming Talks</title>
-      <link>https://josue.rbind.io/talk/</link>
+      <link>https://josue-rodriguez.github.io/talk/</link>
       <pubDate>Sat, 01 Jun 2030 13:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/talk/</guid>
+      <guid>https://josue-rodriguez.github.io/talk/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Posts</title>
-      <link>https://josue.rbind.io/post/</link>
+      <link>https://josue-rodriguez.github.io/post/</link>
       <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/post/</guid>
+      <guid>https://josue-rodriguez.github.io/post/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Courses</title>
-      <link>https://josue.rbind.io/courses/</link>
+      <link>https://josue-rodriguez.github.io/courses/</link>
       <pubDate>Sun, 05 May 2019 00:00:00 +0100</pubDate>
-      <guid>https://josue.rbind.io/courses/</guid>
+      <guid>https://josue-rodriguez.github.io/courses/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Publications</title>
-      <link>https://josue.rbind.io/publication/</link>
+      <link>https://josue-rodriguez.github.io/publication/</link>
       <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/publication/</guid>
+      <guid>https://josue-rodriguez.github.io/publication/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Slides</title>
-      <link>https://josue.rbind.io/slides/</link>
+      <link>https://josue-rodriguez.github.io/slides/</link>
       <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/slides/</guid>
+      <guid>https://josue-rodriguez.github.io/slides/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Projects</title>
-      <link>https://josue.rbind.io/project/</link>
+      <link>https://josue-rodriguez.github.io/project/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/project/</guid>
+      <guid>https://josue-rodriguez.github.io/project/</guid>
       <description></description>
     </item>
     

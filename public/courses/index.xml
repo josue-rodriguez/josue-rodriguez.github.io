@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Courses | Josue Rodriguez</title>
-    <link>https://josue.rbind.io/courses/</link>
-      <atom:link href="https://josue.rbind.io/courses/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://josue-rodriguez.github.io/courses/</link>
+      <atom:link href="https://josue-rodriguez.github.io/courses/index.xml" rel="self" type="application/rss+xml" />
     <description>Courses</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 05 May 2019 00:00:00 +0100</lastBuildDate>
     <image>
-      <url>https://josue.rbind.io/img/icon.png</url>
+      <url>https://josue-rodriguez.github.io/img/icon.png</url>
       <title>Courses</title>
-      <link>https://josue.rbind.io/courses/</link>
+      <link>https://josue-rodriguez.github.io/courses/</link>
     </image>
     
     <item>
       <title>Overview</title>
-      <link>https://josue.rbind.io/courses/example/</link>
+      <link>https://josue-rodriguez.github.io/courses/example/</link>
       <pubDate>Sun, 09 Sep 2018 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/courses/example/</guid>
+      <guid>https://josue-rodriguez.github.io/courses/example/</guid>
       <description>&lt;h2 id=&#34;flexibility&#34;&gt;Flexibility&lt;/h2&gt;
 &lt;p&gt;This feature can be used for publishing content such as:&lt;/p&gt;
 &lt;ul&gt;

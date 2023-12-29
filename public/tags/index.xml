@@ -2,61 +2,61 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags | Josue Rodriguez</title>
-    <link>https://josue.rbind.io/tags/</link>
-      <atom:link href="https://josue.rbind.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://josue-rodriguez.github.io/tags/</link>
+      <atom:link href="https://josue-rodriguez.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 18 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://josue.rbind.io/img/icon.png</url>
+      <url>https://josue-rodriguez.github.io/img/icon.png</url>
       <title>Tags</title>
-      <link>https://josue.rbind.io/tags/</link>
+      <link>https://josue-rodriguez.github.io/tags/</link>
     </image>
     
     <item>
       <title>inference</title>
-      <link>https://josue.rbind.io/tags/inference/</link>
+      <link>https://josue-rodriguez.github.io/tags/inference/</link>
       <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/tags/inference/</guid>
+      <guid>https://josue-rodriguez.github.io/tags/inference/</guid>
       <description></description>
     </item>
     
     <item>
       <title>model selection</title>
-      <link>https://josue.rbind.io/tags/model-selection/</link>
+      <link>https://josue-rodriguez.github.io/tags/model-selection/</link>
       <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/tags/model-selection/</guid>
+      <guid>https://josue-rodriguez.github.io/tags/model-selection/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
-      <link>https://josue.rbind.io/tags/r/</link>
+      <link>https://josue-rodriguez.github.io/tags/r/</link>
       <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/tags/r/</guid>
+      <guid>https://josue-rodriguez.github.io/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Source Themes</title>
-      <link>https://josue.rbind.io/tags/source-themes/</link>
+      <link>https://josue-rodriguez.github.io/tags/source-themes/</link>
       <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/tags/source-themes/</guid>
+      <guid>https://josue-rodriguez.github.io/tags/source-themes/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Deep Learning</title>
-      <link>https://josue.rbind.io/tags/deep-learning/</link>
+      <link>https://josue-rodriguez.github.io/tags/deep-learning/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/tags/deep-learning/</guid>
+      <guid>https://josue-rodriguez.github.io/tags/deep-learning/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Demo</title>
-      <link>https://josue.rbind.io/tags/demo/</link>
+      <link>https://josue-rodriguez.github.io/tags/demo/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>https://josue.rbind.io/tags/demo/</guid>
+      <guid>https://josue-rodriguez.github.io/tags/demo/</guid>
       <description></description>
     </item>
     
