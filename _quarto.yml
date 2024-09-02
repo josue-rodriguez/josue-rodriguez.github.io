@@ -1,0 +1,23 @@
+project:
+  type: website
+
+website:
+  title: "josue rodriguez"
+  navbar:
+    left:
+      - href: index.qmd
+        text: home
+      - about.qmd
+      - posts.qmd
+
+
+
+format:
+  html:
+    page-layout: full
+    sidebar: false
+    theme: 
+      # - minty
+      - styles.scss
+    mainfont: Nunito
+    toc: true
