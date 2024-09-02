@@ -1,0 +1,16 @@
+{
+  "hash": "447e891c1ac59806dccef2667bf6f266",
+  "result": {
+    "markdown": "---\ntitle: Prediction Intervals\nsubtitle: A frequentist's perspective\nauthor: Josue Rodriguez\ndata: September 1st, 2024\nformat:\n  html\n---\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(dplyr)\nlibrary(ggplot2)\n\ntheme_set(theme_minimal())\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nx <- runif(1000, 0, 10)\ny <- x + rnorm(1000)\n\nmodel_1 <- lm(y ~ x)\n\nget_pred <- function(x, model) {\n  mod_coefs <- coef(model)\n  yhat <- mod_coefs[1] + mod_coefs[2] * x\n  return(yhat)\n}\n\n\ndata_df <- data.frame(x, y)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n#' For every row in `df`, compute a rotated normal density\n#' centered at `y` and shifted by `x`\ncompute_rotated_normal_densities <- function(x, model) {\n  mu <- get_pred(x, model)\n  sigma <- sigma(model)\n\n  range <- mu + c(-3.2, 3.2) * sigma\n  x_values <- seq(range[1], range[2], length.out = 100)\n  densities <- dnorm(x_values, mean = mu, sd = sigma)\n\n  rotated_densities_df <- tibble(\n    x = densities + x - max(densities),\n    y = x_values\n  )\n\n  return(rotated_densities_df)\n}\n\n\nall_densities_df  <- purrr::map_dfr(\n  c(1, 3, 5, 7, 9),\n  compute_rotated_normal_densities, \n  mod = model_1,\n  .id = \"id\"\n)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\npred_interval_df <- tibble(x = 0:10)\npred_interval_df_95 <- bind_cols(\n  pred_interval_df,\n  predict(model_1, interval = \"prediction\", level = 0.95, newdata = pred_interval_df)\n)\n\nggplot(data_df, aes(x, y)) +\n  geom_point(alpha = 0.2) +\n  geom_smooth(method = \"lm\", se = TRUE, lwd = 1, col = \"forestgreen\") +\n  geom_path(data = all_densities_df, aes(group = id), lwd = 1, col = \"steelblue\") +\n  # geom_polygon(data = all_densities_df, aes(y = scales::oob_squish(y, c(1, Inf)), group = id), lwd = 2) +\n  geom_line(data = pred_interval_df_95, aes(x, lwr), lwd = 1, lty = 2, color = \"tomato\") +\n  geom_line(data = pred_interval_df_95, aes(x, upr), lwd = 1, lty = 2, color = \"tomato\") \n```\n\n::: {.cell-output .cell-output-stderr}\n```\n`geom_smooth()` using formula = 'y ~ x'\n```\n:::\n\n::: {.cell-output-display}\n![y | x ~ N(y_hat, sigma_hat)](index_files/figure-html/unnamed-chunk-4-1.png){width=960}\n:::\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

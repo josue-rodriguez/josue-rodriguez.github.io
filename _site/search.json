@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html",
+    "title": "Model Selection Bias",
+    "section": "",
+    "text": "Over the last few months, a frequent topic of conversation with my lab mate Donny has been the issue of valid inference following model selection, or model selection bias. This problem has been recognized since at least 1963 and has been written about extensively since then. Some resources I have found both helpful and accessible in understanding model selection bias can be found here, here, and here. However, this issue is still pervasive among social and behavioral scientists 1, so I am writing a short post here in hopes of clarifying the ramifications of drawing inference after selecting a model."
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#why-does-this-occur",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#why-does-this-occur",
+    "title": "Model Selection Bias",
+    "section": "Why does this occur?",
+    "text": "Why does this occur?\nAn assumption behind the majority of inferential procedures is that the model is fixed, but model selection makes the model itself random. Inferential procedures typically do not account for this stochastic aspect. Using confidence intervals, let’s take a second to think about why model selection introduces randomness.\nWikipedia defines a 90% confidence interval in terms of sampling by stating\n\nWere this procedure to be repeated on numerous samples, the fraction of calculated confidence intervals (which would differ for each sample) that encompass the true population parameter would tend toward 90%.”\n\nWhat I would like to emphasize here is that that valid confidence intervals have a long run guarantee of covering the true population parameter (approximately) 90 out of 100 times, and this guarantee is based on carrying out the same procedure repeatedly. In this context, procedure refers to an estimation procedure and implies that the statistical model used for inference does not change from sample to sample.\nNow, suppose we have collected some data and we have some candidate set of predictors. We then pick a subset of these predictors according to some model selection procedure and estimate a model with this subset. The end result is an estimation procedure that is conditional on the selected variables.\nIf we do this repeatedly — collect some new data, select a model, and fit it with the selected predictors — there is no guarantee that the estimation procedure will have the same predictors each time 2. It is this randomness introduced by model selection that invalidates the properties of classical inference."
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#coverage",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#coverage",
+    "title": "Model Selection Bias",
+    "section": "Coverage",
+    "text": "Coverage\nAfter running the simulations, taking the means of covered_condit and covered_full yields the proportion of times that the credible interval covered the true parameter value when a model was selected and when it was not.\n\n\n\n\n\nIt is clear to see from this plot that when a model is not selected, the coverage rate is just about what we would expect — approximately 90 in every 100 credible intervals contained the true value for expected influence. But, when the model was selected prior to computing this interval, the true value was covered much less frequently. Only about 70 in 100 times!"
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#sampling-distribution",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#sampling-distribution",
+    "title": "Model Selection Bias",
+    "section": "Sampling Distribution",
+    "text": "Sampling Distribution\nRecall that model selection also distorts the sampling distribution of parameters. In the simulations, I kept track of the partial correlation between variables 1 and 6. On each simulation trial, I simply took the mean of the posterior distribution for this parameter. While we would expect to see the means normally distributed around the true value (red line), the distribution is truncated when a model is selected 6. This results in overconfident inferences about the population value. Also notice that parameters estimated after model selection are biased towards large effects. This makes sense as larger effects are more likely to be “significant”.\n\n\n\n\n\nThe simulations and plots are simple, but they convey a powerful idea. Model selection distorts inferential properties such as coverage rates and sampling distributions."
+  },
+  {
+    "objectID": "posts/2024-08-test/index.html",
+    "href": "posts/2024-08-test/index.html",
+    "title": "Prediction Intervals",
+    "section": "",
+    "text": "library(dplyr)\nlibrary(ggplot2)\n\ntheme_set(theme_minimal())\n\n\nx <- runif(1000, 0, 10)\ny <- x + rnorm(1000)\n\nmodel_1 <- lm(y ~ x)\n\nget_pred <- function(x, model) {\n  mod_coefs <- coef(model)\n  yhat <- mod_coefs[1] + mod_coefs[2] * x\n  return(yhat)\n}\n\n\ndata_df <- data.frame(x, y)\n\n\n#' For every row in `df`, compute a rotated normal density\n#' centered at `y` and shifted by `x`\ncompute_rotated_normal_densities <- function(x, model) {\n  mu <- get_pred(x, model)\n  sigma <- sigma(model)\n\n  range <- mu + c(-3.2, 3.2) * sigma\n  x_values <- seq(range[1], range[2], length.out = 100)\n  densities <- dnorm(x_values, mean = mu, sd = sigma)\n\n  rotated_densities_df <- tibble(\n    x = densities + x - max(densities),\n    y = x_values\n  )\n\n  return(rotated_densities_df)\n}\n\n\nall_densities_df  <- purrr::map_dfr(\n  c(1, 3, 5, 7, 9),\n  compute_rotated_normal_densities, \n  mod = model_1,\n  .id = \"id\"\n)\n\n\npred_interval_df <- tibble(x = 0:10)\npred_interval_df_95 <- bind_cols(\n  pred_interval_df,\n  predict(model_1, interval = \"prediction\", level = 0.95, newdata = pred_interval_df)\n)\n\nggplot(data_df, aes(x, y)) +\n  geom_point(alpha = 0.2) +\n  geom_smooth(method = \"lm\", se = TRUE, lwd = 1, col = \"forestgreen\") +\n  geom_path(data = all_densities_df, aes(group = id), lwd = 1, col = \"steelblue\") +\n  # geom_polygon(data = all_densities_df, aes(y = scales::oob_squish(y, c(1, Inf)), group = id), lwd = 2) +\n  geom_line(data = pred_interval_df_95, aes(x, lwr), lwd = 1, lty = 2, color = \"tomato\") +\n  geom_line(data = pred_interval_df_95, aes(x, upr), lwd = 1, lty = 2, color = \"tomato\") \n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\ny | x ~ N(y_hat, sigma_hat)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "josue rodriguez",
+    "section": "",
+    "text": "Hi! My name is Josue (ho-sway). I’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. Previously, I completed my PhD in Quantitative Psychology at UC Davis where I focused on developing Bayesian statistical models for social-behavior science."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "about",
+    "section": "",
+    "text": "Hi! My name is Josue (ho-sway). I’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. Previously, I completed my PhD in Quantitative Psychology at UC Davis where I focused on developing Bayesian statistical models for social-behavior science."
+  },
+  {
+    "objectID": "posts.html",
+    "href": "posts.html",
+    "title": "posts",
+    "section": "",
+    "text": "Prediction Intervals\n\n\n\n\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\nModel Selection Bias\n\n\n\n\n\n\nJosue E. Rodriguez\n\n\nJun 18, 2020\n\n\n\n\n\n\n\n\nNo matching items"
+  }
+]
