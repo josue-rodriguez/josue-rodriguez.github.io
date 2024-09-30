@@ -19,5 +19,5 @@ format:
     theme: 
       # - minty
       - styles.scss
-    mainfont: Suse
+    mainfont: Nunito
     toc: true
