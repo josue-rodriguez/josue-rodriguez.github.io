@@ -18,6 +18,6 @@ about:
       href: mailto:josue.rodriguez594@gmail.com
 ---
 
-Welcome! My name is Josue (pronounced ho-sway). 
+Welcome! My name is Josue <small>(pronounced ho-sway)</small>. 
 
 I’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. Previously, I completed my PhD in Quantitative Psychology at UC Davis where I focused on developing Bayesian statistical models for social-behavior science.
