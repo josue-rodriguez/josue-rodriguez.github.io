@@ -1,6 +1,6 @@
 ---
 title: "Model Selection Bias"
-author: "Josue E. Rodriguez"
+author: "Josue Rodriguez"
 date: "2020-06-18"
 output: 
   html_document:

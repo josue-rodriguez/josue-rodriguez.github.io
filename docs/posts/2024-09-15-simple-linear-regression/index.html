@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Josue Rodriguez">
-<meta name="dcterms.date" content="2024-09-01">
+<meta name="dcterms.date" content="2024-09-29">
 
 <title>(simple) Linear regression – josue rodriguez</title>
 <style>
@@ -196,7 +196,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">September 1, 2024</p>
+        <p class="date">September 29, 2024</p>
       </div>
     </div>
     
@@ -236,13 +236,12 @@ window.Quarto = {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>It’s been a couple years since I’ve taught intro to stats to the incoming grad students in the Psychology department at UC Davis, and it’s probably the only thing I really find myself missing about graduate school. One of my favorite parts of teaching was the fact that I got to revisit the basics of statistics every year. It was a chance to look at the foundations through the lens of whatever I had learned in the past year. My day-to-day job as a data scientist doesn’t often involve re-visiting the basics, or does it frequently involve thinking about or fitting any statistical models, and I miss that too.</p>
-<p>I don’t miss writing as much, but I suppose that I miss that too.</p>
-<p>With that in my mind, I want to start writing again, and I’ll start by writing series of short blog posts covering the basics of statistics with the intentions of brushing up on the basics, and indulging my writing whims. Eventually I hope to get to writing posts as a form of learning and retaining new topics. Until then though…I will consider these “warm ups” – they won’t necessarily be thorough, complete, nor accurate.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>It’s been a couple years since I’ve taught intro to stats to the incoming grad students in the Psychology department at UC Davis, and it’s probably the only thing I really find myself missing about graduate school. One of my favorite parts of teaching was the fact that I got to revisit the basics of statistics every year. It was a chance to look at the foundations through the lens of whatever I had learned in the past year. I don’t miss writing as much, but I suppose that I miss that too.</p>
+<p>With that in my mind, I want to start writing again, and I’ll start by writing series of short blog posts covering the basics of statistics with the intentions of brushing up on the basics, and indulging my writing whims. Eventually I hope to get to writing posts as a form of learning and retaining new topics. Until then though…I will consider these “warm ups” – they won’t necessarily be thorough, complete, or accurate.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 </section>
 <section id="what-are-we-doing-here" class="level1">
 <h1>What are we doing here?</h1>
-<p>We will cover no epistemic answer here, but rather, we’ll think about the familiar case where you have some data that describes two continuous variables, and you want to know something about how these variables relate. Or maybe, you want to be able to “predict” the value of one variable given that you know the value of another. In either case, most students are taught to invoke the ancient ritual of simple linear regression in order to one or both of these goals.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>We will cover no epistemic answer here, but rather, we’ll think about the familiar case where you have some data that describes two continuous variables, and you want to know something about how these variables relate. Or maybe, you want to be able to “predict” the value of one variable given that you know the value of another. In either case, most students are taught to invoke the ancient ritual of simple linear regression in order to achieve one or both of these goals.</p>
 <p>We will solemnly abide by statistical tradition and call our two variables continuous variables <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Let’s pretend this what it looks like when we plot <span class="math inline">\(x\)</span> against <span class="math inline">\(y\)</span></p>
 <div class="cell">
 <div class="cell-output-display">
@@ -257,7 +256,7 @@ window.Quarto = {
 <p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x_i
 \]</span></p>
-<p>This might seem trivial, but I always think it’s worth taking a moment and just thinking about what we’re saying here – we can completely determine a value of <span class="math inline">\(y_i\)</span> if we know<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>:</p>
+<p>This might seem trivial, but I always think it’s worth taking a moment and to think about what we’re saying here – we can completely determine a value of <span class="math inline">\(y_i\)</span> if we know<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <ol type="1">
 <li>the value of <span class="math inline">\(x_i\)</span></li>
 <li>the value of some unknown coefficients, <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span></li>
@@ -273,11 +272,11 @@ y_i = \beta_0 + \beta_1 x_i
 </div>
 </div>
 </div>
-<p>Notice that despite having an equation links our <span class="math inline">\(x\)</span>’s and <span class="math inline">\(y\)</span>’s, most in the plot don’t touch the line. Why might that be?</p>
+<p>Notice that despite having an equation links our <span class="math inline">\(x\)</span>’s and <span class="math inline">\(y\)</span>’s, most points in the plot don’t touch the line. Why might that be?</p>
 </section>
 <section id="the-world-is-a-big-and-scary-place" class="level1">
 <h1>The world is a big and scary place</h1>
-<p>Most things on Earth that are interesting enough for people to study tend to be more complex than what we’ve supposed so far. There is probably more than just <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(x\)</span> affecting our observed values of <span class="math inline">\(y\)</span>.</p>
+<p>Most things on Earth that are interesting enough for people to study tend to be more complex than what we’ve supposed so far. There is probably more than just <span class="math inline">\(x\)</span> affecting our observed values of <span class="math inline">\(y\)</span>.</p>
 <p>As long as we don’t think there’s anything else <em>systematically</em> affecting <span class="math inline">\(y\)</span>, we can attribute anything else affecting <span class="math inline">\(y\)</span> to randomness. We can account for this randomness by including an additional component in our model</p>
 <p><span class="math display">\[
 \begin{align}
@@ -285,20 +284,20 @@ y_i = \beta_0 + \beta_1 x_i + \varepsilon_i \\
 \varepsilon_i \sim \text{Normal} \left(0, \sigma^2 \right)
 \end{align}
 \]</span></p>
-<p>The updated equation now includes a new term, <span class="math inline">\(\varepsilon_i\)</span>, which captures any different between <span class="math inline">\(y_i\)</span> and the regression line. <em>Usually</em>, the <span class="math inline">\(\varepsilon\)</span> are assumed to have a Normal distribution with mean zero and unknown variance <span class="math inline">\(\sigma^2\)</span>. There’s a lot of nice theory that follows from this assumption, but it need not be made (e.g., we could also assume the errors are <span class="math inline">\(t\)</span>-distributed if wanted to).</p>
+<p>The updated equation now includes the term <span class="math inline">\(\varepsilon_i\)</span>, which captures any difference between <span class="math inline">\(y_i\)</span> and its corresponding point on the regression line. <em>Usually</em>, the <span class="math inline">\(\varepsilon\)</span> are assumed to have a Normal distribution with mean zero and unknown variance <span class="math inline">\(\sigma^2\)</span>. There’s a lot of nice theory that follows from this assumption, but it need not be made (e.g., we could also assume the errors are <span class="math inline">\(t\)</span>-distributed if we wanted to).</p>
 </section>
 <section id="finding-that-which-is-unknown" class="level1">
 <h1>Finding that which is unknown</h1>
-<p>As much as some of us like to pretend, we are not omniscient, and so some work must be done to find values for <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>. Later we’ll worry about figuring out a value for <span class="math inline">\(\sigma^2\)</span>. Our estimates for these values will be denoted by a little hat, e.g., <span class="math inline">\(\hat \beta_1\)</span>.</p>
-<p>Our first order of business is determining what how we should go about estimating values for the regression coefficients.</p>
-<p>We’ll set the goal that the values we pick for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span> that minimize the (average) distance between each point in the plot and the predicted values – the values along the lines that we find for each <span class="math inline">\(x_i\)</span> once we plug in values for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span>. The quantity we seek to minimize is called the sum of squared residuals</p>
+<p>As much as some of us like to pretend, we are not omniscient, and so some work must be done to find values for <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>. Our estimates for these values will be denoted by a little hat, e.g., <span class="math inline">\(\hat \beta_1\)</span>.</p>
+<p>Our first order of business is determining how we should go about estimating values for the regression coefficients.</p>
+<p>We’ll set the goal that the values we pick for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span> should be the ones that minimize the (average) distance between each point in the plot and the predicted values – the values along the lines that we find for each <span class="math inline">\(x_i\)</span> once we plug in values for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span>. The quantity we seek to minimize is called the sum of squared residuals</p>
 <p><span class="math display">\[
 \begin{align}
 \text{Sum of squared residuals} &amp;= \sum_{i=1}^n \left(y_i - \hat y_i \right)^2 \\
                                 &amp;= \sum_{i=1}^n \left(y_i - \hat \beta_0 + \hat \beta_1 x_i \right)^2.
 \end{align}
 \]</span></p>
-<p>It turns out that the values for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span> that accomplish this are given by the following equations</p>
+<p>It turns out that the values for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span> that accomplish this goal are given by the following equations</p>
 <p><span class="math display">\[
 \begin{align}
 \hat \beta_0 &amp;= \bar y -  \hat \beta_1 \bar x
@@ -308,18 +307,18 @@ y_i = \beta_0 + \beta_1 x_i + \varepsilon_i \\
 \hat \beta_1 &amp;= \frac{\widehat{\text{Cov}(x, y)}}{\hat \sigma^2_x} = \frac{\sum_{i=1}^n (x_i - \bar x) (y_i - \bar y)}{\sum_{i=1}^n (x_i - \bar x)^2} .
 \end{align}
 \]</span></p>
-<p>Great, now we can predict new values of <span class="math inline">\(y\)</span> given that we know a value of <span class="math inline">\(x\)</span>. W’ll call these predictions <span class="math inline">\(\hat y\)</span>.</p>
+<p>Great, we can now describe the “effect” of <span class="math inline">\(x\)</span> on <span class="math inline">\(y\)</span>, and we can predict new values of <span class="math inline">\(y\)</span> given that we know a value of <span class="math inline">\(x\)</span>. We’ll call these predictions <span class="math inline">\(\hat y\)</span>.</p>
 <p><span class="math display">\[
 \hat y_i = \hat \beta_0 + \hat \beta_1 x_i
 \]</span></p>
 </section>
 <section id="are-you-sure-about-that" class="level1">
 <h1>Are you sure about that?</h1>
-<p>Okay fine, we have some way estimating our unknowns. Now what? Do these values help us understand whether there is a relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>? Given a new observation of <span class="math inline">\(x\)</span>, can we predict the corresponding value of <span class="math inline">\(y\)</span>?</p>
+<p>Okay fine, we have some way estimating our unknowns. Now what? Do these values help us understand whether there is a systematic relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>? Given a new observation of <span class="math inline">\(x\)</span>, how well can we predict the corresponding value of <span class="math inline">\(y\)</span>?</p>
 <section id="r2" class="level2">
 <h2 class="anchored" data-anchor-id="r2"><span class="math inline">\(R^2\)</span></h2>
 <p>Perhaps the most commonly computed measure of model fit for regression is called <span class="math inline">\(R^2\)</span>, and it’s used to obtain a sense of how well the variable <span class="math inline">\(x\)</span> “explains” the variation in <span class="math inline">\(y\)</span>. Having values in <span class="math inline">\([0,1]\)</span>, an <span class="math inline">\(R^2 = 1\)</span> indicates that <span class="math inline">\(x\)</span> completely explains all the variation in <span class="math inline">\(y\)</span> whereas <span class="math inline">\(R^2=0\)</span> indidcates <span class="math inline">\(x\)</span> does not explain any variation in <span class="math inline">\(y\)</span>.</p>
-<p>Despite it’s popularity, <span class="math inline">\(R^2\)</span> is often a poor measure of model fit. A couple reasons being that it increases with the number of predictor variables regardless of whether those variables have <em>any</em> association to <span class="math inline">\(y\)</span>, and it can be arbitrarily low in a situation where we have fit the true data-generating model. For more details (and a laugh), check out section 3.2 of the regression notes <a href="https://www.stat.cmu.edu/%7Ecshalizi/mreg/15/lectures/10/lecture-10.pdf">here</a>.</p>
+<p>Despite it’s popularity, <span class="math inline">\(R^2\)</span> is often a poor measure of model fit. A couple reasons being that it increases with the number of predictor variables, regardless of whether those variables have <em>any</em> association to <span class="math inline">\(y\)</span>, and it can be arbitrarily low in a situation where we have fit the true data-generating model. For more details (and a chuckle), check out section 3.2 of the regression notes <a href="https://www.stat.cmu.edu/%7Ecshalizi/mreg/15/lectures/10/lecture-10.pdf">here</a>.</p>
 <p><span class="math display">\[
 \begin{align}
 R^2 &amp;= 1 - \frac{\text{SSR}}{\text{SST}} \\
@@ -329,7 +328,7 @@ R^2 &amp;= 1 - \frac{\text{SSR}}{\text{SST}} \\
 </section>
 <section id="mean-squared-error" class="level2">
 <h2 class="anchored" data-anchor-id="mean-squared-error">Mean squared error</h2>
-<p>Instead of settling for <span class="math inline">\(R^2\)</span> or some variant of it, we can inspect the mean-squared error (MSE). As the name implies, the MSE tells how large our (squared) residuals are on average. The MSE takes a value of 0 when <span class="math inline">\(x\)</span> perfectly predicts <span class="math inline">\(y\)</span>, and it can be arbitrarily large otherwise. It therefore provides a direct measure of how well <span class="math inline">\(x\)</span> predicts <span class="math inline">\(y\)</span>.</p>
+<p>Instead of settling for <span class="math inline">\(R^2\)</span> or some variant of it, we can inspect the mean-squared error (MSE). As the name implies, the MSE tells how large our (squared) residuals are on average. The MSE takes a value of 0 when <span class="math inline">\(x\)</span> perfectly predicts <span class="math inline">\(y\)</span>, and it can be arbitrarily large otherwise. It provides a direct measure of how well <span class="math inline">\(x\)</span> predicts <span class="math inline">\(y\)</span>.</p>
 <p><span class="math display">\[
 \begin{align}
 \text{MSE} &amp;= \frac{\sum_{i=1}^n \left(\hat y_i - y_i\right)^2}{n} \\
@@ -339,7 +338,7 @@ R^2 &amp;= 1 - \frac{\text{SSR}}{\text{SST}} \\
 </section>
 <section id="residual-variance" class="level2">
 <h2 class="anchored" data-anchor-id="residual-variance">Residual variance</h2>
-<p>Another quantity of interest is the estimated residual variance <span class="math inline">\(\hat \sigma^2_{\varepsilon}\)</span>. This also tells how much we expect a given <span class="math inline">\(y_i\)</span> to deviate from our regression line. It’s almost computed almost exactly as the MSE, but it differs in its denominator. This difference makes it an unbiased estimator of the true residual variance, $^2</p>
+<p>Another quantity of interest is the estimated residual variance <span class="math inline">\(\hat \sigma^2_{\varepsilon}\)</span>. This also tells us how much we expect a given <span class="math inline">\(y_i\)</span> to deviate from our regression line. It’s almost computed almost exactly as the MSE, but it differs in its denominator. This difference makes it an unbiased estimator of the true residual variance, <span class="math inline">\(\sigma^2\)</span></p>
 <p><span class="math display">\[
 \begin{align}
 \hat \sigma^2_{\varepsilon} &amp;= \frac{\sum_{i=1}^n \left(\hat y_i - y_i\right)^2}{n - p - 1} \\
@@ -347,37 +346,37 @@ R^2 &amp;= 1 - \frac{\text{SSR}}{\text{SST}} \\
 \end{align}
 \]</span></p>
 <p>Note that the degrees of freedom account for the number of parameters we estimated. So the degrees of freedom are given by <span class="math inline">\(n-p-1\)</span>, where <span class="math inline">\(p\)</span> is the number of predictor variables and the one comes from accounting for the fact that we estimated an intercept.</p>
-<p>The residual variance is assumed to be across all values of <span class="math inline">\(x\)</span>. That is <span class="math inline">\(E[\sigma^2_{\varepsilon} | x] = \sigma^2_{\varepsilon}\)</span>. At least for the data that arises from social-behavioral studies, this is often an unrealistic assumption. Two ways we can avoid this assumption by taking a weighted least-squares approach or by directly modeling the variance.</p>
+<p>The residual variance is assumed to be constant across all values of <span class="math inline">\(x\)</span>. That is <span class="math inline">\(E[\sigma^2_{\varepsilon} | x] = \sigma^2_{\varepsilon}\)</span>. At least for the data that arises from social-behavioral studies, this is often an unrealistic assumption. Two ways we can avoid this assumption by taking a weighted least-squares approach or by directly modeling the variance.</p>
 </section>
 <section id="putting-our-coefficients-to-the-test" class="level2">
 <h2 class="anchored" data-anchor-id="putting-our-coefficients-to-the-test">Putting our coefficients to the test</h2>
-<p>Right right, at so we can assess whether our model is doing it’s job (“explaining” the current variation in <span class="math inline">\(y\)</span> or predicting new values in <span class="math inline">\(y\)</span>). BUT, what if we wanted to say something about whether <span class="math inline">\(\beta_1\)</span> was statistically distinguishable from <span class="math inline">\(0\)</span>? That is, what if we wanted to say that the “effect” of <span class="math inline">\(x\)</span> is non-zero?</p>
+<p>Right right, so we can assess whether our model is doing it’s job (“explaining” the current variation in <span class="math inline">\(y\)</span> or predicting new values in <span class="math inline">\(y\)</span>). BUT, what if we wanted to say something about whether <span class="math inline">\(\beta_1\)</span> was statistically distinguishable from <span class="math inline">\(0\)</span>? That is, what if we wanted to say that the “effect” of <span class="math inline">\(x\)</span> is non-zero?</p>
 <p>The coefficient <span class="math inline">\(\beta_1\)</span> is a random variable, and so we can calculate it’s standard error, and consequently, we can perform a hypothesis test for the following hypotheses</p>
 <p><span class="math display">\[
 \begin{aligned}
-H_0: \beta_j &amp;= \beta \\
+H_0: \beta_1 &amp;= \beta \\
 &amp; \text{vs.} \\
-H_1: \beta_j &amp; \neq \beta
+H_1: \beta_1 &amp; \neq \beta
 \end{aligned}
 \]</span></p>
-<p>Usually, <span class="math inline">\(\beta = 0\)</span>, so we test that the regression coefficients are equal to 0, but we could pick any ol’ number.</p>
-<p>The standard error of <span class="math inline">\(\hat \beta_1\)</span> can be calcuted as follows</p>
+<p>Usually, <span class="math inline">\(\beta = 0\)</span>, so we test that the regression coefficient for <span class="math inline">\(x\)</span> is equal to 0, but we could pick any ol’ number.</p>
+<p>The standard error of <span class="math inline">\(\hat \beta_1\)</span> is given by</p>
 <p><span class="math display">\[
 \begin{aligned}
 \text{Var}(\hat \beta_1) &amp;= \frac{\hat \sigma^2_{\varepsilon}}{\sum_{i=1}^n (x_i - \bar x)^2} \\
 \text{SE}(\hat \beta_1) &amp;= \sqrt{ \text{Var}(\hat \beta_1) }.
 \end{aligned}
 \]</span></p>
-<p>Knowing the standard error, we can calculate a <span class="math inline">\(t\)</span>-statistic as follows</p>
+<p>With the standard error in hand, we can calculate a <span class="math inline">\(t\)</span>-statistic as follows</p>
 <p><span class="math display">\[
 t = \frac{\hat \beta - \beta}{\text{SE}(\hat \beta)} %\sim \text{Student-}t\left(\nu = n-2\right)
 \]</span></p>
-<p>and compute a <span class="math inline">\(p\)</span>-value by referencing it a <span class="math inline">\(t\)</span>-distribution with degrees of freedom <span class="math inline">\(\nu = n-2\)</span>.</p>
+<p>and compute a <span class="math inline">\(p\)</span>-value by referencing it against a <span class="math inline">\(t\)</span>-distribution with degrees of freedom <span class="math inline">\(\nu = n-2\)</span>.</p>
 </section>
 </section>
 <section id="running-through-the-calculations" class="level1">
 <h1>Running through the calculations</h1>
-<p>Below, I use R to grab a sample of 40 observations from an academic performance dataset and fit a regression in with the number of hours a student studied (<code>hours_studied</code>) predicting how well they performed on an exam. I then “manually” compute the quantities discussed above to see that they indeed match the output from R’s <code>lm</code>.</p>
+<p>Below, I use R to grab a sample of 40 observations from an academic performance dataset and fit a regression with the number of hours a student studied predicting how well they performed on an exam. I then “manually” compute the quantities discussed above to see that they indeed match the output from R’s <code>lm</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nanoparquet, <span class="at">include.only =</span> <span class="st">"read_parquet"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -388,8 +387,9 @@ t = \frac{\hat \beta - \beta}{\text{SE}(\hat \beta)} %\sim \text{Student-}t\left
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>performance_df <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(<span class="st">"data/processed/student_performance.parquet"</span>) <span class="sc">%&gt;%</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">40</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(performance_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>performance_df <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(<span class="st">"data/processed/student_performance.parquet"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">40</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(performance_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 40
 Columns: 6
@@ -404,8 +404,7 @@ $ performance_index                &lt;dbl&gt; 74, 71, 53, 43, 36, 27, 48, 61, 4
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(performance_df, <span class="fu">aes</span>(hours_studied, performance_index)) <span class="sc">+</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#FDFBF7"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -484,22 +483,22 @@ F-statistic: 7.028 on 1 and 38 DF,  p-value: 0.01164</code></pre>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># residuals have mean 0</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>var_ehat <span class="ot">&lt;-</span> <span class="fu">sum</span>(ehat<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">2</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sd_ehat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(var_ehat)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(<span class="st">"residual sigma = {round(sd_ehat, 3)}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(<span class="st">"residual sd = {round(sd_ehat, 3)}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>residual sigma = 18.733</code></pre>
+<pre><code>residual sd = 18.733</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>var_b1hat <span class="ot">&lt;-</span> var_ehat <span class="sc">/</span> (<span class="fu">sum</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x))<span class="sc">^</span><span class="dv">2</span>))</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>se_b1hat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(var_b1hat)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(<span class="st">"std_err b1 = {round(se_b1hat, 3)}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(<span class="st">"std err b1 = {round(se_b1hat, 3)}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>std_err b1 = 1.175</code></pre>
+<pre><code>std err b1 = 1.175</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>t_b1hat <span class="ot">&lt;-</span> b1hat <span class="sc">/</span> se_b1hat</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(<span class="st">"t_stat b1 = {round(t_b1hat, 3)}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(<span class="st">"t-stat b1 = {round(t_b1hat, 3)}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>t_stat b1 = 2.651</code></pre>
+<pre><code>t-stat b1 = 2.651</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pval_b1hat <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pt</span>(t_b1hat, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)) <span class="sc">*</span> <span class="dv">2</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(<span class="st">"p-value = {round(pval_b1hat, 3)}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -516,8 +515,7 @@ F-statistic: 7.028 on 1 and 38 DF,  p-value: 0.01164</code></pre>
 
 <ol>
 <li id="fn1"><p>I’d suggest reading one of Gelman’s books or Cosma Shalizi’s book if that’s what you’re looking for<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Also (Pearson’s) correlation, but more on that later.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>How many processes can you think of that can truly be described this way? <span class="emoji" data-emoji="thinking">🤔</span><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>How many processes can you think of that can truly be described this way? <span class="emoji" data-emoji="thinking">🤔</span><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
