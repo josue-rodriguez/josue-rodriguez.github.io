@@ -2,7 +2,104 @@
 title: "about"
 ---
 
-## {{< fa briefcase >}} the profession
+## {{< fa briefcase >}} work
 
 
-Hi! My name is Josue (ho-sway). I’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. Previously, I completed my PhD in Quantitative Psychology at UC Davis where I focused on developing Bayesian statistical models for social-behavior science.
+Hi! My name is Josue <small>(pronounced ho-sway)</small>. 
+
+I’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. I previously earned a PhD in Quantitative Psychology at UC Davis, where I focused on developing Bayesian statistical models for social-behavior science.
+
+## {{< fa graduation-cap >}} education
+```{=html}
+<style>
+  .education-section {
+    max-width: 400px;
+  }
+  
+  .education-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .education-item {
+    margin-bottom: 20px;
+  }
+  
+  .degree {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .minor {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 2px;
+    margin-bottom: 5px;
+  }
+  
+  .year {
+    font-size: 16px;
+  }
+  
+  .institution {
+    font-size: 16px;
+  }
+  
+  .education-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="education-section">
+  <div class="education-item">
+    <p class="degree">
+      PhD in Quantitative Psychology &mdash;
+      <span class="year">2023</span>
+    </p>
+    <p class="institution">University of California, Davis</p>
+  </div>
+  
+  <div class="education-item">
+    <p class="degree">
+      MA in Cognitive Psychology &mdash;
+      <span class="year">2019</span>
+    </p>
+    <p class="minor">Minor in Statistics</p>
+    <p class="institution">California State Polytechnic University, Humboldt</p>
+  </div>
+  
+  
+  <div class="education-item">
+    <p class="degree">
+      BA in Psychology &mdash;
+      <span class="year">2017</span>
+    </p>
+    <p class="institution">California State Polytechnic University, Humboldt</p>
+  </div>
+</div>
+```
+
+<!-- ## {{< fa graduation-cap >}} education -->
+
+<!-- **PhD in Quantitative Psychology, 2023**
+
+::: {style="font-size: 80%;"}
+University of California, Davis
+:::
+  
+  
+**MA in Cognitive Psychology, 2019**
+
+::: {style="font-size: 80%;"}
+California State Polytechnic University, Humboldt
+:::
+
+**BA in Psychology, 2017**
+::: {style="font-size: 80%;"}
+California State Polytechnic University, Humboldt
+::: -->

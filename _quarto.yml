@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "josue rodriguez"
@@ -11,7 +12,6 @@ website:
       - posts.qmd
 
 
-
 format:
   html:
     page-layout: full
@@ -19,5 +19,5 @@ format:
     theme: 
       # - minty
       - styles.scss
-    mainfont: Nunito
+    mainfont: Suse
     toc: true
