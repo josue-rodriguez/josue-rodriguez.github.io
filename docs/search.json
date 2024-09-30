@@ -49,81 +49,11 @@
     "text": "Footnotes\n\n\nOther fields as well but I’m in psychology so that is my focus↩︎\nOne could argue that this is not an issue with a consistent model selector or large enough sample sizes, but see Leeb & Pötscher (2005)↩︎\nIf you have any interest in network models at all I highly suggest checking out the BGGM package! It offers a variety of flexible methods for both exploratory and confirmatory analyses plus it now handles ordinal data and VAR models↩︎\nA 90% credible interval can literally be interpreted as a 90% probability that the true parameter value is covered, given the data↩︎\n“frequentist properties of Bayesian methods” is a good google search if you’re bored↩︎\nThere are methods to correct this truncation, but this is still an active area of research↩︎\nTo account for uncertainty in model selection some propose model averaging↩︎\nThere is a growing body of literature on “undoing” model selection bias, but it is not yet a mature body of literature↩︎"
   },
   {
-    "objectID": "posts/2024-08-test/index.html",
-    "href": "posts/2024-08-test/index.html",
-    "title": "Linear regression",
-    "section": "",
-    "text": "It’s been two years since I’ve taught intro to stats to the incoming grad students in the Psychology department at UC Davis, and it’s probably the only thing I really find myself missing about graduate school. One of my favorite parts of teaching was the fact that I got to revisit the basics of statistics every year. It was a chance to look at the foundations through the lens of whatever I had learned in the past year. My day-to-day job as a data scientist doesn’t often involve re-visiting the basics, nor does it frequently involve thinking about or fitting any statistical models, and I miss that too.\nI don’t miss writing as much, but I suppose that I miss that too.\nWith that in my mind, I intend to write a series of short blog posts covering the basics with the intentions of brushing up on the basics, hopefully colored through my now earned industry experience. Eventually I hope to get to writing posts as a form of learning and retaining new topics. Until then though…"
-  },
-  {
-    "objectID": "posts/2024-08-test/index.html#footnotes",
-    "href": "posts/2024-08-test/index.html#footnotes",
-    "title": "Linear regression",
-    "section": "Footnotes",
-    "text": "Footnotes\n\n\nAlso (Pearson’s) correlation, but more on that later.↩︎\nHow many processes can you think of that can truly be described this way? 🤔↩︎"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "about",
-    "section": "",
-    "text": "Hi! My name is Josue (pronounced ho-sway).\nI’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. I previously earned a PhD in Quantitative Psychology at UC Davis, where I focused on developing Bayesian statistical models for social-behavior science."
-  },
-  {
-    "objectID": "about.html#work",
-    "href": "about.html#work",
-    "title": "about",
-    "section": "",
-    "text": "Hi! My name is Josue (pronounced ho-sway).\nI’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. I previously earned a PhD in Quantitative Psychology at UC Davis, where I focused on developing Bayesian statistical models for social-behavior science."
-  },
-  {
-    "objectID": "about.html#education",
-    "href": "about.html#education",
-    "title": "about",
-    "section": " education",
-    "text": "education\n\n\n\n  \n    \n      PhD in Quantitative Psychology —\n      2023\n    \n    University of California, Davis\n  \n  \n  \n    \n      MA in Cognitive Psychology —\n      2019\n    \n    Minor in Statistics\n    California State Polytechnic University, Humboldt\n  \n  \n  \n  \n    \n      BA in Psychology —\n      2017\n    \n    California State Polytechnic University, Humboldt"
-  },
-  {
     "objectID": "posts/2024-09-15-simple-linear-regression/index.html",
     "href": "posts/2024-09-15-simple-linear-regression/index.html",
     "title": "(simple) Linear regression",
     "section": "",
     "text": "It’s been a couple years since I’ve taught intro to stats to the incoming grad students in the Psychology department at UC Davis, and it’s probably the only thing I really find myself missing about graduate school. One of my favorite parts of teaching was the fact that I got to revisit the basics of statistics every year. It was a chance to look at the foundations through the lens of whatever I had learned in the past year. My day-to-day job as a data scientist doesn’t often involve re-visiting the basics, or does it frequently involve thinking about or fitting any statistical models, and I miss that too.\nI don’t miss writing as much, but I suppose that I miss that too.\nWith that in my mind, I want to start writing again, and I’ll start by writing series of short blog posts covering the basics of statistics with the intentions of brushing up on the basics, and indulging my writing whims. Eventually I hope to get to writing posts as a form of learning and retaining new topics. Until then though…I will consider these “warm ups” – they won’t necessarily be thorough, complete, nor accurate.1"
-  },
-  {
-    "objectID": "posts/2024-09-15-simple-linear-regression/index.html#footnotes",
-    "href": "posts/2024-09-15-simple-linear-regression/index.html#footnotes",
-    "title": "(simple) Linear regression",
-    "section": "Footnotes",
-    "text": "Footnotes\n\n\nI’d suggest reading one of Gelman’s books or Cosma Shalizi’s book if that’s what you’re looking for↩︎\nAlso (Pearson’s) correlation, but more on that later.↩︎\nHow many processes can you think of that can truly be described this way? 🤔↩︎"
-  },
-  {
-    "objectID": "posts/2024-09-15-simple-linear-regression/index.html#a-measure-of-fit",
-    "href": "posts/2024-09-15-simple-linear-regression/index.html#a-measure-of-fit",
-    "title": "(simple) Linear regression",
-    "section": "A measure of fit",
-    "text": "A measure of fit\n\\[\n\\begin{align}\nR^2 &= 1 - \\frac{\\text{SSR}}{\\text{SST}} \\\\\n\\text{SST} &= \\sum_{i=1}^n \\left(y_i - \\bar y \\right)^2\n\\end{align}\n\\]"
-  },
-  {
-    "objectID": "posts/2024-09-15-simple-linear-regression/index.html#a-different-measure-of-dispersion",
-    "href": "posts/2024-09-15-simple-linear-regression/index.html#a-different-measure-of-dispersion",
-    "title": "(simple) Linear regression",
-    "section": "A different measure of dispersion",
-    "text": "A different measure of dispersion\n\nConfidence interval on line"
-  },
-  {
-    "objectID": "posts/2024-09-15-simple-linear-regression/index.html#putting-our-coefficients-to-the-test",
-    "href": "posts/2024-09-15-simple-linear-regression/index.html#putting-our-coefficients-to-the-test",
-    "title": "(simple) Linear regression",
-    "section": "Putting our coefficients to the test",
-    "text": "Putting our coefficients to the test\nRight right, at so we can assess whether our model is doing it’s job (“explaining” the current variation in \\(y\\) or predicting new values in \\(y\\)). BUT, what if we wanted to say something about whether \\(\\beta_1\\) was statistically distinguishable from \\(0\\)? That is, what if we wanted to say that the “effect” of \\(x\\) is non-zero?\nThe coefficient \\(\\beta_1\\) is a random variable, and so we can calculate it’s standard error, and consequently, we can perform a hypothesis test for the following hypotheses\n\\[\n\\begin{aligned}\nH_0: \\beta_j &= \\beta \\\\\n& \\text{vs.} \\\\\nH_1: \\beta_j & \\neq \\beta\n\\end{aligned}\n\\]\nUsually, \\(\\beta = 0\\), so we test that the regression coefficients are equal to 0, but we could pick any ol’ number.\nThe standard error of \\(\\hat \\beta_1\\) can be calcuted as follows\n\\[\n\\begin{aligned}\n\\text{Var}(\\hat \\beta_1) &= \\frac{\\hat \\sigma^2_{\\varepsilon}}{\\sum_{i=1}^n (x_i - \\bar x)^2} \\\\\n\\text{SE}(\\hat \\beta_1) &= \\sqrt{ \\text{Var}(\\hat \\beta_1) }.\n\\end{aligned}\n\\]\nKnowing the standard error, we can calculate a \\(t\\)-statistic as follows\n\\[\nt = \\frac{\\hat \\beta - \\beta}{\\text{SE}(\\hat \\beta)} %\\sim \\text{Student-}t\\left(\\nu = n-2\\right)\n\\]\nand compute a \\(p\\)-value by referencing it a \\(t\\)-distribution with degrees of freedom \\(\\nu = n-2\\)."
-  },
-  {
-    "objectID": "posts/2024-09-15-simple-linear-regression/index.html#a-measure-of-dispersion",
-    "href": "posts/2024-09-15-simple-linear-regression/index.html#a-measure-of-dispersion",
-    "title": "(simple) Linear regression",
-    "section": "A measure of dispersion",
-    "text": "A measure of dispersion\n\nVariance of the residuals / standard error of regression\n\n\\[\n\\begin{align}\n\\hat \\sigma^2_{\\varepsilon} &= \\frac{\\sum_{i=1}^n \\left(\\hat y_i - y_i\\right)^2}{n - p - 1} \\\\\n&= \\frac{\\sum_{i=1}^n \\hat \\varepsilon^2}{n - 2}\n\\end{align}\n\\]"
   },
   {
     "objectID": "posts/2024-09-15-simple-linear-regression/index.html#r2",
@@ -145,5 +75,40 @@
     "title": "(simple) Linear regression",
     "section": "Residual variance",
     "text": "Residual variance\nAnother quantity of interest is the estimated residual variance \\(\\hat \\sigma^2_{\\varepsilon}\\). This also tells how much we expect a given \\(y_i\\) to deviate from our regression line. It’s almost computed almost exactly as the MSE, but it differs in its denominator. This difference makes it an unbiased estimator of the true residual variance, $^2\n\\[\n\\begin{align}\n\\hat \\sigma^2_{\\varepsilon} &= \\frac{\\sum_{i=1}^n \\left(\\hat y_i - y_i\\right)^2}{n - p - 1} \\\\\n&=  \\frac{1}{n-2}\\sum_{i=1}^n \\hat \\varepsilon_i .\n\\end{align}\n\\]\nNote that the degrees of freedom account for the number of parameters we estimated. So the degrees of freedom are given by \\(n-p-1\\), where \\(p\\) is the number of predictor variables and the one comes from accounting for the fact that we estimated an intercept.\nThe residual variance is assumed to be across all values of \\(x\\). That is \\(E[\\sigma^2_{\\varepsilon} | x] = \\sigma^2_{\\varepsilon}\\). At least for the data that arises from social-behavioral studies, this is often an unrealistic assumption. Two ways we can avoid this assumption by taking a weighted least-squares approach or by directly modeling the variance."
+  },
+  {
+    "objectID": "posts/2024-09-15-simple-linear-regression/index.html#putting-our-coefficients-to-the-test",
+    "href": "posts/2024-09-15-simple-linear-regression/index.html#putting-our-coefficients-to-the-test",
+    "title": "(simple) Linear regression",
+    "section": "Putting our coefficients to the test",
+    "text": "Putting our coefficients to the test\nRight right, at so we can assess whether our model is doing it’s job (“explaining” the current variation in \\(y\\) or predicting new values in \\(y\\)). BUT, what if we wanted to say something about whether \\(\\beta_1\\) was statistically distinguishable from \\(0\\)? That is, what if we wanted to say that the “effect” of \\(x\\) is non-zero?\nThe coefficient \\(\\beta_1\\) is a random variable, and so we can calculate it’s standard error, and consequently, we can perform a hypothesis test for the following hypotheses\n\\[\n\\begin{aligned}\nH_0: \\beta_j &= \\beta \\\\\n& \\text{vs.} \\\\\nH_1: \\beta_j & \\neq \\beta\n\\end{aligned}\n\\]\nUsually, \\(\\beta = 0\\), so we test that the regression coefficients are equal to 0, but we could pick any ol’ number.\nThe standard error of \\(\\hat \\beta_1\\) can be calcuted as follows\n\\[\n\\begin{aligned}\n\\text{Var}(\\hat \\beta_1) &= \\frac{\\hat \\sigma^2_{\\varepsilon}}{\\sum_{i=1}^n (x_i - \\bar x)^2} \\\\\n\\text{SE}(\\hat \\beta_1) &= \\sqrt{ \\text{Var}(\\hat \\beta_1) }.\n\\end{aligned}\n\\]\nKnowing the standard error, we can calculate a \\(t\\)-statistic as follows\n\\[\nt = \\frac{\\hat \\beta - \\beta}{\\text{SE}(\\hat \\beta)} %\\sim \\text{Student-}t\\left(\\nu = n-2\\right)\n\\]\nand compute a \\(p\\)-value by referencing it a \\(t\\)-distribution with degrees of freedom \\(\\nu = n-2\\)."
+  },
+  {
+    "objectID": "posts/2024-09-15-simple-linear-regression/index.html#footnotes",
+    "href": "posts/2024-09-15-simple-linear-regression/index.html#footnotes",
+    "title": "(simple) Linear regression",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nI’d suggest reading one of Gelman’s books or Cosma Shalizi’s book if that’s what you’re looking for↩︎\nAlso (Pearson’s) correlation, but more on that later.↩︎\nHow many processes can you think of that can truly be described this way? 🤔↩︎"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "about",
+    "section": "",
+    "text": "Hi! My name is Josue (pronounced ho-sway).\nI’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. I previously earned a PhD in Quantitative Psychology at UC Davis, where I focused on developing Bayesian statistical models for social-behavior science."
+  },
+  {
+    "objectID": "about.html#work",
+    "href": "about.html#work",
+    "title": "about",
+    "section": "",
+    "text": "Hi! My name is Josue (pronounced ho-sway).\nI’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. I previously earned a PhD in Quantitative Psychology at UC Davis, where I focused on developing Bayesian statistical models for social-behavior science."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "about",
+    "section": " education",
+    "text": "education\n\n\n\n  \n    \n      PhD in Quantitative Psychology —\n      2023\n    \n    University of California, Davis\n  \n  \n  \n    \n      MA in Cognitive Psychology —\n      2019\n    \n    Minor in Statistics\n    California State Polytechnic University, Humboldt\n  \n  \n  \n  \n    \n      BA in Psychology —\n      2017\n    \n    California State Polytechnic University, Humboldt"
   }
 ]
