@@ -4,7 +4,7 @@
     "href": "posts.html",
     "title": "posts",
     "section": "",
-    "text": "(simple) Linear regression\n\n\n\n\n\n\n\n\n\n\n\nSep 29, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\nModel Selection Bias\n\n\n\n\n\n\n\n\n\n\n\nJun 18, 2020\n\n\nJosue Rodriguez\n\n\n\n\n\n\nNo matching items"
+    "text": "Connecting Scalar and Matrix Notation in OLS\n\n\n\n\n\n\n\n\n\n\n\nNov 16, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\n(simple) Linear regression\n\n\n\n\n\n\n\n\n\n\n\nSep 29, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\nModel Selection Bias\n\n\n\n\n\n\n\n\n\n\n\nJun 18, 2020\n\n\nJosue Rodriguez\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -12,41 +12,6 @@
     "title": "josue rodriguez",
     "section": "",
     "text": "Welcome! My name is Josue (pronounced ho-sway).\nI’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. Previously, I completed my PhD in Quantitative Psychology at UC Davis where I focused on developing Bayesian statistical models for social-behavior science."
-  },
-  {
-    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html",
-    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html",
-    "title": "Model Selection Bias",
-    "section": "",
-    "text": "Over the last few months, a frequent topic of conversation with my lab mate Donny has been the issue of valid inference following model selection, or model selection bias. This problem has been recognized since at least 1963 and has been written about extensively since then. Some resources I have found both helpful and accessible in understanding model selection bias can be found here, here, and here. However, this issue is still pervasive among social and behavioral scientists 1, so I am writing a short post here in hopes of clarifying the ramifications of drawing inference after selecting a model."
-  },
-  {
-    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#why-does-this-occur",
-    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#why-does-this-occur",
-    "title": "Model Selection Bias",
-    "section": "Why does this occur?",
-    "text": "Why does this occur?\nAn assumption behind the majority of inferential procedures is that the model is fixed, but model selection makes the model itself random. Inferential procedures typically do not account for this stochastic aspect. Using confidence intervals, let’s take a second to think about why model selection introduces randomness.\nWikipedia defines a 90% confidence interval in terms of sampling by stating\n\nWere this procedure to be repeated on numerous samples, the fraction of calculated confidence intervals (which would differ for each sample) that encompass the true population parameter would tend toward 90%.”\n\nWhat I would like to emphasize here is that that valid confidence intervals have a long run guarantee of covering the true population parameter (approximately) 90 out of 100 times, and this guarantee is based on carrying out the same procedure repeatedly. In this context, procedure refers to an estimation procedure and implies that the statistical model used for inference does not change from sample to sample.\nNow, suppose we have collected some data and we have some candidate set of predictors. We then pick a subset of these predictors according to some model selection procedure and estimate a model with this subset. The end result is an estimation procedure that is conditional on the selected variables.\nIf we do this repeatedly — collect some new data, select a model, and fit it with the selected predictors — there is no guarantee that the estimation procedure will have the same predictors each time 2. It is this randomness introduced by model selection that invalidates the properties of classical inference."
-  },
-  {
-    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#coverage",
-    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#coverage",
-    "title": "Model Selection Bias",
-    "section": "Coverage",
-    "text": "Coverage\nAfter running the simulations, taking the means of covered_condit and covered_full yields the proportion of times that the credible interval covered the true parameter value when a model was selected and when it was not.\n\n\n\n\n\n\n\n\n\nIt is clear to see from this plot that when a model is not selected, the coverage rate is just about what we would expect — approximately 90 in every 100 credible intervals contained the true value for expected influence. But, when the model was selected prior to computing this interval, the true value was covered much less frequently. Only about 70 in 100 times!"
-  },
-  {
-    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#sampling-distribution",
-    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#sampling-distribution",
-    "title": "Model Selection Bias",
-    "section": "Sampling Distribution",
-    "text": "Sampling Distribution\nRecall that model selection also distorts the sampling distribution of parameters. In the simulations, I kept track of the partial correlation between variables 1 and 6. On each simulation trial, I simply took the mean of the posterior distribution for this parameter. While we would expect to see the means normally distributed around the true value (red line), the distribution is truncated when a model is selected 6. This results in overconfident inferences about the population value. Also notice that parameters estimated after model selection are biased towards large effects. This makes sense as larger effects are more likely to be “significant”.\n\n\n\n\n\n\n\n\n\nThe simulations and plots are simple, but they convey a powerful idea. Model selection distorts inferential properties such as coverage rates and sampling distributions."
-  },
-  {
-    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#footnotes",
-    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#footnotes",
-    "title": "Model Selection Bias",
-    "section": "Footnotes",
-    "text": "Footnotes\n\n\nOther fields as well but I’m in psychology so that is my focus↩︎\nOne could argue that this is not an issue with a consistent model selector or large enough sample sizes, but see Leeb & Pötscher (2005)↩︎\nIf you have any interest in network models at all I highly suggest checking out the BGGM package! It offers a variety of flexible methods for both exploratory and confirmatory analyses plus it now handles ordinal data and VAR models↩︎\nA 90% credible interval can literally be interpreted as a 90% probability that the true parameter value is covered, given the data↩︎\n“frequentist properties of Bayesian methods” is a good google search if you’re bored↩︎\nThere are methods to correct this truncation, but this is still an active area of research↩︎\nTo account for uncertainty in model selection some propose model averaging↩︎\nThere is a growing body of literature on “undoing” model selection bias, but it is not yet a mature body of literature↩︎"
   },
   {
     "objectID": "posts/2024-09-15-simple-linear-regression/index.html",
@@ -89,6 +54,69 @@
     "title": "(simple) Linear regression",
     "section": "Footnotes",
     "text": "Footnotes\n\n\nI’d suggest reading one of Gelman’s books or Cosma Shalizi’s book if that’s what you’re looking for↩︎\nHow many processes can you think of that can truly be described this way? 🤔↩︎"
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html",
+    "title": "Model Selection Bias",
+    "section": "",
+    "text": "Over the last few months, a frequent topic of conversation with my lab mate Donny has been the issue of valid inference following model selection, or model selection bias. This problem has been recognized since at least 1963 and has been written about extensively since then. Some resources I have found both helpful and accessible in understanding model selection bias can be found here, here, and here. However, this issue is still pervasive among social and behavioral scientists 1, so I am writing a short post here in hopes of clarifying the ramifications of drawing inference after selecting a model."
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#why-does-this-occur",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#why-does-this-occur",
+    "title": "Model Selection Bias",
+    "section": "Why does this occur?",
+    "text": "Why does this occur?\nAn assumption behind the majority of inferential procedures is that the model is fixed, but model selection makes the model itself random. Inferential procedures typically do not account for this stochastic aspect. Using confidence intervals, let’s take a second to think about why model selection introduces randomness.\nWikipedia defines a 90% confidence interval in terms of sampling by stating\n\nWere this procedure to be repeated on numerous samples, the fraction of calculated confidence intervals (which would differ for each sample) that encompass the true population parameter would tend toward 90%.”\n\nWhat I would like to emphasize here is that that valid confidence intervals have a long run guarantee of covering the true population parameter (approximately) 90 out of 100 times, and this guarantee is based on carrying out the same procedure repeatedly. In this context, procedure refers to an estimation procedure and implies that the statistical model used for inference does not change from sample to sample.\nNow, suppose we have collected some data and we have some candidate set of predictors. We then pick a subset of these predictors according to some model selection procedure and estimate a model with this subset. The end result is an estimation procedure that is conditional on the selected variables.\nIf we do this repeatedly — collect some new data, select a model, and fit it with the selected predictors — there is no guarantee that the estimation procedure will have the same predictors each time 2. It is this randomness introduced by model selection that invalidates the properties of classical inference."
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#coverage",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#coverage",
+    "title": "Model Selection Bias",
+    "section": "Coverage",
+    "text": "Coverage\nAfter running the simulations, taking the means of covered_condit and covered_full yields the proportion of times that the credible interval covered the true parameter value when a model was selected and when it was not.\n\n\n\n\n\n\n\n\n\nIt is clear to see from this plot that when a model is not selected, the coverage rate is just about what we would expect — approximately 90 in every 100 credible intervals contained the true value for expected influence. But, when the model was selected prior to computing this interval, the true value was covered much less frequently. Only about 70 in 100 times!"
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#sampling-distribution",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#sampling-distribution",
+    "title": "Model Selection Bias",
+    "section": "Sampling Distribution",
+    "text": "Sampling Distribution\nRecall that model selection also distorts the sampling distribution of parameters. In the simulations, I kept track of the partial correlation between variables 1 and 6. On each simulation trial, I simply took the mean of the posterior distribution for this parameter. While we would expect to see the means normally distributed around the true value (red line), the distribution is truncated when a model is selected 6. This results in overconfident inferences about the population value. Also notice that parameters estimated after model selection are biased towards large effects. This makes sense as larger effects are more likely to be “significant”.\n\n\n\n\n\n\n\n\n\nThe simulations and plots are simple, but they convey a powerful idea. Model selection distorts inferential properties such as coverage rates and sampling distributions."
+  },
+  {
+    "objectID": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#footnotes",
+    "href": "posts/2020-6-18-model-selection-bias/model-selection-bias.html#footnotes",
+    "title": "Model Selection Bias",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nOther fields as well but I’m in psychology so that is my focus↩︎\nOne could argue that this is not an issue with a consistent model selector or large enough sample sizes, but see Leeb & Pötscher (2005)↩︎\nIf you have any interest in network models at all I highly suggest checking out the BGGM package! It offers a variety of flexible methods for both exploratory and confirmatory analyses plus it now handles ordinal data and VAR models↩︎\nA 90% credible interval can literally be interpreted as a 90% probability that the true parameter value is covered, given the data↩︎\n“frequentist properties of Bayesian methods” is a good google search if you’re bored↩︎\nThere are methods to correct this truncation, but this is still an active area of research↩︎\nTo account for uncertainty in model selection some propose model averaging↩︎\nThere is a growing body of literature on “undoing” model selection bias, but it is not yet a mature body of literature↩︎"
+  },
+  {
+    "objectID": "posts/2024-11-16-matrix-ols/index.html",
+    "href": "posts/2024-11-16-matrix-ols/index.html",
+    "title": "Connecting Scalar and Matrix Notation in OLS",
+    "section": "",
+    "text": "I don’t know. Maybe my journey in statistics has been nontraditional in that much of my statistical training came from social-behavioral stats classes, where the math-y bits of statistics are de-emphasized, and so I missed out on a lot of the intuition and proofs that many statistics students see in their undergraduate courses.\nFor me, this is certainly the case in connecting the estimating equations for the regression parameters (and their variances) that you learn in intro statistics courses to the estimating equation in the matrix form of OLS. This post is an attempt at making that connection clearer for myself.\nThe derivations below largely come from Chapter 11 in Cosma Shalizi’s The Truth about Linear Regression. Where I could, I filled in some details."
+  },
+  {
+    "objectID": "posts/2024-11-16-matrix-ols/index.html#elements-of-hatboldsymbolbeta",
+    "href": "posts/2024-11-16-matrix-ols/index.html#elements-of-hatboldsymbolbeta",
+    "title": "Connecting Scalar and Matrix Notation in OLS",
+    "section": "Elements of \\(\\hat{\\boldsymbol{\\beta}}\\)",
+    "text": "Elements of \\(\\hat{\\boldsymbol{\\beta}}\\)\nOur next step is to make sure that the elements in \\(\\hat{\\bm{\\beta}}\\) correspond to their scalar counterparts.\nThat is, we want to confirm that\n\\[\n\\hat{\\bm{\\beta}} =\n\\begin{bmatrix}\\hat\\beta_0 \\\\ \\hat\\beta_1\\end{bmatrix} =\n\\begin{bmatrix}\n\\bar y -  \\hat \\beta_1 \\bar x \\\\\n\\frac{{\\text{Cov}[x, y]}}{\\hat \\sigma^2_x}\n\\end{bmatrix}.\n\\]\nAs a starting point, we’ll introduce a normalizing factor \\(n^{-1}\\) to the estimating equation1 so that\n\\[\n\\hat{\\bm{\\beta}} =\n\\left(\n   n^{-1}\\mathbf{x}'\\mathbf{x}\n\\right)^{-1} n^{-1}\\mathbf{x}'\\mathbf{y}.\n\\]\n\nWe’ll then compute this product in parts, beginning with the terms inside the parentheses. I’ll note here that in what follows, estimates of variances are defined as their maximum likelihood estimates.\n\\[\n\\begin{align}\nn^{-1}\\mathbf{x}'\\mathbf{x} &=\n\\frac1n\n\\begin{bmatrix}\n1 & \\dots & 1 \\\\\nx_1 & \\dots & x_n\n\\end{bmatrix}\n\\begin{bmatrix}\n1 & x_1 \\\\\n\\vdots & \\vdots \\\\\n1 & x_n\n\\end{bmatrix} \\\\\n% ---------\n&= \\frac1n \\begin{bmatrix}\nn & \\sum x_i \\\\\n\\sum x_i & \\sum x^2_i\n\\end{bmatrix} \\\\\n% ---------\n&= \\begin{bmatrix}\n1 & \\bar{x}\\\\\n\\bar{x}& \\bar{x^2}\n\\end{bmatrix}\n\\end{align}\n\\]\nLet’s not forget that we need to find the inverse of the resulting matrix 2\n\\[\n\\begin{align}\n\\left(n^{-1}\\mathbf{x}'\\mathbf{x}\\right)^{-1} &=\n  \\begin{bmatrix}\n    1 & \\sum \\bar{x}\\\\\n    \\bar{x}& \\sum \\bar{x^2}\n  \\end{bmatrix}^{-1} \\\\\n% ---------\n&= \\frac{1}{\\bar{x^2} - \\bar{x}^2} \\begin{bmatrix}\n\\bar{x^2} & -\\bar{x}\\\\\n-\\bar{x} & 1  \n\\end{bmatrix}\\\\\n% ---------\n&= \\frac{1}{\\hat\\sigma^2_x} \\begin{bmatrix}\n\\bar{x^2} & -\\bar{x}\\\\\n-\\bar{x} & 1  \n\\end{bmatrix}.\n\\end{align}\n\\]\n\nWe get \\(\\hat\\sigma^2_x\\) because \\(\\bar{x^2} - \\bar{x}^2\\) estimates \\(\\text{Var}[x] = \\mathbb{E}[x^2] - \\mathbb{E}[x]^2\\).\n\n\nNext, we’ll work through the term outside the parentheses\n\\[\n\\begin{align}\nn^{-1}\\mathbf{x}'\\mathbf{y} &=\n\\frac1n \\begin{bmatrix}\n  1 & \\dots & 1 \\\\\n  x_1 & \\dots & x_n\n\\end{bmatrix}\n\\begin{bmatrix}\n  y_i \\\\\n  \\vdots \\\\\n  y_n\n\\end{bmatrix}\\\\\n% ---------\n&= \\frac1n \\begin{bmatrix}\n  \\sum y_i \\\\\n  \\sum x_i y_i\n\\end{bmatrix} \\\\\n% ---------\n&= \\begin{bmatrix}\n\\bar{y} \\\\\n\\overline{xy}\n\\end{bmatrix}\n\\end{align}\n\\]\n\nStitching it all together we see that\n\\[\n\\begin{align}\n\\hat{\\bm{\\beta}} &=\n\\left(\n  n^{-1}\\mathbf{x}'\\mathbf{x}\n\\right)^{-1} n^{-1}\\mathbf{x}'\\mathbf{y} \\\\\n% ---------\n&= \\frac{1}{\\hat\\sigma^2_x}\n\\begin{bmatrix}\n  \\bar{x^2} & -\\bar{x}\\\\\n  -\\bar{x} & 1  \n\\end{bmatrix}\n\\begin{bmatrix}\n  \\bar{y} \\\\\n  \\overline{xy}\n\\end{bmatrix} \\\\\n% ---------\n&= \\frac{1}{\\hat\\sigma^2_x}\n\\begin{bmatrix}\n  \\bar{x^2}\\bar{y} - \\bar{x} \\overline{xy} \\\\\n  - \\bar{x} \\bar{y} + \\overline{xy}\n\\end{bmatrix}.\n% ---------\n\\end{align}\n\\]\nAt this point, it still feels unclear how the elements of this vector correspond to scalar equations for \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\), even though we have seen that it’s elements minimize the RSS. To continue, we’ll have re-express the elements of the vector by taking advantage of the following definitions\n\n\\(\\hat{\\sigma^2_x} = \\bar{x^2} - \\bar{x}^2\\)\n\\(\\hat{\\text{Cov}[x, y]} = \\overline{xy} - \\bar{x}\\bar{y}\\)\n\nDoing so let’s us re-write the vector as follows \\[\n\\begin{align}\n&= \\frac{1}{\\hat\\sigma^2_x}\n\\begin{bmatrix}\n  \\left(\\hat\\sigma^2_x + \\bar{x}^2\\right)\\bar{y} - \\bar{x}\\left(\\hat{\\text{Cov}[x,y]} + \\bar{x} \\bar{y}\\right) \\\\\n  \\hat{\\text{Cov}[x,y]}\n\\end{bmatrix} \\\\\n% ---------\n&= \\frac{1}{\\hat\\sigma^2_x}\n\\begin{bmatrix}\n  \\hat\\sigma^2_x\\bar{y} + \\bar{x}^2\\bar{y} - \\bar{x}\\hat{\\text{Cov}[x,y]} - \\bar{x}^2 \\bar{y} \\\\\n  \\hat{\\text{Cov}[x,y]}\n\\end{bmatrix}.\n% ---------\n\\end{align}\n\\]\nOut last step here is distributing \\(\\frac{1}{\\hat\\sigma^2_x}\\)\n\\[\n\\begin{align}\n&=\n\\begin{bmatrix}\n  \\bar{y} - \\frac{\\hat{\\text{Cov}[x,y]}}{\\hat\\sigma^2_x}\\bar{x} \\\\\n  \\frac{\\hat{\\text{Cov}[x,y]}}{\\hat\\sigma^2_x}\n\\end{bmatrix} \\\\\n% ---------\n&=\n\\begin{bmatrix}\n  \\bar{y} - \\hat\\beta_1\\bar{x} \\\\\n  \\hat \\beta_1\n\\end{bmatrix}.\n\\end{align}\n\\]\nAnd there it is. Although it was a bit tedious, we can see that the elements in \\(\\hat{\\bm{\\beta}}\\) indeed correspond to the scalar equations for \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\)."
+  },
+  {
+    "objectID": "posts/2024-11-16-matrix-ols/index.html#elements-of-the-variance-covariance-matrix",
+    "href": "posts/2024-11-16-matrix-ols/index.html#elements-of-the-variance-covariance-matrix",
+    "title": "Connecting Scalar and Matrix Notation in OLS",
+    "section": "Elements of the variance-covariance matrix",
+    "text": "Elements of the variance-covariance matrix\nAs we did with the parameter estimates, we want to make sure that our matrix representation of the parameter variances correspond to their scalar counterparts.\nTo find out, we’ll again start by adding in a normalizing term of \\(n^{-1}\\) so that\n\\[\n\\begin{align}\n{\\bm{\\Sigma}} &= n^{-1}\\sigma^2_{\\epsilon}  \\left(n^{-1}\\mathbf{x}'\\mathbf{x}\\right)^{-1} \\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}}{n}  \\left(\\frac{1}{\\hat\\sigma^2_x} \\begin{bmatrix}\n\\bar{x^2} & -\\bar{x}\\\\\n-\\bar{x} & 1  \n\\end{bmatrix}\n\\right)\n\\end{align}\n\\]\nThe variance for \\(\\hat\\beta_0\\) corresponds to the first diagonal element of \\({\\bm{\\Sigma}}\\). Multiplying the relevant terms gets us\n\\[\n\\begin{align}\n\\text{Var}[\\hat\\beta_0] &= \\frac{\\sigma^2_{\\epsilon}}{n} \\cdot \\frac{1}{\\hat\\sigma^2_x} \\cdot \\bar{x^2} \\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}\\bar{x^2} }{n \\hat\\sigma^2_x} \\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}( \\bar{x}^2  + \\hat\\sigma^2_x )}{n \\hat\\sigma^2_x} \\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}\\bar{x}^2  + \\sigma^2_{\\epsilon}\\hat\\sigma^2_x}{n \\hat\\sigma^2_x} \\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}\\bar{x}^2}{n \\hat\\sigma^2_x} + \\frac{\\sigma^2_{\\epsilon}\\hat\\sigma^2_x}{n \\hat\\sigma^2_x} \\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}}{n} \\left(\n  \\frac{\\bar{x}^2}{\\sigma^2_x} + 1\n\\right).\n\\end{align}\n\\]\nThe variance for \\(\\hat\\beta_1\\) corresponds to the second diagonal element of \\({\\bm{\\Sigma}}\\), and again multiplying the relevant terms\n\\[\n\\begin{align}\n\\text{Var}[\\hat\\beta_1] &= \\frac{\\sigma^2_{\\epsilon}}{n} \\cdot \\frac{1}{\\hat\\sigma^2_x} \\cdot 1 \\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}}{n} \\cdot \\frac{1}{\\frac{\\sum (x_i - \\bar{x})^2}{n}}\\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}}{\\frac{n\\sum (x_i - \\bar{x})^2}{n}}\\\\\n% ---------\n&= \\frac{\\sigma^2_{\\epsilon}}{\\sum_{i=1}^n\\left(x_i - \\bar{x}\\right)^2}.\n\\end{align}\n\\]\nNice! With that, we connected the variances for the regression parameters obtained via the matrix form of OLS to those obtained through scalar notation."
+  },
+  {
+    "objectID": "posts/2024-11-16-matrix-ols/index.html#footnotes",
+    "href": "posts/2024-11-16-matrix-ols/index.html#footnotes",
+    "title": "Connecting Scalar and Matrix Notation in OLS",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nThis will be handy in letting us define the elements in the relevant vectors and matrices as means and variances.↩︎\nThe inverse of a \\(2 \\times 2\\) matrix is given by \\(\\left[\\begin{smallmatrix}a & b \\\\ c & d\\end{smallmatrix}\\right]^{-1} = \\frac{1}{ad-bc}\\left[\\begin{smallmatrix}d & -b \\\\ -c & a\\end{smallmatrix}\\right]\\).↩︎\nThis stems from the fact that we defined \\(\\hat{\\bm{\\beta}} = \\bm{\\beta} + \\left(\\mathbf{x}'\\mathbf{x}\\right)^{-1}\\mathbf{x}'\\bm{\\epsilon}\\) and the normality of \\(\\bm{\\epsilon}\\) is preserved under affine transformations.↩︎"
   },
   {
     "objectID": "about.html",

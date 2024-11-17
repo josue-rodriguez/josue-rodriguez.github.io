@@ -1,0 +1,1 @@
+/Users/josue/GitHub/econometrics/02_matrix_ols.qmd
