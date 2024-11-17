@@ -179,8 +179,8 @@ window.Quarto = {
    
   <ul>
   <li><a href="#ols-in-scalar-notation" id="toc-ols-in-scalar-notation" class="nav-link active" data-scroll-target="#ols-in-scalar-notation">OLS in scalar notation</a></li>
-  <li><a href="#ols-in-matrix-notatin" id="toc-ols-in-matrix-notatin" class="nav-link" data-scroll-target="#ols-in-matrix-notatin">OLS in matrix notatin</a></li>
-  <li><a href="#deriving-the-matrix-ols-estimator" id="toc-deriving-the-matrix-ols-estimator" class="nav-link" data-scroll-target="#deriving-the-matrix-ols-estimator">Deriving the matrix OLS estimator</a>
+  <li><a href="#ols-in-matrix-notation" id="toc-ols-in-matrix-notation" class="nav-link" data-scroll-target="#ols-in-matrix-notation">OLS in matrix notation</a></li>
+  <li><a href="#deriving-the-ols-estimator-using-matrix-notation" id="toc-deriving-the-ols-estimator-using-matrix-notation" class="nav-link" data-scroll-target="#deriving-the-ols-estimator-using-matrix-notation">Deriving the OLS estimator using matrix notation</a>
   <ul class="collapse">
   <li><a href="#elements-of-hatboldsymbolbeta" id="toc-elements-of-hatboldsymbolbeta" class="nav-link" data-scroll-target="#elements-of-hatboldsymbolbeta">Elements of <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span></a></li>
   </ul></li>
@@ -202,34 +202,36 @@ window.Quarto = {
 
 
 
-<p>I don’t know. Maybe my journey in statistics has been nontraditional in that much of my statistical training came from social-behavioral stats classes, where the math-y bits of statistics are de-emphasized, and so I missed out on a lot of the intuition and proofs that many statistics students see in their undergraduate courses.</p>
-<p>For me, this is certainly the case in connecting the estimating equations for the regression parameters (and their variances) that you learn in intro statistics courses to the estimating equation in the matrix form of OLS. This post is an attempt at making that connection clearer for myself.</p>
-<p>The derivations below largely come from Chapter 11 in Cosma Shalizi’s <em>The Truth about Linear Regression</em>. Where I could, I filled in some details.</p>
+<p>I think my journey in statistics has been unconventional in that much of my statistical training came from social-behavioral stats classes, where the heavier math is often left at the door, and so I missed out on a lot of the intuition and proofs that many statistics students see in their undergraduate courses.</p>
+<p>For me, this is certainly the case in connecting the estimating equations for the regression parameters (and their variances) that you learn in intro statistics courses to the estimating equation in the matrix form of OLS. I know the scalar equations and I know the matrix equation. But I haven’t seen how it is that they result in the same estimates.</p>
+<p>This gap in understanding led me to reflect on a statistics professor I had during my master’s program. When it came to derivations with important results, he’d often insist that we “see it once!”. I think what he wanted was for us to know that the methods he was teaching stood on solid ground, and not necessarily for us to memorize each step of the derivation. The idea of “see it once” always struck me as a valuable principle.</p>
+<p>This post is another opportunity to “see it once”, bridging the scalar and matrix notations of OLS. The derivations below follow Chapter 11 of Cosma Shalizi’s <em>The Truth about Linear Regression</em>, with a few added details for clarity.</p>
 <section id="ols-in-scalar-notation" class="level1">
 <h1>OLS in scalar notation</h1>
-<p>OLS regression is typically presented in its simplest, clearest form in introductory statistics classes</p>
+<p>OLS regression is typically presented in its simplest (and, I think clearest) form in introductory statistics classes</p>
 <p><span class="math display">\[
-y_i = \beta_0 + \beta_1 x_i + \epsilon_i,\quad i = 1, \dots, n
+y_i = \beta_0 + \beta_1 x_i + \epsilon_i,\quad i = 1, \dots, n.
 \]</span></p>
-<p>The goal is to predict <span class="math inline">\(y_i\)</span> from <span class="math inline">\(x_i\)</span>, and the optimal linear prediction of <span class="math inline">\(y_i\)</span> given <span class="math inline">\(x_i\)</span> is obtained when the regression parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> chosen are the ones that minimize the sum of the squared residuals (RSS). The parameters accomplishing this are given by the following equations</p>
+<p>The goal is to predict <span class="math inline">\(y_i\)</span> from <span class="math inline">\(x_i\)</span>, with the optimal linear prediction of <span class="math inline">\(y_i\)</span> given <span class="math inline">\(x_i\)</span> obtained when the regression parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> minimize the sum of the squared residuals (RSS). The parameters that accomplish this are given by the following equations</p>
 <p><span class="math display">\[
 \begin{align}
-\hat \beta_1 &amp;= \frac{\hat{\text{Cov}[x, y]}}{\hat \sigma^2_x}  \\
+\hat \beta_1 &amp;= \frac{\hat{\text{Cov}(x, y)}}{\hat \sigma^2_x}  \\
 \hat \beta_0 &amp;= \bar y -  \hat \beta_1 \bar x.
 \end{align}
 \]</span></p>
 <p>Assuming homoskedastic and independent errors, the variances of the regression parameters can be calculated as follows</p>
 <p><span class="math display">\[
-\text{Var}(\beta_0) = \frac{\sigma^2_\epsilon}{n} \left( 1 + \frac{\bar x^2}{\sigma^2_x} \right).
+\mathbb{V}(\beta_0) = \frac{\sigma^2_\epsilon}{n} \left( 1 + \frac{\bar x^2}{\sigma^2_x} \right)
 \]</span></p>
 <p><span class="math display">\[
-\text{Var}(\beta_1) = \frac{\sigma^2_{\epsilon}}{\sum_{i=1}^n (x_i - \bar x)^2}
+\mathbb{V}(\beta_1) = \frac{\sigma^2_{\epsilon}}{\sum_{i=1}^n (x_i - \bar x)^2}.
 \]</span></p>
 </section>
-<section id="ols-in-matrix-notatin" class="level1">
-<h1>OLS in matrix notatin</h1>
-<p>While the equations in scalar notation are intuitive for simple regression, they become unwieldy with multiple predictors. This is where matrix notation comes in handy since it gives us a nice, compact notation. However, we’ll stick to the case of a single predictor so that we can focus on connecting the scalar form to the matrix form.</p>
-<p>The scalar equations and be combined and re-written using vectors and matrices <span class="math display">\[
+<section id="ols-in-matrix-notation" class="level1">
+<h1>OLS in matrix notation</h1>
+<p>While the equations in scalar notation are intuitive for simple regression, they become unwieldy with multiple predictors. This is where matrix notation comes in handy since it gives us a nice, compact notation. However, we’ll stick to the case of a single predictor so that we can focus on connecting the scalar notation to the matrix notation.</p>
+<p>The scalar equation connecting <span class="math inline">\(y_i\)</span> to <span class="math inline">\(x_i\)</span> can be re-written using vectors and matrices</p>
+<p><span class="math display">\[
 \begin{align}
 \begin{bmatrix}
 y_1 \\
@@ -260,23 +262,25 @@ y_n
 \end{bmatrix}.
 \end{align}
 \]</span></p>
-<p>These can be compactly written as <span class="math display">\[
+<p>We can compactly write</p>
+<p><span class="math display">\[
 \begin{align}
 \mathbf{y} = \mathbf{x} \bm{\beta} + \bm{\epsilon}.
 \end{align}
 \]</span></p>
-<p>In matrix notation, the regression parameters that minimize the RSS are given by <span class="math display">\[
+<p>Using the vector <span class="math inline">\(\mathbf{y}\)</span> and matrix <span class="math inline">\(\mathbf{x}\)</span>, the regression parameters that minimize the RSS are given by <span class="math display">\[
 \hat{\bm{\beta}} = \begin{bmatrix} \hat\beta_0 \\ \hat\beta_1\end{bmatrix} = \left(\mathbf{x}'\mathbf{x}\right)^{-1} \mathbf{x}'\mathbf{y}
 \]</span></p>
 <p>and the estimated variance-covariance matrix of the coefficients by</p>
 <p><span class="math display">\[
-\bm{\Sigma} = \begin{bmatrix} \text{Var}[\hat\beta_0] &amp; \cdot \\ \cdot &amp;  \text{Var}[\hat\beta_1]\end{bmatrix} = \sigma^2_\epsilon (\bm{x}'\bm{x})^{-1}.
+\bm{\Sigma} = \begin{bmatrix} \mathbb{V}[\hat\beta_0] &amp; \text{Cov}(\hat\beta_0, \hat\beta_1) \\ \text{Cov}(\hat\beta_1, \hat\beta_0) &amp;  \mathbb{V}[\hat\beta_1]\end{bmatrix} = \sigma^2_\epsilon (\bm{x}'\bm{x})^{-1}.
 \]</span></p>
 </section>
-<section id="deriving-the-matrix-ols-estimator" class="level1">
-<h1>Deriving the matrix OLS estimator</h1>
-<p>The first step we’ll take in connecting the scalar equations to the matrix equation is to show that the matrix estimator indeed yields a parameter vector that minimizes the RSS.</p>
-<p>In matrix form, the residuals can be expressed as <span class="math display">\[
+<section id="deriving-the-ols-estimator-using-matrix-notation" class="level1">
+<h1>Deriving the OLS estimator using matrix notation</h1>
+<p>The first step we’ll take in connecting the scalar equations to the matrix equation is to show that the matrix estimator yields a parameter vector that minimizes the RSS.</p>
+<p>The residuals can be collected in a vector that can subsequently be used to compute the residual sum of squares (RSS)</p>
+<p><span class="math display">\[
 \begin{align}
 \bm \epsilon &amp;= \begin{bmatrix}
 y_1 - \hat y_1 \\
@@ -284,17 +288,16 @@ y_1 - \hat y_1 \\
 y_n - \hat y_n
 \end{bmatrix} \\
 &amp;= \mathbf{y} - \hat{\mathbf{y}} \\
-&amp;= \mathbf{y} - \mathbf{x} \bm{\beta} \\
+&amp;= \mathbf{y} - \mathbf{x} \bm{\beta}.
 \end{align}
 \]</span></p>
-<p>and then we write also write the residual sum of squares in matrix form residual sum of squares can then be expressed as</p>
 <p><span class="math display">\[
 \begin{align}
 \text{RSS} &amp;= \epsilon'\epsilon \\
 &amp;= \left(\mathbf{y} - \mathbf{x} \bm{\beta} \right)' \left(\mathbf{y} - \mathbf{x} \bm{\beta} \right).
 \end{align}
 \]</span></p>
-<p>Expanding that equation yields</p>
+<p>Expanding the terms in the RSS results in the following expression</p>
 <p><span class="math display">\[
 =
   \mathbf{y}'\mathbf{y} -
@@ -302,7 +305,7 @@ y_n - \hat y_n
   \bm{\beta}'\mathbf{x}'\mathbf{x}\bm{\beta}.
 \]</span></p>
 <p>If you’re curious, the intervening steps can be found by expanding the box below.</p>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="RSS Details">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="RSS Details">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -314,9 +317,9 @@ RSS Details
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>There exists a rule for the tranpose of a product that says <span class="math inline">\((AB)' = B'A'\)</span>. Applying that rule, we get</p>
+<p>The tranpose of matrix product satisfies <span class="math inline">\((AB)' = B'A'\)</span>. Using this property, we get</p>
 <p><span class="math display">\[
-\text{RSS} = \left(\mathbf{y}' -\bm{\beta}'\mathbf{x}'\right) \left(\mathbf{y} - \mathbf{x} \bm{\beta} \right)
+\text{RSS} = \left(\mathbf{y}' -\bm{\beta}'\mathbf{x}'\right) \left(\mathbf{y} - \mathbf{x} \bm{\beta} \right).
 \]</span></p>
 <p>Expanding the equation we get</p>
 <p><span class="math display">\[
@@ -346,8 +349,8 @@ RSS Details
 </div>
 </div>
 <hr>
-<p>Now, we want to find the vector <span class="math inline">\(\bm{\beta}\)</span> that <em>minimizes</em> the RSS. So we must now find the gradient of the RSS with respect to <span class="math inline">\(\bm{\beta}\)</span>, set it to zero, and solve for <span class="math inline">\(\bm{\beta}\)</span>.</p>
-<p>The gradient can be worked out to be</p>
+<p>To determine the vector <span class="math inline">\(\bm{\beta}\)</span> that minimizes the residual sum of squares (RSS), we differentiate the RSS with respect to <span class="math inline">\(\bm{\beta}\)</span>, set the resulting expression equal to zero, and solve for <span class="math inline">\(\bm{\beta}\)</span>.</p>
+<p>The gradient turns out to be given by</p>
 <p><span class="math display">\[
 \begin{align}
 \nabla \text{RSS} &amp;=
@@ -359,7 +362,7 @@ RSS Details
 \end{align}
 \]</span></p>
 <p>Again, the curious can find details by expanding the box below.</p>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Gradient Details">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Gradient Details">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -371,7 +374,7 @@ Gradient Details
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>The gradient can be worked out term by term.</p>
+<p>Differentiating term by term:</p>
 <p><span class="math display">\[
 \nabla \mathbf{y}'\mathbf{y} = 0
 \]</span></p>
@@ -404,7 +407,7 @@ Gradient Details
 </div>
 </div>
 </div>
-<p>Now, remember that <span class="math inline">\(\mathbf{x}\)</span> and <span class="math inline">\(\mathbf{y}\)</span> are sample data. We can <em>estimate</em> the coefficient vectory by setting the gradient to zero and solving for it</p>
+<p>Now, remember that <span class="math inline">\(\mathbf{x}\)</span> and <span class="math inline">\(\mathbf{y}\)</span> are sample data. We can <em>estimate</em> the coefficient vector by setting the gradient to zero and solving for it</p>
 <p><span class="math display">\[
 \begin{align}
 2 \left(
@@ -416,18 +419,17 @@ Gradient Details
 \hat{\bm{\beta}} &amp;= \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}' \mathbf{y}.
 \end{align}
 \]</span></p>
-<p>To see that this <span class="math inline">\(\hat{\bm{\beta}}\)</span> is a <em>minimum</em>, we can do a second derivative test. We get the Hessian by taking the gradient and differentiating again with respect to <span class="math inline">\(\bm{\beta}\)</span>: <span class="math inline">\(2 \mathbf{x}'\mathbf{x}\)</span>. If <span class="math inline">\(\mathbf{x}\)</span> is full rank and positive semi-definite then so is its Gram matrix <span class="math inline">\(\mathbf{x}'\mathbf{x}\)</span>, and the vector <span class="math inline">\(\bm\beta\)</span> is a minimum.</p>
-<p>Excellent. We see that the estimating equation <span class="math inline">\(\left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}' \mathbf{y}\)</span> indeed results in a vector of parameter estimates that minimizes the RSS.</p>
+<p>To confirm that <span class="math inline">\(\hat{\bm{\beta}}\)</span> represents a <em>minimum</em>, we can do a second derivative test. This involves computing the Hessian by differentiating the gradient with respect to <span class="math inline">\(\bm{\beta}\)</span> again, yielding <span class="math inline">\(2 \mathbf{x}'\mathbf{x}\)</span>. If <span class="math inline">\(\mathbf{x}\)</span> is full rank and positive semi-definite then so is its Gram matrix <span class="math inline">\(\mathbf{x}'\mathbf{x}\)</span>, and the vector <span class="math inline">\(\hat{\bm\beta}\)</span> is a minimum.</p>
 <section id="elements-of-hatboldsymbolbeta" class="level2">
 <h2 class="anchored" data-anchor-id="elements-of-hatboldsymbolbeta">Elements of <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span></h2>
-<p>Our next step is to make sure that the elements in <span class="math inline">\(\hat{\bm{\beta}}\)</span> correspond to their scalar counterparts.</p>
-<p>That is, we want to confirm that</p>
+<p>Okay so we’ve seen that the estimating equation <span class="math inline">\(\left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}' \mathbf{y}\)</span> results in a vector of parameter estimates that minimizes the RSS, but let’s make sure that the elements in <span class="math inline">\(\hat{\bm{\beta}}\)</span> indeed correspond to their scalar counterparts.</p>
+<p>Specifically, let’s verify that</p>
 <p><span class="math display">\[
 \hat{\bm{\beta}} =
 \begin{bmatrix}\hat\beta_0 \\ \hat\beta_1\end{bmatrix} =
 \begin{bmatrix}
 \bar y -  \hat \beta_1 \bar x \\
-\frac{{\text{Cov}[x, y]}}{\hat \sigma^2_x}
+\frac{{\text{Cov}(x, y)}}{\hat \sigma^2_x}
 \end{bmatrix}.
 \]</span></p>
 <p>As a starting point, we’ll introduce a normalizing factor <span class="math inline">\(n^{-1}\)</span> to the estimating equation<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> so that</p>
@@ -438,7 +440,7 @@ Gradient Details
 \right)^{-1} n^{-1}\mathbf{x}'\mathbf{y}.
 \]</span></p>
 <hr>
-<p>We’ll then compute this product in parts, beginning with the terms inside the parentheses. I’ll note here that in what follows, estimates of variances are defined as their maximum likelihood estimates.</p>
+<p>We’ll compute this product in parts, beginning with the terms inside the parentheses. I’ll note here that in what follows, estimates of variances are defined as their maximum likelihood estimates.</p>
 <p><span class="math display">\[
 \begin{align}
 n^{-1}\mathbf{x}'\mathbf{x} &amp;=
@@ -485,7 +487,7 @@ n &amp; \sum x_i \\
 \end{align}
 \]</span></p>
 <ul>
-<li>We get <span class="math inline">\(\hat\sigma^2_x\)</span> because <span class="math inline">\(\bar{x^2} - \bar{x}^2\)</span> estimates <span class="math inline">\(\text{Var}[x] = \mathbb{E}[x^2] - \mathbb{E}[x]^2\)</span>.</li>
+<li>We get <span class="math inline">\(\hat\sigma^2_x\)</span> because <span class="math inline">\(\bar{x^2} - \bar{x}^2\)</span> estimates <span class="math inline">\(\mathbb{V}[x] = \mathbb{E}[x^2] - \mathbb{E}[x]^2\)</span>.</li>
 </ul>
 <hr>
 <p>Next, we’ll work through the term outside the parentheses</p>
@@ -510,11 +512,11 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 &amp;= \begin{bmatrix}
 \bar{y} \\
 \overline{xy}
-\end{bmatrix}
+\end{bmatrix}.
 \end{align}
 \]</span></p>
 <hr>
-<p>Stitching it all together we see that</p>
+<p>Stitching it all together we results in the following vector</p>
 <p><span class="math display">\[
 \begin{align}
 \hat{\bm{\beta}} &amp;=
@@ -540,34 +542,34 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 % ---------
 \end{align}
 \]</span></p>
-<p>At this point, it still feels unclear how the elements of this vector correspond to scalar equations for <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span>, even though we have seen that it’s elements minimize the RSS. To continue, we’ll have re-express the elements of the vector by taking advantage of the following definitions</p>
+<p>We’ve made good progress up to this point, but it still feels unclear how the elements of this vector correspond to the scalar equations for <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span>. To continue, we’ll have re-express the elements of the vector by taking advantage of the following definitions</p>
 <ul>
 <li><span class="math inline">\(\hat{\sigma^2_x} = \bar{x^2} - \bar{x}^2\)</span></li>
-<li><span class="math inline">\(\hat{\text{Cov}[x, y]} = \overline{xy} - \bar{x}\bar{y}\)</span></li>
+<li><span class="math inline">\(\hat{\text{Cov}(x, y)} = \overline{xy} - \bar{x}\bar{y}\)</span>.</li>
 </ul>
-<p>Doing so let’s us re-write the vector as follows <span class="math display">\[
+<p>Doing so lets us re-express the vector as follows <span class="math display">\[
 \begin{align}
 &amp;= \frac{1}{\hat\sigma^2_x}
 \begin{bmatrix}
-  \left(\hat\sigma^2_x + \bar{x}^2\right)\bar{y} - \bar{x}\left(\hat{\text{Cov}[x,y]} + \bar{x} \bar{y}\right) \\
-  \hat{\text{Cov}[x,y]}
+  \left(\hat\sigma^2_x + \bar{x}^2\right)\bar{y} - \bar{x}\left(\hat{\text{Cov}(x,y)} + \bar{x} \bar{y}\right) \\
+  \hat{\text{Cov}(x,y)}
 \end{bmatrix} \\
 % ---------
 &amp;= \frac{1}{\hat\sigma^2_x}
 \begin{bmatrix}
-  \hat\sigma^2_x\bar{y} + \bar{x}^2\bar{y} - \bar{x}\hat{\text{Cov}[x,y]} - \bar{x}^2 \bar{y} \\
-  \hat{\text{Cov}[x,y]}
+  \hat\sigma^2_x\bar{y} + \bar{x}^2\bar{y} - \bar{x}\hat{\text{Cov}(x,y)} - \bar{x}^2 \bar{y} \\
+  \hat{\text{Cov}(x,y)}
 \end{bmatrix}.
 % ---------
 \end{align}
 \]</span></p>
-<p>Out last step here is distributing <span class="math inline">\(\frac{1}{\hat\sigma^2_x}\)</span></p>
+<p>Out last task here is distributing <span class="math inline">\(\frac{1}{\hat\sigma^2_x}\)</span> and simplifying</p>
 <p><span class="math display">\[
 \begin{align}
 &amp;=
 \begin{bmatrix}
-  \bar{y} - \frac{\hat{\text{Cov}[x,y]}}{\hat\sigma^2_x}\bar{x} \\
-  \frac{\hat{\text{Cov}[x,y]}}{\hat\sigma^2_x}
+  \bar{y} - \frac{\hat{\text{Cov}(x,y)}}{\hat\sigma^2_x}\bar{x} \\
+  \frac{\hat{\text{Cov}(x,y)}}{\hat\sigma^2_x}
 \end{bmatrix} \\
 % ---------
 &amp;=
@@ -583,7 +585,7 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 <section id="deriving-the-sampling-distribution-of-hatboldsymbolbeta" class="level1">
 <h1>Deriving the sampling distribution of <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span></h1>
 <p>To perform hypothesis tests and compute confidence intervals for the elements in <span class="math inline">\(\hat{\bm{\beta}}\)</span>, we need to understand its sampling distribution. We can do this by splitting <span class="math inline">\(\hat{\bm{\beta}}\)</span> into a deterministic part and a random part.</p>
-<p>Note that up to this point, we haven’t made any distributional assumptions. Now, though, we’ll assume that usual assumption that the residuals are distributed <span class="math inline">\(\bm{\epsilon} \sim \mathcal{N}\left(\mathbf{0}, \sigma^2_{\epsilon}\mathbf{I}\right)\)</span>.</p>
+<p>Note that up to this point, we haven’t made any distributional assumptions. Now, though, we’ll make the usual assumption that the residuals are distributed <span class="math inline">\(\bm{\epsilon} \sim \mathcal{N}\left(\mathbf{0}, \sigma^2_{\epsilon}\mathbf{I}\right)\)</span>.</p>
 <p>Remember that we’ve defined <span class="math inline">\(\mathbf{y} = \mathbf{x}\bm{\beta} + \bm{\epsilon}\)</span> so</p>
 <p><span class="math display">\[
 \begin{align}
@@ -604,41 +606,39 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 &amp;= \mathbb{E}[\bm{\beta}] + \mathbb{E}[\left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\bm{\epsilon}] \\
 % ---------
 &amp;= \bm{\beta} + \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\mathbb{E}[\bm{\epsilon}] \\
-\end{align}
-\]</span></p>
-<p>and <span class="math inline">\(\mathbb{E}[\bm{\epsilon}] = 0\)</span>, we’re left with</p>
-<p><span class="math display">\[
-\mathbb{E}[\hat{\bm{\beta}}] = \bm{\beta}.
-\]</span></p>
-<p>Turning our attention to the variance-covariance matrix of the coefficients</p>
-<p><span class="math display">\[
-\begin{align}
-\text{Var}[\hat{\bm{\beta}}] &amp;= \text{Var}[\bm{\beta} + \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\bm{\epsilon}] \\
 % ---------
-&amp;= \text{Var}[\bm{\beta}] + \text{Var}[\left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\bm{\epsilon}]
+&amp;=  \bm{\beta}.
 \end{align}
 \]</span></p>
-<p>The variance of <span class="math inline">\(\bm{\beta}\)</span> is 0 because it is a fixed vector. To work out the variance for the remaining term we’ll use the fact that if <span class="math inline">\(\mathbf{a}\)</span> is fixed and <span class="math inline">\(\mathbf{X}\)</span> is random, then <span class="math inline">\(\text{Var}[\mathbf{a}\mathbf{X}] = \mathbf{a} \text{Var}[\mathbf{X}]\mathbf{a}'\)</span></p>
+<p>Now, turning our attention to the variance-covariance matrix of the coefficients</p>
 <p><span class="math display">\[
 \begin{align}
-&amp;= \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}' \text{Var}[\bm{\epsilon}] \left( \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\right)' \\
+\mathbb{V}[\hat{\bm{\beta}}] &amp;= \mathbb{V}[\bm{\beta} + \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\bm{\epsilon}] \\
+% ---------
+&amp;= \mathbb{V}[\bm{\beta}] + \mathbb{V}[\left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\bm{\epsilon}]
+\end{align}
+\]</span></p>
+<p>The variance of <span class="math inline">\(\bm{\beta}\)</span> is 0 because it is a fixed vector. To compute the variance for the remaining term we’ll use the fact that if <span class="math inline">\(\mathbf{a}\)</span> is fixed and <span class="math inline">\(\mathbf{X}\)</span> is random, then <span class="math inline">\(\mathbb{V}[\mathbf{a}\mathbf{X}] = \mathbf{a} \mathbb{V}[\mathbf{X}]\mathbf{a}'\)</span></p>
+<p><span class="math display">\[
+\begin{align}
+&amp;= \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}' \mathbb{V}[\bm{\epsilon}] \left( \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\right)' \\
 % ---------
 &amp;= \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}' \sigma^2_{\epsilon}\mathbf{I} \mathbf{x}\left(\mathbf{x}'\mathbf{x}\right)^{-1} \\
 % --------- Multiplying by I does't change the matrix
 &amp;= \sigma^2_{\epsilon}  \left(\mathbf{x}'\mathbf{x}\right)^{-1}\mathbf{x}'\mathbf{x}\left(\mathbf{x}'\mathbf{x}\right)^{-1} \\
 % ---------
-&amp;= \sigma^2_{\epsilon}  \left(\mathbf{x}'\mathbf{x}\right)^{-1}
-\end{align}.
+&amp;= \sigma^2_{\epsilon}  \left(\mathbf{x}'\mathbf{x}\right)^{-1}.
+\end{align}
 \]</span></p>
-<p>Great, we can now see that the estimated regression coefficients are normally distributed with mean vector <span class="math inline">\(\beta\)</span><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> (the true regression coefficients), and variance-covariance matrix <span class="math inline">\(\bm{\Sigma} =  \sigma^2_{\epsilon}  \left(\mathbf{x}'\mathbf{x}\right)^{-1}\)</span>.</p>
+<p>Great, our work has shown that the estimated regression coefficients are normally distributed<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> with mean vector <span class="math inline">\(\bm\beta\)</span>, and variance-covariance matrix <span class="math inline">\(\bm{\Sigma} = \sigma^2_{\epsilon}  \left(\mathbf{x}'\mathbf{x}\right)^{-1}\)</span></p>
 <p><span class="math display">\[
 \hat{\bm\beta} \sim \mathcal{N} \left(\bm{\beta}, \bm{\Sigma}\right).
 \]</span></p>
-<p>In practice, though, we don’t know <span class="math inline">\(\sigma^2_{\epsilon}\)</span> so we instead use <span class="math inline">\(\hat{\bm{\Sigma}} = \hat{\sigma^2_\epsilon}\left(\mathbf{x}'\mathbf{x}\right)^{-1}\)</span>.</p>
+<p>In practice, though, we don’t know <span class="math inline">\(\sigma^2_{\epsilon}\)</span> so we estimate <span class="math inline">\(\hat{\bm{\Sigma}} = \hat{\sigma^2_\epsilon}\left(\mathbf{x}'\mathbf{x}\right)^{-1}\)</span> for inferences.</p>
 <section id="elements-of-the-variance-covariance-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="elements-of-the-variance-covariance-matrix">Elements of the variance-covariance matrix</h2>
-<p>As we did with the parameter estimates, we want to make sure that our matrix representation of the parameter variances correspond to their scalar counterparts.</p>
-<p>To find out, we’ll again start by adding in a normalizing term of <span class="math inline">\(n^{-1}\)</span> so that</p>
+<p>As we did with the parameter estimates, we want to make sure that the matrix representation of parameter variances correspond to their scalar counterparts.</p>
+<p>To verify, we’ll again start by adding in a normalizing term of <span class="math inline">\(n^{-1}\)</span> so that</p>
 <p><span class="math display">\[
 \begin{align}
 {\bm{\Sigma}} &amp;= n^{-1}\sigma^2_{\epsilon}  \left(n^{-1}\mathbf{x}'\mathbf{x}\right)^{-1} \\
@@ -647,13 +647,13 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 \bar{x^2} &amp; -\bar{x}\\
 -\bar{x} &amp; 1  
 \end{bmatrix}
-\right)
+\right).
 \end{align}
 \]</span></p>
 <p>The variance for <span class="math inline">\(\hat\beta_0\)</span> corresponds to the first diagonal element of <span class="math inline">\({\bm{\Sigma}}\)</span>. Multiplying the relevant terms gets us</p>
 <p><span class="math display">\[
 \begin{align}
-\text{Var}[\hat\beta_0] &amp;= \frac{\sigma^2_{\epsilon}}{n} \cdot \frac{1}{\hat\sigma^2_x} \cdot \bar{x^2} \\
+\mathbb{V}[\hat\beta_0] &amp;= \frac{\sigma^2_{\epsilon}}{n} \cdot \frac{1}{\hat\sigma^2_x} \cdot \bar{x^2} \\
 % ---------
 &amp;= \frac{\sigma^2_{\epsilon}\bar{x^2} }{n \hat\sigma^2_x} \\
 % ---------
@@ -671,7 +671,7 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 <p>The variance for <span class="math inline">\(\hat\beta_1\)</span> corresponds to the second diagonal element of <span class="math inline">\({\bm{\Sigma}}\)</span>, and again multiplying the relevant terms</p>
 <p><span class="math display">\[
 \begin{align}
-\text{Var}[\hat\beta_1] &amp;= \frac{\sigma^2_{\epsilon}}{n} \cdot \frac{1}{\hat\sigma^2_x} \cdot 1 \\
+\mathbb{V}[\hat\beta_1] &amp;= \frac{\sigma^2_{\epsilon}}{n} \cdot \frac{1}{\hat\sigma^2_x} \cdot 1 \\
 % ---------
 &amp;= \frac{\sigma^2_{\epsilon}}{n} \cdot \frac{1}{\frac{\sum (x_i - \bar{x})^2}{n}}\\
 % ---------
@@ -680,13 +680,13 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 &amp;= \frac{\sigma^2_{\epsilon}}{\sum_{i=1}^n\left(x_i - \bar{x}\right)^2}.
 \end{align}
 \]</span></p>
-<p>Nice! With that, we connected the variances for the regression parameters obtained via the matrix form of OLS to those obtained through scalar notation.</p>
+<p>With that, we’ve shown that the matrix representation of the parameter variances also match their scalar representations.</p>
 </section>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>Well there you have it. By carefully working through the matrix derivations, we’ve demonstrated that the OLS parameter estimates and their variances derived in matrix form are equivalent to those obtained from the traditional scalar equations.</p>
-<p>For those like me, who initially learned statistics in a less mathematically rigorous context, it can be illuminating to fill in such knowledge gaps.</p>
+<p>Well. There you have it. By working through the derivations, we’ve demonstrated that the OLS parameter estimates and their variances derived in matrix form are equivalent to those obtained from the traditional scalar notation.</p>
+<p>We don’t need to remember every step, but we can feel confident that the scalar and matrix notations of OLS regression lead to the same results now that we’ve “seen it once”.</p>
 
 
 </section>
