@@ -1,48 +1,46 @@
 /*-- scss:defaults --*/
 
 // Import fonts (define mainfont in _quarto.yml)
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&family=Nunito:wght@300;800&family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;800&family=Nunito:wght@300;350;800&family=Roboto+Mono:wght@400;700&display=swap');
 
 // fonts
-$nunito: 'Montserrat', sans-serif; 
+$nunito: 'Nunito', sans-serif; 
 $josefin: 'Josefin Sans', sans-serif; 
 
 // Colors
 $light-green: #D1D9CE;
-$medium-green: #98A08D;
+$medium-green: #B2AC88;
 $dark-green: #757B6D;
 $hunter-green: #464B37;
+$pine-green: #34544d;
+
 $cream: #FDFBF7;
+
 $dark-gray: #5A5856;
 $medium-gray: #64605f;
+
 $violet: #846075;
 $orange: #c27e00;
 
-//$purple: #9158A2; 
-//$burnt-orange: #ad7237;
-//$blue-gray: #466060;
-//$wine: #6B2737;
-//$rose: #885053;
-//$lime: #bdba66;
-//$moss: #959252;
-//$dark-brown: #424024; 
-//$midnight-green: #0F5257;
 
 // Base document colors
 $navbar-bg: $cream;
-$navbar-fg: $medium-green; 
-$navbar-hl: $orange;//$purple; 
-$body-bg: $light-green;
-$body-color: $medium-gray;
+$navbar-fg: $dark-gray; 
+$navbar-hl: $pine-green;//$purple;
+
+$body-bg: $cream;
+$body-color: $dark-gray;
+
 $footer-bg: $cream; 
-$link-color: $orange;//$purple;
+
+$link-color: $pine-green;//$purple;
 
 // Inline code
 $code-bg: $cream;
 $code-color: $violet;//$burnt-orange; 
 
 // Code blocks
-$code-block-bg: $cream;
+// $code-block-bg: #f1efeb;
 
 /*-- scss:rules --*/
 
@@ -186,6 +184,10 @@ blockquote {
   width: auto;
 }
 
+.navbar-title {
+  font-weight: 350;
+}
+
 // headshot shape
 .rounded { 
     border-radius: 50px 20px 50px 20px !important;
@@ -193,17 +195,17 @@ blockquote {
 
 // button text size (landing page)
 .about-link-text { 
-  font-size: 18px;
+  font-size: 16px;
 }
 
 // button icon size (landing page)
 .bi { 
-  font-size: 18px;
+  font-size: 16px;
 }
 
 // dropdown navbar text color
 .dropdown-item{
-  color: $medium-green;
+  color: $pine-green;
   background-color: $cream;
 }
 
@@ -231,5 +233,5 @@ blockquote {
 
 // about page link button colors 
 div.quarto-about-jolla .about-link {
-  color: $dark-green;
+  color: $dark-gray;
 }

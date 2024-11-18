@@ -21,3 +21,6 @@ format:
       - styles.scss
     mainfont: Nunito
     toc: true
+    code-block-border-left: "#5A5856"
+    code-block-bg: true
+    highlight-style: a11y-light
