@@ -8,6 +8,7 @@
 
 <meta name="author" content="Josue Rodriguez">
 <meta name="dcterms.date" content="2024-11-16">
+<meta name="description" content="I go over OLS regression in matrix notation, and show how it connects to the scalar notation of OLS regression.">
 
 <title>Connecting Scalar and Matrix Notation in OLS Regression – josue rodriguez</title>
 <style>
@@ -142,7 +143,12 @@ window.Quarto = {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
       <h1 class="title">Connecting Scalar and Matrix Notation in OLS Regression</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          <p>I go over OLS regression in matrix notation, and show how it connects to the scalar notation of OLS regression.</p>
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">statistics</div>
                 <div class="quarto-category">regression</div>
               </div>
@@ -278,7 +284,7 @@ y_n
 </section>
 <section id="deriving-the-ols-estimator-using-matrix-notation" class="level1">
 <h1>Deriving the OLS estimator using matrix notation</h1>
-<p>The first step we’ll take in connecting the scalar equations to the matrix equation is to show that the matrix estimator yields a parameter vector that minimizes the RSS.</p>
+<p>The first step we’ll take in connecting the scalar notation equations to the matrix equation is to show that the matrix estimator yields a parameter vector that minimizes the RSS.</p>
 <p>The residuals can be collected in a vector that can subsequently be used to compute the residual sum of squares (RSS)</p>
 <p><span class="math display">\[
 \begin{align}
@@ -634,7 +640,7 @@ n^{-1}\mathbf{x}'\mathbf{y} &amp;=
 <p><span class="math display">\[
 \hat{\bm\beta} \sim \mathcal{N} \left(\bm{\beta}, \bm{\Sigma}\right).
 \]</span></p>
-<p>In practice, though, we don’t know <span class="math inline">\(\sigma^2_{\epsilon}\)</span> so we estimate <span class="math inline">\(\hat{\bm{\Sigma}} = \hat{\sigma^2_\epsilon}\left(\mathbf{x}'\mathbf{x}\right)^{-1}\)</span> for inferences.</p>
+<p>In practice, we don’t know <span class="math inline">\(\sigma^2_{\epsilon}\)</span> so we estimate <span class="math inline">\(\hat{\bm{\Sigma}} = \hat{\sigma^2_\epsilon}\left(\mathbf{x}'\mathbf{x}\right)^{-1}\)</span> for inferences.</p>
 <section id="elements-of-the-variance-covariance-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="elements-of-the-variance-covariance-matrix">Elements of the variance-covariance matrix</h2>
 <p>As we did with the parameter estimates, we want to make sure that the matrix representation of parameter variances correspond to their scalar counterparts.</p>
