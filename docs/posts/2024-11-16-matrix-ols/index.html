@@ -230,7 +230,7 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i,\quad i = 1, \dots, n.
 <section id="ols-in-matrix-notation" class="level1">
 <h1>OLS in matrix notation</h1>
 <p>While the equations in scalar notation are intuitive for simple regression, they become unwieldy with multiple predictors. This is where matrix notation comes in handy since it gives us a nice, compact notation. However, we’ll stick to the case of a single predictor so that we can focus on connecting the scalar notation to the matrix notation.</p>
-<p>The scalar equation connecting <span class="math inline">\(y_i\)</span> to <span class="math inline">\(x_i\)</span> can be re-written using vectors and matrices</p>
+<p>The equation connecting <span class="math inline">\(y_i\)</span> to <span class="math inline">\(x_i\)</span> can be re-written using vectors and matrices</p>
 <p><span class="math display">\[
 \begin{align}
 \begin{bmatrix}
@@ -271,7 +271,7 @@ y_n
 <p>Using the vector <span class="math inline">\(\mathbf{y}\)</span> and matrix <span class="math inline">\(\mathbf{x}\)</span>, the regression parameters that minimize the RSS are given by <span class="math display">\[
 \hat{\bm{\beta}} = \begin{bmatrix} \hat\beta_0 \\ \hat\beta_1\end{bmatrix} = \left(\mathbf{x}'\mathbf{x}\right)^{-1} \mathbf{x}'\mathbf{y}
 \]</span></p>
-<p>and the estimated variance-covariance matrix of the coefficients by</p>
+<p>and the variance-covariance matrix of the estimated coefficients by</p>
 <p><span class="math display">\[
 \bm{\Sigma} = \begin{bmatrix} \mathbb{V}[\hat\beta_0] &amp; \text{Cov}(\hat\beta_0, \hat\beta_1) \\ \text{Cov}(\hat\beta_1, \hat\beta_0) &amp;  \mathbb{V}[\hat\beta_1]\end{bmatrix} = \sigma^2_\epsilon (\bm{x}'\bm{x})^{-1}.
 \]</span></p>
