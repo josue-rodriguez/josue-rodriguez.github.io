@@ -1,11 +1,11 @@
 /*-- scss:defaults --*/
 
 // Import fonts (define mainfont in _quarto.yml)
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;800&family=Nunito:wght@300;350;800&family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;800&family=Nunito:wght@300;350;800&family=Roboto:wght@300;400&family=IBM+Plex+Serif&display=swap');
 
 // fonts
-$nunito: 'Nunito', sans-serif; 
-$josefin: 'Josefin Sans', sans-serif; 
+$montserrat: 'Montserrat', sans-serif; 
+// $josefin: 'Montserrat', sans-serif; 
 
 // Colors
 $light-green: #D1D9CE;
@@ -47,17 +47,17 @@ $code-color: $violet;//$burnt-orange;
 /* ELEMENT SELECTORS */
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: $josefin; 
+  font-family: $montserrat; 
   letter-spacing: 1px;
   font-weight: 700;
   color: $medium-gray;
 }
 
 body {
-  font-family: $nunito;
+  font-family: $montserrat;
   line-height: 1.5; // min 1.5 suggested for assistive tech
-  font-size: 19.5px;
-  font-weight: 375;//350;
+  font-size: 18px;
+  font-weight: 400;//350;
 }
 
 // modify blockquote styling
@@ -234,4 +234,14 @@ blockquote {
 // about page link button colors 
 div.quarto-about-jolla .about-link {
   color: $dark-gray;
+}
+
+
+/* MathJax */
+.math.inline .MathJax  {
+  font-size: 120% !important;
+}
+
+.math.display .MathJax  {
+  font-size: 120% !important;
 }

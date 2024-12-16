@@ -5,7 +5,7 @@ title: "about"
 ## {{< fa briefcase >}} work
 
 
-Hi! My name is Josue <small>(pronounced ho-sway)</small>. 
+Hi! My name is Josue <small>([hear my name](https://www.howtopronounce.com/josue/705494))</small>. 
 
 I’m a data scientist at McGraw Hill where I’m helping build personalized learning experiences at scale. I previously earned a PhD in Quantitative Psychology at UC Davis, where I focused on developing Bayesian statistical models for social-behavior science.
 
