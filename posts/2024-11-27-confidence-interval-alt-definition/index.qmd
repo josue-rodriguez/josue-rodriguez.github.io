@@ -22,7 +22,7 @@ categories: [statistics, uncertainty]
 
 For example, suppose we observe a sample mean $\bar{x} = 100$ and calculate the $95\%$ confidence interval for the population mean to be $[90, 110]$. This interval suggests that any population mean between $90$ and $110$ could plausibly lead to observing a sample mean of $100$.
 
-The main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you'd like to better understand what the above interpretation means and why its valid, I invite you to read on. 
+The main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you'd like to better understand what the above interpretation means and why it's valid, I invite you to read on. 
 
 ___
 
@@ -132,7 +132,7 @@ ci_covers_df %>%
   ggplot(aes(rowid)) +
   geom_errorbar(aes(ymin = lb, ymax = ub, col = covers)) +
   geom_hline(yintercept = mu) +
-  theme_minimal(base_size = 14) +
+  theme_minimal(base_size = 16) +
   guides(
     col = guide_legend(
       title = "CI includes population mean", 
@@ -164,13 +164,13 @@ ___
 
 You might recall a statistics professor telling you that if 0 is in your confidence interval, then you fail to reject the null hypothesis that $\mu = 0$. You might even recall asking yourself why that is the case. This idea is based on an alternative interpretation of a confidence interval.  To be clear, the "usual" interpretation we saw above isn't wrong, it's simply one perspective. Here, we'll explore the concept from a different angle.
 
-[Wikipedia give this as one interpretation of a confidence interval](https://en.wikipedia.org/wiki/Confidence_interval#Interpretation)
+[Wikipedia offers the following interpretation of a confidence interval](https://en.wikipedia.org/wiki/Confidence_interval#Interpretation)
 
 > The confidence interval can be expressed in terms of statistical significance, e.g.: "The 95% confidence interval represents values that are not statistically significantly different from the point estimate at the .05 level."
 
 Essentially, this says that if we set up a null hypothesis $H_0{:\;} \mu = \theta$ such that $\theta$ is any value covered by the $(1-\alpha)100\%$ confidence interval, then we would fail to reject the null hypothesis at a significance level of $\alpha$.  Importantly for us, notice that this interpretation doesn't make any references to a series of hypothetical experiments, but references only a single confidence interval. 
 
-To better grasp this alternative interpretation it will again be helpful to walk through an example. Let's start by generating sample data and computing a $(1-\alpha)100\%$ confidence interval for the mean. We'll stick with $\alpha = 0.05$ so that we get a $95\%$ CI.
+To better grasp this alternative interpretation, it will again be helpful to walk through an example. Let's start by generating sample data and computing a $(1-\alpha)100\%$ confidence interval for the mean. We'll stick with $\alpha = 0.05$ so that we get a $95\%$ CI.
 
 
 ```{r}
@@ -186,14 +186,14 @@ round(ci, 2)
 
 Okay, so we've collected some data and observed a sample mean of 53.11 and computed a confidence interval goes from 49.44 to 56.78. 
 
-What would happen if we set up a hypothesis test $H_0{:\;} \mu  = 49.5$? Or if instead we set up $H_0{:\;} \mu  = 55$? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those $t$-tests, that's exactly what happens.
+What would happen if we set up a hypothesis test $H_0{:\;} \mu  = 49.5$? Or if instead we set up $H_0{:\;} \mu  = 55$? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those $t$-tests and extract the $p$-values, we see that's exactly what would happen.
 
 ```{r}
 #| code-fold: false
 #| results: hold
-
-t.test(x, mu = 49.5)$p.value
-t.test(x, mu = 57)$p.value
+alpha  <- 0.05
+t.test(x, mu = 49.5, conf.level = 1 - alpha)$p.value
+t.test(x, mu = 57, conf.level = 1 - alpha)$p.value
 ```
 
 Just to be sure, let's expand on the code above such that we test $H_0{:\;} \mu = \theta$ for a range of values both inside and outside of the confidence interval and see what happens.
@@ -229,7 +229,7 @@ ggplot(pvalues_df, aes(thetas, pvalues)) +
   ggsci::scale_fill_jama() +
   geom_errorbarh(aes(y = 0.02, xmin = ci[1], xmax = ci[2]), height = 0, col = "white", lwd = 1) +
   geom_point(x = mean(x), y = 0.02, col = "white", size = 3) +
-  theme_minimal(base_size = 14) +
+  theme_minimal(base_size = 16) +
   guides(
     fill = guide_legend(
       position = "top",

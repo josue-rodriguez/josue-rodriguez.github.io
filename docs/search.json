@@ -18,7 +18,7 @@
     "href": "posts/2024-11-27-confidence-interval-alt-definition/index.html",
     "title": "Intepreting the confidence interval in front of you",
     "section": "",
-    "text": "A confidence interval contains the parameter values that are consistent with your observed sample data.\nFor example, suppose we observe a sample mean \\(\\bar{x} = 100\\) and calculate the \\(95\\%\\) confidence interval for the population mean to be \\([90, 110]\\). This interval suggests that any population mean between \\(90\\) and \\(110\\) could plausibly lead to observing a sample mean of \\(100\\).\nThe main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you’d like to better understand what the above interpretation means and why its valid, I invite you to read on."
+    "text": "A confidence interval contains the parameter values that are consistent with your observed sample data.\nFor example, suppose we observe a sample mean \\(\\bar{x} = 100\\) and calculate the \\(95\\%\\) confidence interval for the population mean to be \\([90, 110]\\). This interval suggests that any population mean between \\(90\\) and \\(110\\) could plausibly lead to observing a sample mean of \\(100\\).\nThe main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you’d like to better understand what the above interpretation means and why it’s valid, I invite you to read on."
   },
   {
     "objectID": "posts/2024-11-27-confidence-interval-alt-definition/index.html#set-up",

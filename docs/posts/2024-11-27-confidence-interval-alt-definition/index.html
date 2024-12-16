@@ -268,7 +268,7 @@ window.Quarto = {
 <h1>Takeaway</h1>
 <p><strong>A confidence interval contains the parameter values that are consistent with your observed sample data.</strong></p>
 <p>For example, suppose we observe a sample mean <span class="math inline">\(\bar{x} = 100\)</span> and calculate the <span class="math inline">\(95\%\)</span> confidence interval for the population mean to be <span class="math inline">\([90, 110]\)</span>. This interval suggests that any population mean between <span class="math inline">\(90\)</span> and <span class="math inline">\(110\)</span> could plausibly lead to observing a sample mean of <span class="math inline">\(100\)</span>.</p>
-<p>The main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you’d like to better understand what the above interpretation means and why its valid, I invite you to read on.</p>
+<p>The main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you’d like to better understand what the above interpretation means and why it’s valid, I invite you to read on.</p>
 <hr>
 </section>
 <section id="introduction" class="level1">
@@ -355,7 +355,7 @@ C(x_1, \dots, x_n) = \left[\bar{x} - \frac{s}{\sqrt{n}}t_{crit, \alpha},~ \bar{x
 <span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(rowid)) <span class="sc">+</span></span>
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lb, <span class="at">ymax =</span> ub, <span class="at">col =</span> covers)) <span class="sc">+</span></span>
 <span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> mu) <span class="sc">+</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">guide_legend</span>(</span>
 <span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"CI includes population mean"</span>, </span>
@@ -385,12 +385,12 @@ C(x_1, \dots, x_n) = \left[\bar{x} - \frac{s}{\sqrt{n}}t_{crit, \alpha},~ \bar{x
 <section id="an-alternative-interpretation-of-a-ci" class="level1">
 <h1>An alternative interpretation of a CI</h1>
 <p>You might recall a statistics professor telling you that if 0 is in your confidence interval, then you fail to reject the null hypothesis that <span class="math inline">\(\mu = 0\)</span>. You might even recall asking yourself why that is the case. This idea is based on an alternative interpretation of a confidence interval. To be clear, the “usual” interpretation we saw above isn’t wrong, it’s simply one perspective. Here, we’ll explore the concept from a different angle.</p>
-<p><a href="https://en.wikipedia.org/wiki/Confidence_interval#Interpretation">Wikipedia give this as one interpretation of a confidence interval</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Confidence_interval#Interpretation">Wikipedia offers the following interpretation of a confidence interval</a></p>
 <blockquote class="blockquote">
 <p>The confidence interval can be expressed in terms of statistical significance, e.g.: “The 95% confidence interval represents values that are not statistically significantly different from the point estimate at the .05 level.”</p>
 </blockquote>
 <p>Essentially, this says that if we set up a null hypothesis <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> such that <span class="math inline">\(\theta\)</span> is any value covered by the <span class="math inline">\((1-\alpha)100\%\)</span> confidence interval, then we would fail to reject the null hypothesis at a significance level of <span class="math inline">\(\alpha\)</span>. Importantly for us, notice that this interpretation doesn’t make any references to a series of hypothetical experiments, but references only a single confidence interval.</p>
-<p>To better grasp this alternative interpretation it will again be helpful to walk through an example. Let’s start by generating sample data and computing a <span class="math inline">\((1-\alpha)100\%\)</span> confidence interval for the mean. We’ll stick with <span class="math inline">\(\alpha = 0.05\)</span> so that we get a <span class="math inline">\(95\%\)</span> CI.</p>
+<p>To better grasp this alternative interpretation, it will again be helpful to walk through an example. Let’s start by generating sample data and computing a <span class="math inline">\((1-\alpha)100\%\)</span> confidence interval for the mean. We’ll stick with <span class="math inline">\(\alpha = 0.05\)</span> so that we get a <span class="math inline">\(95\%\)</span> CI.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># n = 100, mu = 1, std = 1</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu, std)</span>
@@ -407,10 +407,11 @@ C(x_1, \dots, x_n) = \left[\bar{x} - \frac{s}{\sqrt{n}}t_{crit, \alpha},~ \bar{x
 </div>
 </div>
 <p>Okay, so we’ve collected some data and observed a sample mean of 53.11 and computed a confidence interval goes from 49.44 to 56.78.</p>
-<p>What would happen if we set up a hypothesis test <span class="math inline">\(H_0{:\;} \mu  = 49.5\)</span>? Or if instead we set up <span class="math inline">\(H_0{:\;} \mu  = 55\)</span>? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those <span class="math inline">\(t\)</span>-tests, that’s exactly what happens.</p>
+<p>What would happen if we set up a hypothesis test <span class="math inline">\(H_0{:\;} \mu  = 49.5\)</span>? Or if instead we set up <span class="math inline">\(H_0{:\;} \mu  = 55\)</span>? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those <span class="math inline">\(t\)</span>-tests and extract the <span class="math inline">\(p\)</span>-values, we see that’s exactly what would happen.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="fl">49.5</span>)<span class="sc">$</span>p.value</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="dv">57</span>)<span class="sc">$</span>p.value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>alpha  <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="fl">49.5</span>, <span class="at">conf.level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)<span class="sc">$</span>p.value</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="dv">57</span>, <span class="at">conf.level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)<span class="sc">$</span>p.value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.05410432
 [1] 0.03778379</code></pre>
@@ -444,7 +445,7 @@ C(x_1, \dots, x_n) = \left[\bar{x} - \frac{s}{\sqrt{n}}t_{crit, \alpha},~ \bar{x
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  ggsci<span class="sc">::</span><span class="fu">scale_fill_jama</span>() <span class="sc">+</span></span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fl">0.02</span>, <span class="at">xmin =</span> ci[<span class="dv">1</span>], <span class="at">xmax =</span> ci[<span class="dv">2</span>]), <span class="at">height =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> <span class="fu">mean</span>(x), <span class="at">y =</span> <span class="fl">0.02</span>, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(</span>
 <span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="st">"top"</span>,</span>
@@ -530,7 +531,7 @@ C(x_1, \dots, x_n) = \left\{\theta: \bar{x} - t_{crit, \alpha} \frac{s}{\sqrt{n}
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>The main thing I think you should take away from this post is that a perfectly valid way to define a confidence interval is that it’s an interval that contains values for the population parameter that are consistent with the observed data. Personally, I think that this interpretation is also more useful than the “usual” one because it permits a clear interpetation for the confidence interval in front of you.</p>
+<p>The main thing I think you should take away from this post is that a perfectly valid way to interpret a confidence interval is that it’s an interval that contains values for the population parameter that are consistent with the observed data. Personally, I think that this interpretation is also more useful than the “usual” one because it permits a clear interpetation for the confidence interval in front of you.</p>
 <!-- This interval is a random quantity (it's a function of our random sample), and has the property that
 $$
 P\left(\bar{x} - \frac{s}{\sqrt{n}}t_{(1-\alpha/2), n-1} < \mu <  \bar{x} + t_{(1-\alpha/2), n-1} \frac{s}{\sqrt{n}}\right) = 1 - \alpha
