@@ -2,6 +2,7 @@
   {
     "listing": "/posts.html",
     "items": [
+      "/posts/2024-11-27-confidence-interval-alt-definition/index.html",
       "/posts/2024-11-16-matrix-ols/index.html",
       "/posts/2024-09-15-simple-linear-regression/index.html",
       "/posts/2020-6-18-model-selection-bias/model-selection-bias.html"

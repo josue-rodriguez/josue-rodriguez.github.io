@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.3">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Josue Rodriguez">
+<meta name="dcterms.date" content="2024-12-16">
+<meta name="description" content="I go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one.">
+
+<title>Intepreting the confidence interval in front of you – josue rodriguez</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2b7e86a45101691e9cf9029500fe0614.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-b9080fd8af111c1303e26c7e65ee2a26.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">josue rodriguez</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">about</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts.html"> 
+<span class="menu-text">posts</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Intepreting the confidence interval in front of you</h1>
+                  <div>
+        <div class="description">
+          <p>I go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one.</p>
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">statistics</div>
+                <div class="quarto-category">uncertainty</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Josue Rodriguez </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 16, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#takeaway" id="toc-takeaway" class="nav-link active" data-scroll-target="#takeaway">Takeaway</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#set-up" id="toc-set-up" class="nav-link" data-scroll-target="#set-up">Set up</a></li>
+  </ul></li>
+  <li><a href="#the-usual-interpretation-of-a-ci" id="toc-the-usual-interpretation-of-a-ci" class="nav-link" data-scroll-target="#the-usual-interpretation-of-a-ci">The “usual” interpretation of a CI</a></li>
+  <li><a href="#an-alternative-interpretation-of-a-ci" id="toc-an-alternative-interpretation-of-a-ci" class="nav-link" data-scroll-target="#an-alternative-interpretation-of-a-ci">An alternative interpretation of a CI</a>
+  <ul class="collapse">
+  <li><a href="#a-caveat" id="toc-a-caveat" class="nav-link" data-scroll-target="#a-caveat">A Caveat</a></li>
+  </ul></li>
+  <li><a href="#why-does-this-work" id="toc-why-does-this-work" class="nav-link" data-scroll-target="#why-does-this-work">Why does this work?</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+\(
+\newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+\)
+
+
+
+
+
+<section id="takeaway" class="level1">
+<h1>Takeaway</h1>
+<p><strong>A confidence interval contains the parameter values that are consistent with your observed sample data.</strong></p>
+<p>For example, suppose we observe a sample mean <span class="math inline">\(\bar{x} = 100\)</span> and calculate the <span class="math inline">\(95\%\)</span> confidence interval for the population mean to be <span class="math inline">\([90, 110]\)</span>. This interval suggests that any population mean between <span class="math inline">\(90\)</span> and <span class="math inline">\(110\)</span> could plausibly lead to observing a sample mean of <span class="math inline">\(100\)</span>.</p>
+<p>The main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you’d like to better understand what the above interpretation means and why its valid, I invite you to read on.</p>
+<hr>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Confidence intervals are a cornerstone of statistical inference; they’re used to express uncertainty around a point estimate. However, misinterpretations of confidence intervals abound. This is both unsurprising and understandable since 1) confidence intervals are usually defined in reference to an infinite series of hypothetical, repeated experiments, and 2) most people analyzing data are usually concerned with a single experiment.</p>
+<p>Confidence intervals aren’t fundamentally incompatible with analysts’ goals, though. They can be interpreted in a way that is meaningful (and potentially even useful!) in the context of a single experiment, and the goal of this post is to walk through such an interpretation with words, code, and a bit of math.</p>
+<section id="set-up" class="level2">
+<h2 class="anchored" data-anchor-id="set-up">Set up</h2>
+<p>Suppose we sample <span class="math inline">\(x_1, \dots, x_n\)</span> from a normal distribution <span class="math inline">\(\mathcal{N}(\mu, \sigma^2)\)</span>, and that we are interested in testing the follow hypotheses about the population mean</p>
+<p><span class="math display">\[
+\begin{align}
+H_0{:\;}\mu &amp;= \theta \\
+&amp; \text{vs.} \\
+H_1{:\;} \mu &amp;\neq \theta,
+\end{align}
+\]</span></p>
+<p>for some <span class="math inline">\(\theta\)</span><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. We can choose a significance level <span class="math inline">\(\alpha\)</span> and perform a two-sided <span class="math inline">\(t\)</span>-test to assess this null hypothesis. Recall that our <span class="math inline">\(\alpha\)</span> level is our error rate – the probability that we reject the null hypothesis when the null hypothesis is true. Canonically, <span class="math inline">\(\theta = 0\)</span> and <span class="math inline">\(\alpha = 0.05\)</span>.</p>
+<p>We first find our critical value for this test, <span class="math inline">\(t_{crit, \alpha}\)</span>. We get this value by finding the <span class="math inline">\(1 - \alpha/2\)</span> quantile of the <span class="math inline">\(\text{Student-}t\)</span> distribution with <span class="math inline">\(n-1\)</span> degrees of freedom.</p>
+<p>We can then calculate our observed <span class="math inline">\(t\)</span>-statistic as</p>
+<p><span class="math display">\[
+t_{obs} = \frac{\bar{x} - \theta}{s/\sqrt{n}}
+\]</span></p>
+<p>where <span class="math inline">\(\bar{x}\)</span> denotes the sample mean and <span class="math inline">\(s\)</span> denotes the sample standard deviation.</p>
+<p>We reject the null hypothesis that <span class="math inline">\(\mu = \theta\)</span> when the <span class="math inline">\(p\)</span>-value is greater than <span class="math inline">\(\alpha\)</span>, or <span class="math inline">\(|t_{obs}| \geq t_{crit, \alpha}.\)</span> Conversely, we fail to reject the null hypothesis whenever the <span class="math inline">\(p\)</span>-value is less than <span class="math inline">\(\alpha\)</span>, or <span class="math inline">\(|t_{obs}| &lt; t_{crit, \alpha}\)</span>.</p>
+<hr>
+</section>
+</section>
+<section id="the-usual-interpretation-of-a-ci" class="level1">
+<h1>The “usual” interpretation of a CI</h1>
+<p>It’s often desired to have a measure of uncertainty to accompany the point estimate in the form of a confidence interval.</p>
+<p>A <span class="math inline">\((1 - \alpha)100\%\)</span> CI is an interval that covers the true parameter value in approximately <span class="math inline">\((1 - \alpha)100\%\)</span> of repeated experiments. Such an interval is a function of our sample data and can be constructed as</p>
+<p><span class="math display">\[
+C(x_1, \dots, x_n) = \left[\bar{x} - \frac{s}{\sqrt{n}}t_{crit, \alpha},~ \bar{x} + \frac{s}{\sqrt{n}}t_{crit, \alpha} \right].
+\]</span></p>
+<p>To make the interpretation a bit more concrete, let’s simulate 100 experiments at <span class="math inline">\(\alpha = 0.05\)</span> and compute a <span class="math inline">\(95\%\)</span> confidence interval for each. We should expect approximately 95 of the 100 intervals to cover the true parameter value.</p>
+<p>The code below simulates these experiments by repeatedly drawing random samples from a normal distribution <span class="math inline">\(\mathcal{N}(50, 20^2)\)</span> and calculating a confidence interval for the population mean. The resulting confidence intervals are then plotted. They are colored blue if they contain the the population mean and red if they do not.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">271828</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' compute the confidence interval for the mean of x</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x sample data</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param alpha  the significance level</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>compute_ci <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">alpha =</span> <span class="fl">0.05</span>) {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  xbar <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  std_err <span class="ot">&lt;-</span> <span class="fu">sd</span>(x) <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  tcrit <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> (alpha <span class="sc">/</span> <span class="dv">2</span>), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  lb <span class="ot">&lt;-</span> xbar <span class="sc">-</span> tcrit <span class="sc">*</span> std_err</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  ub <span class="ot">&lt;-</span> xbar <span class="sc">+</span> tcrit <span class="sc">*</span> std_err</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(<span class="at">lb =</span> lb, <span class="at">ub =</span> ub))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># define population values</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>std <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># sample size</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>n_experiments <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># run "experiments"</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>ci_df <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_dfr</span>(</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span>n_experiments, </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(i) <span class="fu">compute_ci</span>(<span class="fu">rnorm</span>(n, mu, std))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># determine whether each CI contains mu and plot</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>ci_covers_df <span class="ot">&lt;-</span> ci_df <span class="sc">%&gt;%</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rowid_to_column</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covers =</span> <span class="fu">ifelse</span>(lb <span class="sc">&lt;=</span> mu <span class="sc">&amp;</span> mu <span class="sc">&lt;=</span> ub, <span class="st">"yes"</span>, <span class="st">"no"</span>))</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>n_covered <span class="ot">&lt;-</span> <span class="fu">sum</span>(ci_covers_df<span class="sc">$</span>covers <span class="sc">==</span> <span class="st">"yes"</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>ci_covers_df <span class="sc">%&gt;%</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(rowid)) <span class="sc">+</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lb, <span class="at">ymax =</span> ub, <span class="at">col =</span> covers)) <span class="sc">+</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> mu) <span class="sc">+</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"CI includes population mean"</span>, </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="st">"top"</span>, </span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.hjust =</span> <span class="fl">0.5</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Experiment Number"</span>,</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"CI Values"</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this example, exactly 95 out of 100 <span class="math inline">\(95\%\)</span> CIs cover the population mean of 50. Exactly as we would expect for a confidence interval.</p>
+<p>In practice, though, you usually run one experiment and so you only get one confidence interval. <a href="https://en.wikipedia.org/wiki/Confidence_interval#Common_misunderstandings">A common misunderstanding leads analysts to say something like</a> “there’s a <span class="math inline">\(95\%\)</span> chance that the population parameter lies within the interval.”, but that’s not quite right. Once you’ve computed a CI it either covers the population mean or it does not<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>Because the usual interpretation of a CI relies on the notion of long-run frequencies we <em>could</em> say “<a href="https://en.wikipedia.org/wiki/Confidence_interval#Interpretation">Were this procedure to be repeated on numerous samples, the proportion of calculated 95% confidence intervals that encompassed the true [population mean] would tend toward 95%”</a>. But this really doesn’t seem helpful in interpreting a confidence interval based on a single sample, so what can we say instead?</p>
+<hr>
+</section>
+<section id="an-alternative-interpretation-of-a-ci" class="level1">
+<h1>An alternative interpretation of a CI</h1>
+<p>You might recall a statistics professor telling you that if 0 is in your confidence interval, then you fail to reject the null hypothesis that <span class="math inline">\(\mu = 0\)</span>. You might even recall asking yourself why that is the case. This idea is based on an alternative interpretation of a confidence interval. To be clear, the “usual” interpretation we saw above isn’t wrong, it’s simply one perspective. Here, we’ll explore the concept from a different angle.</p>
+<p><a href="https://en.wikipedia.org/wiki/Confidence_interval#Interpretation">Wikipedia give this as one interpretation of a confidence interval</a></p>
+<blockquote class="blockquote">
+<p>The confidence interval can be expressed in terms of statistical significance, e.g.: “The 95% confidence interval represents values that are not statistically significantly different from the point estimate at the .05 level.”</p>
+</blockquote>
+<p>Essentially, this says that if we set up a null hypothesis <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> such that <span class="math inline">\(\theta\)</span> is any value covered by the <span class="math inline">\((1-\alpha)100\%\)</span> confidence interval, then we would fail to reject the null hypothesis at a significance level of <span class="math inline">\(\alpha\)</span>. Importantly for us, notice that this interpretation doesn’t make any references to a series of hypothetical experiments, but references only a single confidence interval.</p>
+<p>To better grasp this alternative interpretation it will again be helpful to walk through an example. Let’s start by generating sample data and computing a <span class="math inline">\((1-\alpha)100\%\)</span> confidence interval for the mean. We’ll stick with <span class="math inline">\(\alpha = 0.05\)</span> so that we get a <span class="math inline">\(95\%\)</span> CI.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># n = 100, mu = 1, std = 1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu, std)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">compute_ci</span>(x, <span class="at">alpha =</span> <span class="fl">0.05</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(x), <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 53.11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ci, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   lb    ub 
+49.44 56.78 </code></pre>
+</div>
+</div>
+<p>Okay, so we’ve collected some data and observed a sample mean of 53.11 and computed a confidence interval goes from 49.44 to 56.78.</p>
+<p>What would happen if we set up a hypothesis test <span class="math inline">\(H_0{:\;} \mu  = 49.5\)</span>? Or if instead we set up <span class="math inline">\(H_0{:\;} \mu  = 55\)</span>? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those <span class="math inline">\(t\)</span>-tests, that’s exactly what happens.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="fl">49.5</span>)<span class="sc">$</span>p.value</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="dv">57</span>)<span class="sc">$</span>p.value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.05410432
+[1] 0.03778379</code></pre>
+</div>
+</div>
+<p>Just to be sure, let’s expand on the code above such that we test <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> for a range of values both inside and outside of the confidence interval and see what happens.</p>
+<div class="cell preview-image" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generate a range of thetas inside &amp; outside the CI</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>thetas <span class="ot">&lt;-</span> <span class="fu">seq</span>(ci[<span class="st">"lb"</span>] <span class="sc">-</span> <span class="dv">3</span>, ci[<span class="st">"ub"</span>] <span class="sc">+</span> <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' compute the p-value for a one-sample t-test</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x sample data</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param theta the value of theta in the null hypothesis</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param alpha the significance level</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>get_t_test_pval <span class="ot">&lt;-</span> <span class="cf">function</span>(x, theta, <span class="at">alpha =</span> <span class="fl">0.05</span>) {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">t.test</span>(x, <span class="at">mu =</span> theta, <span class="at">conf.level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res<span class="sc">$</span>p.val)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># for every theta in thetas, run a hypothesis test for</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># H_O: mu = theta and get the p-value</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>pvalues <span class="ot">&lt;-</span> <span class="fu">sapply</span>(thetas, <span class="cf">function</span>(theta) <span class="fu">get_t_test_pval</span>(x, theta))</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>pvalues_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(thetas, pvalues) <span class="sc">%&gt;%</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">reject_h0 =</span> <span class="fu">ifelse</span>(pvalues <span class="sc">&lt;</span> .<span class="dv">05</span>, <span class="st">"yes"</span>, <span class="st">"no"</span>))</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pvalues_df, <span class="fu">aes</span>(thetas, pvalues)) <span class="sc">+</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> reject_h0)) <span class="sc">+</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  ggsci<span class="sc">::</span><span class="fu">scale_fill_jama</span>() <span class="sc">+</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fl">0.02</span>, <span class="at">xmin =</span> ci[<span class="dv">1</span>], <span class="at">xmax =</span> ci[<span class="dv">2</span>]), <span class="at">height =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> <span class="fu">mean</span>(x), <span class="at">y =</span> <span class="fl">0.02</span>, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="st">"top"</span>,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"Reject $H_0 : </span><span class="sc">\\</span><span class="st">; </span><span class="sc">\\</span><span class="st">mu = </span><span class="sc">\\</span><span class="st">theta$"</span>),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.hjust =</span> <span class="fl">0.5</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(theta),</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"p-value"</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The x-axis in the above plot reflects the range of the different <span class="math inline">\(\theta\)</span> values and the y-axis reflects the <span class="math inline">\(p\)</span>-value for each corresponding <span class="math inline">\(t\)</span>-test. The white point corresponds the sample mean of 53.11 and the white horizontal line corresponds to the confidence interval [49.44, 56.78.].</p>
+<p>Just like Wikipedia claimed! None of the values inside of the confidence interval are statistically significantly different from the sample mean since their <span class="math inline">\(p\)</span>-values are greater than or equal to .05. <strong>In other words, each value in the confidence interval represents a value for <span class="math inline">\(\mu\)</span> that is consistent with the observed sample mean</strong>. On the other hand, all <span class="math inline">\(p\)</span>-values for the tests concerning <span class="math inline">\(\theta\)</span> values outside of the interval are <span class="math inline">\(&lt;.05\)</span>. By the same logic, each value outside the confidence interval represents a value for <span class="math inline">\(\mu\)</span> that is <em>in</em>-consistent with the observed sample mean.</p>
+<hr>
+<p>So we have managed to find a way to say something about the values inside of a single confidence interval – they are parameter values that are not significantly different than the sample mean – but can we be a little more precise?</p>
+<p>I think so. We can clarify what is meant by “consistent” in this context. To start, let’s revisit a common interpretation of a <span class="math inline">\(p\)</span>-value. It’s the probability of obtaining test results at least as extreme as the results we actually observed, under the assumption that the null hypothesis is correct. The phrase “at least as extreme” can be read as “greater than or equal to the absolute value of”. We fail to reject <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> when the <span class="math inline">\(p\)</span>-value is less than <span class="math inline">\(\alpha\)</span>.</p>
+<p>For example, if the population mean was truly <span class="math inline">\(\mu = 49.5\)</span>, then the probability of observing a sample mean <span class="math inline">\(|\bar{x}| \geq 53.11\)</span> is 0.054 (this is the <span class="math inline">\(p\)</span>-value we computed above). In other words, a population mean of 49.5 is consistent with our observed sample mean because if it really was the true population mean, we would observe a sample mean <span class="math inline">\(|\bar{x}| &gt; 53.11\)</span> 5.4% of the time. The reason 49.5 is “consistent” with our observed sample mean, is because the <span class="math inline">\(p\)</span>-value of 5.4% is greater than 5%, the <span class="math inline">\(\alpha\)</span> level.</p>
+<p>We can extend this logic to all of the parameter values inside the confidence interval to say how the values in the confidence interval are consistent with the sample mean. <strong>Each value in a <span class="math inline">\((1 - \alpha)100\%\)</span> confidence interval represents a value for <span class="math inline">\(\mu\)</span> that would lead to observing a sample mean greater than or equal to <span class="math inline">\(|\bar{x}|\)</span> at least <span class="math inline">\(\alpha(100)\%\)</span> of the time</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>The data we generated above had a sample mean of 53.11 and a 95% CI with lower and upper bounds of 49.44 and 56.78, respectively. We can say that the the values in the CI are consistent with the sample mean in that we would expect to see a sample mean greater than or equal to 53.11 at least 5% of the time if the true population mean <span class="math inline">\(\mu\)</span> was equal to any value between 49.44 and 56.78.</p>
+<section id="a-caveat" class="level3">
+<h3 class="anchored" data-anchor-id="a-caveat">A Caveat</h3>
+<p>This exercise has allowed us to interpret a given confidence interval without making reference to the long-run proportion of times a confidence interval covers the population parameter in an infinite series of hypothetical experiments. What this exercise hasn’t done is help us determine whether the confidence interval which we’ve computed covers the population parameter (<a href="#the-usual-interpretation-of-a-ci">see the plot above</a>). Thus, we should still expect to completely miss the population parameter in <span class="math inline">\(\alpha(100)\%\)</span> of CIs over the long run, as <span class="math inline">\(\alpha\)</span> represents our error rate.</p>
+<hr>
+</section>
+</section>
+<section id="why-does-this-work" class="level1">
+<h1>Why does this work?</h1>
+<p>To understand why values inside of the confidence interval are not statistically significantly different from the point estimate, we’ll need to consider the relationship between hypothesis tests and confidence intervals. Recall that we are testing hypotheses regarding a population mean <span class="math inline">\(H_0{:\;} \mu = \theta \text{ vs. } H_1{:\;} \mu \neq \theta\)</span> at significance level <span class="math inline">\(\alpha\)</span>, and we fail to reject <span class="math inline">\(H_0\)</span> whenever</p>
+<p><span class="math display">\[
+t_{obs} &lt; t_{crit, \alpha}.
+\]</span></p>
+<p>We can expand on that inequality to see that we fail to reject <span class="math inline">\(H_0\)</span> whenever</p>
+<p><span class="math display">\[
+\begin{align}
+-t_{crit, \alpha} &lt;&amp;  t_{obs} &lt; t_{crit, \alpha} \\
+-t_{crit, \alpha} &lt;&amp; \frac{\bar{x} - \theta}{s/\sqrt{n}} &lt; t_{crit, \alpha} \\
+-t_{crit, \alpha}\frac{s}{\sqrt{n}} &lt;&amp; \bar{x} - \theta &lt; t_{crit, \alpha} \frac{s}{\sqrt{n}} \\
+-\bar{x}-t_{crit, \alpha}\frac{s}{\sqrt{n}} &lt;&amp;  - \theta &lt; -\bar{x} + t_{crit, \alpha} \frac{s}{\sqrt{n}} \\
+\bar{x}-t_{crit, \alpha}\frac{s}{\sqrt{n}} &amp;&lt;  \theta &lt; \bar{x} + t_{crit, \alpha} \frac{s}{\sqrt{n}}.
+\end{align}
+\]</span></p>
+<p>There’s three things I’d like to point out here:</p>
+<ol type="1">
+<li><p>The bounds in the final expression should look familar. They are the same bounds as a <span class="math inline">\((1 - \alpha)100\%\)</span> confidence interval.</p></li>
+<li><p>Which means that we fail to reject <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> whenever <span class="math inline">\(\theta\)</span> is covered by the confidence interval. Just like we saw earlier.</p></li>
+<li><p>There is a direct connection between a hypothesis test for <span class="math inline">\(\theta\)</span> and a confidence interval. A confidence interval can be obtained by “inverting” a hypothesis test.</p></li>
+</ol>
+<p>To further explore the relationship between hypothesis tests and confidence intervals, we need to introduce the notion of an acceptance region.</p>
+<p>A hypothesis test for <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> has a so-called “acceptance region”. It’s defined as the set in the <em>sample space</em> for which we don’t reject <span class="math inline">\(H_0\)</span></p>
+<p><span class="math display">\[
+A(\theta) = \left\{(x_1, \dots, x_n): \theta - t_{crit, \alpha} \frac{s}{\sqrt{n}}  &lt; \bar{x} &lt; \theta + t_{crit, \alpha} \frac{s}{\sqrt{n}} \right\}.
+\]</span></p>
+<p>We fail to reject <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> any time we observe a sample that’s consistent with <span class="math inline">\(\mu = \theta\)</span>. That is, when <span class="math inline">\(x_1, \dots, x_n\)</span> belong to the acceptance region for <span class="math inline">\(\theta\)</span>.</p>
+<p>A confidence interval is the set in the <em>parameter</em> space with plausible values of <span class="math inline">\(\theta\)</span></p>
+<p><span class="math display">\[
+C(x_1, \dots, x_n) = \left\{\theta: \bar{x} - t_{crit, \alpha} \frac{s}{\sqrt{n}}  &lt; \theta &lt; \bar{x} + t_{crit, \alpha} \frac{s}{\sqrt{n}} \right\}.
+\]</span></p>
+<p>As we’ve seen a few times now, we fail to reject <span class="math inline">\(H_0{:\;} \mu = \theta\)</span> any time <span class="math inline">\(\theta\)</span> is consistent with <span class="math inline">\(x_1,\dots, x_n\)</span>. That is, when <span class="math inline">\(\theta\)</span> is in the confidence interval.</p>
+<p>These two sets are connected by the tautology</p>
+<p><span class="math display">\[
+\bar{x} \in A(\theta) \Longleftrightarrow \theta \in C(x_1, \dots, x_n).
+\]</span></p>
+<p>Basically,</p>
+<ul>
+<li>If a sample <span class="math inline">\(x_1, \dots, x_n\)</span> is in <span class="math inline">\(A(\theta)\)</span>, then the CI computed with that sample includes <span class="math inline">\(\theta\)</span>. ​</li>
+<li>Conversely, if <span class="math inline">\(\theta\)</span> is in the CI computed from the sample <span class="math inline">\(x_1, \dots, x_n\)</span>, then that sample is in <span class="math inline">\(A(\theta)\)</span>.</li>
+</ul>
+<p>The relationship between hypothesis tests’ acceptance regions and confidence intervals demonstrates why the values in the confidence interval are not statistically significantly different than the point estimate. The sample we observed is contained in the acceptance region of all <span class="math inline">\(\theta\)</span>’s present in the confidence interval.</p>
+<p>This relationship also shows that hypothesis tests and confidence intervals provide consistent interpretations of the data, but from different angles. <span class="citation" data-cites="casella2002statistical">Casella &amp; Berger (<a href="#ref-casella2002statistical" role="doc-biblioref">2002</a>)</span> sum it up nicely:</p>
+<blockquote class="blockquote">
+<p>The hypothesis test fixes the parameter and asks what sample values (the acceptance region) are consistent with that fixed value. The confidence set fixes the sample value and asks what parameter values (the confidence interval) make this sample value most plausible. (p.&nbsp;421)</p>
+</blockquote>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>The main thing I think you should take away from this post is that a perfectly valid way to define a confidence interval is that it’s an interval that contains values for the population parameter that are consistent with the observed data. Personally, I think that this interpretation is also more useful than the “usual” one because it permits a clear interpetation for the confidence interval in front of you.</p>
+<!-- This interval is a random quantity (it's a function of our random sample), and has the property that
+$$
+P\left(\bar{x} - \frac{s}{\sqrt{n}}t_{(1-\alpha/2), n-1} < \mu <  \bar{x} + t_{(1-\alpha/2), n-1} \frac{s}{\sqrt{n}}\right) = 1 - \alpha
+$$
+
+Note that the *interval* is random and the true parameter value $\mu$ is fixed. Once we've constructed an interval from our sample, the interval either contains $\mu$ or it does not. So the above statement says that if we *sample* a confidence interval from the distribution of possible confidence intervals, there is a $1-\alpha$ probability that it will cover the paramter value $\mu$. -->
+<!-- > It is tempting to say (and many experimenters do) that “the probability is 90% that λ is in the interval [.262, 1.184].” Within classical statistics, however, such a statement is invalid since the parameter is assumed fixed. Formally, the interval [.262, 1.184] is one of the possible realized values of the random interval [1 2n χ2 2Y,.95, 1 2n χ2 2(Y +1),.05] and, since the parameter λ does not move, λ is in the realized interval [.262, 1.184] with probability either 0 or 1. When we say that the realized interval [.262, 1.184] has a 90% chance of coverage, we only mean that we know that 90% of the sample points of the random interval cover the true parameter. 
+
+Problems:
+
+- there is only *a priori* a 95% chance that the interval contains the true value 
+- NOT a 95% chance the true parameter value is in this range
+- interpretation requires reference to a series of infinity hypothetical experiments -->
+<!-- 
+
+___
+
+# Intuition
+
+Why is it that we fail to reject any $\theta$ in the confidence interval?
+
+1. look at approximate sampling distribution of $\bar{x}$
+2. suppose it's our "null" distribution
+3. at alpha = 0.05, we only reject values outside of the 0.05 region.
+4. by definition, the regions > 5% coincide with the confidence intervals...
+$$
+\frac{\bar{x} - \mu}{s / \sqrt{n}} \sim \text{Student-}t\left(n-1, 0, 1\right)
+$$
+
+$$
+\Longrightarrow
+$$
+
+$$
+\bar{x} \sim \text{Student-}t\left(n - 1, \mu, \frac{s}{\sqrt{n}}\right)
+$$
+$$
+\Longrightarrow
+$$
+
+$$
+\bar{x} \sim \text{Student-}t\left(n - 1, \bar{x}, \frac{s}{\sqrt{n}}\right)
+$$
+
+We are saying that we can approximate the sampling distribution of $\bar{x}$ as $\bar{x} \sim \text{Student-}t\left(n - 1, \bar{x}, \frac{s}{\sqrt{n}}\right)$.
+
+Let's take the 0.025 and 0.975 quantiles of this distribution, i.e., the bounds capturing the middle 95% of the distribution. We can use the `extraDistr` package find the quantiles of the [location-scale formulation of the $\text{Student-}t$ distribution](https://en.wikipedia.org/wiki/Student%27s_t-distribution#Location-scale_t_distribution).
+
+
+
+::: {.cell}
+
+```{.r .cell-code  code-fold="false"}
+x_bar <- mean(x)
+std_err_x_bar <- sd(x) / sqrt(n)
+
+alpha <- 0.05
+t_crit_lb <- extraDistr::qlst(alpha / 2, df = n - 1, x_bar, std_err_x_bar)
+t_crit_ub <- extraDistr::qlst(1 - (alpha / 2), df = n - 1, x_bar, std_err_x_bar)
+
+c(t_crit_lb, t_crit_ub)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+[1] 49.43518 56.77577
+```
+
+
+:::
+
+```{.r .cell-code  code-fold="false"}
+ci
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+      lb       ub 
+49.43518 56.77577 
+```
+
+
+:::
+:::
+
+::: {.cell layout-align="center"}
+
+```{.r .cell-code}
+df <- data.frame(
+  x = seq(
+    from = x_bar - 4 * std_err_x_bar,
+    to   = x_bar + 4 * std_err_x_bar,
+    length.out = 100
+  )
+)
+
+
+df$y <- extraDistr::dlst(df$x, df = n - 1, x_bar, std_err_x_bar)
+
+ggplot(df, aes(x = x, y = y)) +
+  geom_line() +
+  geom_ribbon(
+    data = subset(df, x >= t_crit_lb & x <= t_crit_ub),
+    aes(ymin = 0, ymax = y),
+    fill = "lightblue",
+    alpha = 0.5
+  ) + 
+  geom_errorbarh(aes(xmin = ci[1], xmax = ci[2], y = 0), height = 0.1) +
+  theme_minimal() +
+  labs(
+    title = "Approximate sampling distribution of the mean",
+    x = "x",
+    y = "Density"
+  )
+```
+
+::: {.cell-output-display}
+![](index_files/figure-html/unnamed-chunk-6-1.png){fig-align='center' width=576}
+:::
+:::
+
+::: {.cell}
+
+```{.r .cell-code}
+print(c(t_crit_lb, t_crit_ub))
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+[1] 49.43518 56.77577
+```
+
+
+:::
+
+```{.r .cell-code}
+print(ci)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+      lb       ub 
+49.43518 56.77577 
+```
+
+
+:::
+:::
+
+
+
+
+
+
+
+--- -->
+</section>
+<section id="references" class="level1">
+
+
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-casella2002statistical" class="csl-entry" role="listitem">
+Casella, G., &amp; Berger, R. (2002). <em>Statistical inference</em>. CRC Press.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>I’ll focus on hypothesis tests concerning populuation means in this post, but the arguments are applicable to other tests as well, e.g., those concerning mean differences or regression coefficients.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Julia Rohrer says the following on <a href="https://www.the100.ci/2024/12/05/why-you-are-not-allowed-to-say-that-your-95-confidence-interval-contains-the-true-parameter-with-a-probability-of-95/">her blog</a>, though, and I do think it’s a point well-worth considering</p>
+<blockquote class="blockquote">
+<p>What are the downstream consequences of rampant misinterpretation of confidence intervals? As far as I can tell, the whole exercise seems mostly concerned about language. If I say “with a probability of 95%, this interval contains the true parameter”, I commit a faux pas. If I say “here’s my interval; in the long run, 95% of intervals created in this manner contain the true value”, I exhibit technical sophistication. But will any of my downstream inferences look differently? Is any consumer of my findings going to deal with the information differently?</p>
+</blockquote>
+<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn3"><p>The <span class="math inline">\(p\)</span>-values are exactly 0.05 for the lower and upper bounds of the interval, and increase to 1 as you move toward the middle of the CI to the sample mean.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
