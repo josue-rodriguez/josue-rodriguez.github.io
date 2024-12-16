@@ -1,5 +1,5 @@
 ---
-title: Intepreting the confidence interval in front of you
+title: Interpreting the confidence interval in front of you
 author: Josue Rodriguez
 description: |
  I go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one.
