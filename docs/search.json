@@ -4,7 +4,7 @@
     "href": "posts.html",
     "title": "posts",
     "section": "",
-    "text": "Intepreting the confidence interval in front of you\n\n\n\n\n\nI go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one. \n\n\n\n\n\nDec 16, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\nConnecting Scalar and Matrix Notation in OLS Regression\n\n\n\n\n\nI go over OLS regression in matrix notation, and show how it connects to the scalar notation of OLS regression. \n\n\n\n\n\nNov 16, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\n(simple) Linear regression\n\n\n\n\n\nA “warm up” post covering simple ordinary least squares regression. \n\n\n\n\n\nSep 29, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\nModel Selection Bias\n\n\n\n\n\n\n\n\n\n\n\nJun 18, 2020\n\n\nJosue Rodriguez\n\n\n\n\n\n\nNo matching items"
+    "text": "Interpreting the confidence interval in front of you\n\n\n\n\n\nI go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one. \n\n\n\n\n\nDec 16, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\nConnecting Scalar and Matrix Notation in OLS Regression\n\n\n\n\n\nI go over OLS regression in matrix notation, and show how it connects to the scalar notation of OLS regression. \n\n\n\n\n\nNov 16, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\n(simple) Linear regression\n\n\n\n\n\nA “warm up” post covering simple ordinary least squares regression. \n\n\n\n\n\nSep 29, 2024\n\n\nJosue Rodriguez\n\n\n\n\n\n\n\n\n\n\n\n\nModel Selection Bias\n\n\n\n\n\n\n\n\n\n\n\nJun 18, 2020\n\n\nJosue Rodriguez\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -16,21 +16,21 @@
   {
     "objectID": "posts/2024-11-27-confidence-interval-alt-definition/index.html",
     "href": "posts/2024-11-27-confidence-interval-alt-definition/index.html",
-    "title": "Intepreting the confidence interval in front of you",
+    "title": "Interpreting the confidence interval in front of you",
     "section": "",
     "text": "A confidence interval contains the parameter values that are consistent with your observed sample data.\nFor example, suppose we observe a sample mean \\(\\bar{x} = 100\\) and calculate the \\(95\\%\\) confidence interval for the population mean to be \\([90, 110]\\). This interval suggests that any population mean between \\(90\\) and \\(110\\) could plausibly lead to observing a sample mean of \\(100\\).\nThe main point of this post is that the above interpretation of a confidence interval is a valid one, and that it is more useful than the conventional interpretation. If you’d like to better understand what the above interpretation means and why it’s valid, I invite you to read on."
   },
   {
     "objectID": "posts/2024-11-27-confidence-interval-alt-definition/index.html#set-up",
     "href": "posts/2024-11-27-confidence-interval-alt-definition/index.html#set-up",
-    "title": "Intepreting the confidence interval in front of you",
+    "title": "Interpreting the confidence interval in front of you",
     "section": "Set up",
     "text": "Set up\nSuppose we sample \\(x_1, \\dots, x_n\\) from a normal distribution \\(\\mathcal{N}(\\mu, \\sigma^2)\\), and that we are interested in testing the follow hypotheses about the population mean\n\\[\n\\begin{align}\nH_0{:\\;}\\mu &= \\theta \\\\\n& \\text{vs.} \\\\\nH_1{:\\;} \\mu &\\neq \\theta,\n\\end{align}\n\\]\nfor some \\(\\theta\\)1. We can choose a significance level \\(\\alpha\\) and perform a two-sided \\(t\\)-test to assess this null hypothesis. Recall that our \\(\\alpha\\) level is our error rate – the probability that we reject the null hypothesis when the null hypothesis is true. Canonically, \\(\\theta = 0\\) and \\(\\alpha = 0.05\\).\nWe first find our critical value for this test, \\(t_{crit, \\alpha}\\). We get this value by finding the \\(1 - \\alpha/2\\) quantile of the \\(\\text{Student-}t\\) distribution with \\(n-1\\) degrees of freedom.\nWe can then calculate our observed \\(t\\)-statistic as\n\\[\nt_{obs} = \\frac{\\bar{x} - \\theta}{s/\\sqrt{n}}\n\\]\nwhere \\(\\bar{x}\\) denotes the sample mean and \\(s\\) denotes the sample standard deviation.\nWe reject the null hypothesis that \\(\\mu = \\theta\\) when the \\(p\\)-value is greater than \\(\\alpha\\), or \\(|t_{obs}| \\geq t_{crit, \\alpha}.\\) Conversely, we fail to reject the null hypothesis whenever the \\(p\\)-value is less than \\(\\alpha\\), or \\(|t_{obs}| &lt; t_{crit, \\alpha}\\)."
   },
   {
     "objectID": "posts/2024-11-27-confidence-interval-alt-definition/index.html#footnotes",
     "href": "posts/2024-11-27-confidence-interval-alt-definition/index.html#footnotes",
-    "title": "Intepreting the confidence interval in front of you",
+    "title": "Interpreting the confidence interval in front of you",
     "section": "Footnotes",
     "text": "Footnotes\n\n\nI’ll focus on hypothesis tests concerning populuation means in this post, but the arguments are applicable to other tests as well, e.g., those concerning mean differences or regression coefficients.↩︎\nJulia Rohrer says the following on her blog, though, and I do think it’s a point well-worth considering\n\nWhat are the downstream consequences of rampant misinterpretation of confidence intervals? As far as I can tell, the whole exercise seems mostly concerned about language. If I say “with a probability of 95%, this interval contains the true parameter”, I commit a faux pas. If I say “here’s my interval; in the long run, 95% of intervals created in this manner contain the true value”, I exhibit technical sophistication. But will any of my downstream inferences look differently? Is any consumer of my findings going to deal with the information differently?\n\n↩︎\nThe \\(p\\)-values are exactly 0.05 for the lower and upper bounds of the interval, and increase to 1 as you move toward the middle of the CI to the sample mean.↩︎"
   },
