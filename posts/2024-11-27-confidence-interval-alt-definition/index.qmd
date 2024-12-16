@@ -186,7 +186,7 @@ round(ci, 2)
 
 Okay, so we've collected some data and observed a sample mean of 53.11 and computed a confidence interval goes from 49.44 to 56.78. 
 
-What would happen if we set up a hypothesis test $H_0{:\;} \mu  = 49.5$? Or if instead we set up $H_0{:\;} \mu  = 55$? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those $t$-tests and extract the $p$-values, we see that's exactly what would happen.
+What would happen if we set up a hypothesis test $H_0{:\;} \mu  = 49.5$? Or if instead we set up $H_0{:\;} \mu  = 57$? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those $t$-tests and extract the $p$-values, we see that's exactly what would happen.
 
 ```{r}
 #| code-fold: false

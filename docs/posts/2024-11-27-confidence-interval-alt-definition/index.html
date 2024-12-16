@@ -407,7 +407,7 @@ C(x_1, \dots, x_n) = \left[\bar{x} - \frac{s}{\sqrt{n}}t_{crit, \alpha},~ \bar{x
 </div>
 </div>
 <p>Okay, so we’ve collected some data and observed a sample mean of 53.11 and computed a confidence interval goes from 49.44 to 56.78.</p>
-<p>What would happen if we set up a hypothesis test <span class="math inline">\(H_0{:\;} \mu  = 49.5\)</span>? Or if instead we set up <span class="math inline">\(H_0{:\;} \mu  = 55\)</span>? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those <span class="math inline">\(t\)</span>-tests and extract the <span class="math inline">\(p\)</span>-values, we see that’s exactly what would happen.</p>
+<p>What would happen if we set up a hypothesis test <span class="math inline">\(H_0{:\;} \mu  = 49.5\)</span>? Or if instead we set up <span class="math inline">\(H_0{:\;} \mu  = 57\)</span>? According to Wikipedia, we would fail to reject the first null hypothesis and reject the second because 49.5 is inside the interval and 57 is not. If we run those <span class="math inline">\(t\)</span>-tests and extract the <span class="math inline">\(p\)</span>-values, we see that’s exactly what would happen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>alpha  <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="fl">49.5</span>, <span class="at">conf.level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)<span class="sc">$</span>p.value</span>
@@ -582,7 +582,6 @@ Let's take the 0.025 and 0.975 quantiles of this distribution, i.e., the bounds 
 
 
 
-
 ::: {.cell}
 
 ```{.r .cell-code  code-fold="false"}
@@ -685,7 +684,6 @@ print(ci)
 
 :::
 :::
-
 
 
 
