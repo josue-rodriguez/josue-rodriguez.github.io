@@ -1,7 +1,7 @@
 /*-- scss:defaults --*/
 
 // Import fonts (define mainfont in _quarto.yml)
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;800&family=Nunito:wght@300;350;800&family=Roboto:wght@300;400&family=IBM+Plex+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@350;600;800&family=Nunito:wght@300;350;800&family=Roboto:wght@300;400&family=IBM+Plex+Serif&display=swap');
 
 // fonts
 $montserrat: 'Montserrat', sans-serif; 
@@ -56,8 +56,13 @@ h1, h2, h3, h4, h5, h6 {
 body {
   font-family: $montserrat;
   line-height: 1.5; // min 1.5 suggested for assistive tech
-  font-size: 18px;
-  font-weight: 400;//350;
+  font-size: 16px;
+  font-weight: 350;
+}
+
+body strong,
+body b {
+    font-weight: 600; // Semi-bold for bolded text
 }
 
 // modify blockquote styling
