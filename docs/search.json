@@ -159,12 +159,5 @@
     "title": "about",
     "section": " education",
     "text": "education\n\n\n\n  \n    \n      PhD in Quantitative Psychology —\n      2023\n    \n    University of California, Davis\n  \n  \n  \n    \n      MA in Cognitive Psychology —\n      2019\n    \n    Minor in Statistics\n    California State Polytechnic University, Humboldt\n  \n  \n  \n  \n    \n      BA in Psychology —\n      2017\n    \n    California State Polytechnic University, Humboldt"
-  },
-  {
-    "objectID": "posts/2024-11-27-confidence-interval-alt-definition/index.html#problem-set-up",
-    "href": "posts/2024-11-27-confidence-interval-alt-definition/index.html#problem-set-up",
-    "title": "Intepreting the confidence interval in front of you",
-    "section": "Problem Set-up",
-    "text": "Problem Set-up\nSuppose we sample \\(x_1, \\dots, x_n\\) from a \\(\\mathcal{N}(\\mu, \\sigma^2)\\) distribution, and that we are interested in testing the follow hypotheses about the population mean\n\\[\n\\begin{align}\nH_0{:\\;}\\mu &= \\theta \\\\\n& \\text{vs.} \\\\\nH_1{:\\;} \\mu &\\neq \\theta,\n\\end{align}\n\\]\nfor some \\(\\theta\\)1. We can choose a significance level \\(\\alpha\\) and perform a two-sided \\(t\\)-test to assess this null hypothesis. Recall that our \\(\\alpha\\) level is our error rate – the probability that we reject the null hypothesis when the null hypothesis is true. Canonically, \\(\\theta = 0\\) and \\(\\alpha = 0.05\\).\nWe first find our critical value for this test, \\(t_{crit, \\alpha}\\). We get this value by finding the \\(1 - \\alpha/2\\) quantile of the \\(\\text{Student-}t\\) distribution with \\(n-1\\) degrees of freedom.\nWe can then calculate our observed \\(t\\)-statistic as\n\\[\nt_{obs} = \\frac{\\bar{x} - \\theta}{s/\\sqrt{n}}\n\\]\nwhere \\(\\bar{x}\\) denotes the sample mean and \\(s\\) denotes the sample standard deviation.\nWe reject the null hypothesis that \\(\\mu = \\theta\\) when the \\(p\\)-value is greater than \\(\\alpha\\), or \\(|t_{obs}| \\geq t_{crit, \\alpha}.\\) Conversely, we fail to reject the null hypothesis whenever the \\(p\\)-value is less than \\(\\alpha\\), or \\(|t_{obs}| &lt; t_{crit, \\alpha}\\)."
   }
 ]
