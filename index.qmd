@@ -1,11 +1,11 @@
 ---
 title: ""
-image: images/josue_cropped.png
+image: images/harborhouse.png
 toc: false
 about: 
   template: jolla
   image-shape: round
-  image-width: 14em
+  image-width: 300px
   links:
     - icon: linkedin
       text: LinkedIn
