@@ -1,1 +1,1 @@
-/Users/josue/GitHub/econometrics/01_regression.qmd
+/Users/josue/GitHub/blogposts/01_regression.qmd

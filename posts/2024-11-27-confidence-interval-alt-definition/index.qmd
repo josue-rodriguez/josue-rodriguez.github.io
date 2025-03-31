@@ -274,7 +274,7 @@ ___
 To understand why values inside of the confidence interval are not statistically significantly different from the point estimate, we'll need to consider the relationship between hypothesis tests and confidence intervals. Recall that we are testing hypotheses regarding a population mean $H_0{:\;} \mu = \theta \text{ vs. } H_1{:\;} \mu \neq \theta$ at significance level $\alpha$, and we fail to reject $H_0$ whenever
 
 $$
-t_{obs} < t_{crit, \alpha}.
+|t_{obs}| < t_{crit, \alpha}.
 $$
 
 We can expand on that inequality to see that we fail to reject $H_0$ whenever
