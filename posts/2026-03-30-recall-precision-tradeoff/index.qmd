@@ -1,0 +1,475 @@
+---
+title: Why base rates cap 
+description: |
+ I go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one.
+tags: ["classification", "latent variables"]
+date: "2026-03-31"
+format:
+  html:
+    toc-depth: 1
+    code-fold: false
+jupyter: python3
+---
+
+```{python}
+#| code-fold: true
+import numpy as np
+from plotnine import *
+import polars as pl
+from scipy.stats import logistic, norm, bernoulli
+```
+
+# Takeaway
+
+**Even models with strong classification abilities will suffer in terms of precision if there is a strong class imbalance**
+
+# Introduction
+
+A very common data problem is that there's some binary outcome that you'd like to predict, say, whether a transaction was fraudulent. Typically, you have a model that takes in some features and outputs a probability that the features represent the positive class. You then classify observations into the positive or negative classes if the probabilities exceed a threshold, %t%.
+
+In this set-up, there's a few quantities that tend to stand-out:
+
+1. True positive rate (how frequently are you predicting a positive class, when the observation really belongs to the positive class?)
+2. False positive rate (how frequently are you predicting a positive class, when the observation really belongs to the *negative* class?)
+3. Precision (what proportion of all positive predictions really belong to the positive class?)
+
+These quantities matter because you'd probably like to (a) maximize the number of fraudelent transactions you catch (true positive rate) while simultaneously (b) minimizing the number of legimate transactions you flag as fraudlent (false positive rate). This objective is captured by precision.
+
+However, when the positive class makes up a very small proportion of the population (e.g., [fraudelent credit card transactions can be < 1% of all CC transactions](https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725) ), it can be very difficult to achieve high precision without a near-perfect model. In many settings, false positives have a cost associated to them (e.g., human review time) so it's very important to maximize precision. However, it's equally important to understand what's even achievable in the first place
+
+The post explores aims to demonstrate what kind of precision is realistic when the positive class is rare for binary classification problems.
+
+# Why base rates matter
+
+To understand this trade-off, it will be helpful to define the four probabilities described by the standard confusion matrix. Below, $y$ defines an observation's true class and $\hat{y}$ defines a model's predicted class. Both variables can take on a value of $1$ (positive class) or $0$ (negative class). Note that all for 4 probabilities are model predictions, conditional the true class.
+
+
+$$
+\begin{align}
+\text{True Positive Rate} &= p(\hat{y} = 1 | y = 1) \\
+\text{False Negative Rate} &= p(\hat{y} = 0 | y = 1) \\
+\text{False Positive Rate} &= p(\hat{y} = 1 | y = 0) \\
+\text{True Negative Rate} &= p(\hat{y} = 0 | y = 0) \\
+\end{align}
+$$
+
+
+Using these rates, we can imagine a strong model that at some threshold $t$, achieves the following probabilities:
+
+|         | $\hat{y} = 1$ | $\hat{y} = 0$ |                |
+|---------|---------------|--------------------------------|
+| $y = 1$ | 0.95          | 0.05          | $p(y=1)$ |
+| $y = 0$ | 0.05          | 0.95          | $p(y=0)$ |
+
+That is, this model has a true positive rate of 0.95 and a false positive rate of 0.05. Sticking with the credit card transaction example, this means that this model
+
+1. Correctly catches 95% of all fraudulent transactions
+2. Incorrectly misclassifies 5% of legimate transactions as fraudlent
+
+Prima facie, this model is looking good. I think most practitioners would be proud about a model that achieves these numbers. But remember, each positive prediction generates a costly human review, so it's of interest to understand how costly this model is. To do that, we need to work out the precision.
+
+___
+
+Precision is defined as
+
+$$
+\text{Precision} = p(y = 1 | \hat{y} = 1)
+$$
+
+
+or, the probability that an observation that the model flagged as fraudulent is indeed, fraudulent. 
+
+You might notice that this is a conditional probability that we can work out by applying Bayes' theorem. If we do this we get the following equation a
+
+$$
+\begin{align}
+p(y = 1 | \hat{y} = 1) &= \frac{%
+  p(\hat{y} = 1 | y = 1)p(y = 1)%
+  }{%
+  p(\hat{y} = 1 | y = 1)p(y = 1) + p(\hat{y} = 1 | y = 0)p(y = 0)%
+  }
+\end{align}
+$$
+
+and can plug in the numbers from the above table. However, we can't actually compute precision until we've defined the prior probability, or *prevalence*, of the positive and negative classes. We know from existing data that the prevalence of fraudulent transaction is less than 1%, but let's round up to 1% just for good measure so that $p(y=1) = 0.01$ and $p(y=0) = 0.99$.
+
+With prevalence specified, we can finally go on to compute the precision for our high true positive rate / low false positive rate model
+
+
+```{python}
+tpr = 0.95
+fpr = 0.05
+
+prevalence = 0.01
+```
+
+
+```{python}
+precision = tpr * prevalence / (tpr * prevalence + fpr * (1 - prevalence))
+print(f"{precision = :.2}")
+```
+
+
+If you've seen the classical [disease testing example](https://math.hmc.edu/funfacts/medical-tests-and-bayes-theorem/), then this result comes as no surprise to you:
+
+**A precision of 0.16 indicates that 84% of observations flagged as fraudulent would be false positive**, despite having a true positive rate of 0.95 and a false positive rate of 0.05! Such is life when the positive class makes up only a small fraction of the population.
+
+
+
+## Sweeping through different rates
+
+Okay, so in the above case we see just how terrible precision can be with a very low positive class and a fairly strong model. We can build some intuition for what precision looks like for other combinations of true positive rate, false positive rate, and prevalence. We can intuit that increasing any of these three should lead to a higher precision, but by how much?
+
+
+We'll do this by applying the Bayes' theorem logic as above to different combinations of these rates to observe
+
+```{python}
+def get_precision(tpr: np.array, fpr: float, prevalence: float = 0.05) -> np.array:
+  """compute conditional precision, given true positive rate, false positve rate, and positive class prevalence"""
+  precision = tpr * prevalence / (tpr * prevalence + fpr * (1 - prevalence))
+  return precision
+```
+
+```{python}
+tprs = np.arange(0.0, 1.0, step=0.01)
+fprs = [0.1, 0.05, 0.01]
+prevalences = [0.01, 0.05, 0.1, 0.2, 0.5]
+```
+
+
+```{python}
+precision_dfs = []
+
+for fpr in fprs:
+  for prevalence in prevalences:
+    # cast tpr array 
+    precision = get_precision(tprs, fpr, prevalence)
+
+    if len(tprs) != len(precision):
+      print(f"{len(tprs) = }")
+      print(f"{len(precision) = }")
+
+    _df = pl.DataFrame({
+      "tpr": tprs,
+      "precision": precision,
+      "fpr": "FPR = " + str(fpr),
+      "prevalence": str(prevalence),
+    })
+    precision_dfs.append(_df)
+
+precision_df = pl.concat(precision_dfs)
+```
+
+```{python}
+#| code-fold: true
+#| fig-align: center
+
+
+(
+  ggplot(precision_df, aes("tpr", "precision", color="prevalence"))
+  + geom_line(size=2)
+  + geom_vline(xintercept=0.95, color="gray", linetype="dashed")
+  + geom_hline(yintercept=0.8, color="gray", linetype="dashed")
+  + facet_wrap("~ fpr")
+  + scale_colour_cmap_d() 
+  + scale_y_continuous(breaks=np.arange(0, 1.1, 0.1))
+  + theme_bw(base_size=14)
+  + theme(legend_position="top", figure_size=(9, 6))
+  + labs(
+      x="True Positive Rate",
+      y="Precision",
+      color="Prevalence",
+      caption="*Dashed vertical line is TPR=0.95\n*Dashed horizontal line is Precision=0.8"
+    )
+)
+```
+
+It's worth sitting with this plot for a moment to see what it takes to achieve a high precision. 
+
+Even when your false positive rate is 0.01 , you never do better than 0.5 precision even with a perfect true positive rate, when your prevalence is 0.1!
+
+In an "optimistic" case, you false where your false positive rate is 0.05, you still have precision much lower tha
+
+
+# Evaluating ROC & Precision-Recall Curves
+
+<!--
+TRANSITION NOTE (remove before publishing):
+
+The tricky thing to communicate clearly:
+
+Part 1 treated tpr and trn as knobs you can set independently —
+"suppose you have a model with 95% tpr and 95% trn." But those
+numbers describe a model at a *specific decision threshold*. Move the threshold
+and both change.
+
+Part 2 flips the question: instead of assuming tpr/trn, we
+*construct* two class distributions (negative ~ Logistic(0,1), positive ~
+Logistic(μ,1)) such that there EXISTS a threshold where tpr=0.95 and
+trn=0.95 simultaneously. The separation μ encodes how good the model is.
+
+But once the model (i.e., the separation) is fixed, we can sweep the threshold
+across the entire range. Each threshold gives a *different* (tpr, trn)
+pair — the 0.95/0.95 point is just one stop along the curve. This is what
+generates the full precision-tpr curve.
+
+So the narrative is:
+  - Part 1: "Even at one impressive-sounding operating point, precision is bad."
+  - Part 2: "Let's build a model that *achieves* that operating point, then look
+    at the full picture. The entire precision-tpr curve shifts based on
+    prevalence — not model quality."
+
+The challenge: readers may not realize that "a model with 95% tpr" doesn't
+mean the model *always* has 95% tpr. It has 95% tpr at one threshold. The
+bilogistic framing makes this concrete because you can see the threshold moving
+along the x-axis.
+-->
+
+Now, the plots above were considering precision at different combinations of TPR and FPR, but those numbers typically only exist at some threshold $t$ on the probability output of a model. The choice of $t$ affects the trade-off between TPR and FPR. Usually, values of $t$ near zero usually result in high TPR at the cost of a high FPR and higher values of $t$ result in lower values of FPR at the cost of lower TPR.  
+
+With this in mind, I want to dig into the TPR - precision trade-off for a strong classification model, but look at the kinds of trade-offs it allows.
+
+```{python}
+def get_loc_p(trn: float, tpr: float) -> float:
+  z_n = logistic.ppf(trn)
+  
+  alpha = 1 - tpr
+  loc_p = z_n + np.log((1 - alpha) / alpha)
+
+  return loc_p
+```
+
+```{python}
+loc_n = 0
+loc_p = get_loc_p(trn=0.95, tpr=0.95)
+
+scale = 1
+
+xrange_n = np.arange(-8, 8, 0.1)
+xrange_p = xrange_n + loc_p
+```
+
+
+```{r}
+n <- c(4, 6)
+(2 * 4 * n) / 16
+```
+```{python}
+neg_df = pl.DataFrame({
+  "x": xrange_n,
+  "y": logistic.pdf(xrange_n),
+  "class": "0"
+})
+pos_df = pl.DataFrame({
+  "x": xrange_p,
+  "y": logistic.pdf(xrange_p, loc=loc_p),
+  "class": "1"
+})
+
+dist_df = pl.concat([neg_df, pos_df])
+
+dist_df = dist_df.with_columns(
+   pl.from_numpy(
+    logistic.cdf(dist_df.select("x").to_numpy()),
+    schema=["p"]
+   )
+)
+```
+
+
+```{python}
+(
+    ggplot(dist_df, aes(x="x", y="p", color="class"))
+    + geom_line()
+    # + labs(title="Class-Conditional Densities", x="Score", y="Density")
+    + facet_wrap("~ class")
+    + theme_bw()
+)
+```
+
+```{python}
+neg_df = pl.DataFrame({
+  "x": xrange_n,
+  "y": (1-prevalence) * logistic.pdf(xrange_n),
+  "class": "0"
+})
+pos_df = pl.DataFrame({
+  "x": xrange_p,
+  "y": prevalence * logistic.pdf(xrange_p, loc=loc_p),
+  "class": "1"
+})
+
+dist_df = pl.concat([neg_df, pos_df])
+
+```
+
+
+```{python}
+(
+    ggplot(dist_df, aes(x="x", y="y", color="class"))
+    + geom_line()
+    + labs(title="Class-Conditional Densities", x="Score", y="Density")
+    + theme_bw()
+)
+```
+
+
+
+## Need $f(x)$ to get TPR, FPR, TNR, and FNR
+
+```{python}
+thresholds = np.arange(-10, 14, 0.01)
+
+# TPR and FPR are coupled by the threshold
+tpr = 1 - logistic.cdf(thresholds, loc=loc_p)  # tpr
+fpr = 1 - logistic.cdf(thresholds, loc=loc_n)  # 1 - trn
+
+dfs = []
+for prev in [0.01, 0.05, 0.1, 0.2]:
+    precision = (tpr * prev) / (tpr * prev + fpr * (1 - prev))
+    dfs.append(pl.DataFrame({
+        "tpr": tpr,
+        "precision": precision,
+        "prevalence": str(prev),
+    }))
+
+pr_df = pl.concat(dfs)
+
+(
+    ggplot(pr_df, aes("tpr", "precision", color="prevalence"))
+    + geom_line()
+    + labs(
+        title="Precision-tpr Curves (0.95/0.95 Bilogistic Model)",
+        x="tpr (TPR)",
+        y="Precision",
+    )
+    + theme_bw()
+)
+```
+
+
+
+
+# Connection to LR
+
+
+::: {.callout-tip title="Connecting to Logistic Regression" collapse=true icon=false}
+
+$$
+\begin{align}
+y* = X\beta + \epsilon \\
+\epsilon \sim \text{Logistic}(\mu, s) \\
+y = \begin{cases}
+    1 & \text{if } y* > c \\
+    0  & \text{otherwise}
+\end{cases}
+\end{align}
+$$
+
+
+```{python}
+n = 10_000
+group = np.repeat([0, 1], n//2)
+X = np.column_stack([np.ones(n), group])
+B = np.array([0, loc_p])
+
+e = logistic.rvs(size=n)
+# e = norm.rvs(size=n)
+
+ystar = X @ B + e
+
+latent_df = pl.DataFrame({
+  "group": [str(i) for i in group],
+  "y": ystar,
+})
+
+
+(
+    ggplot(latent_df, aes(x="y", fill="group")) + geom_density()
+)
+```
+
+```{python}
+import statsmodels.api as sm
+
+yobs = (ystar > 0).astype(int)
+model = sm.Logit(yobs, X).fit()
+print(model.summary())
+```
+
+:::
+
+
+<!-- 
+# TNR = True Negative Rate (TNR) = area to the left of the threshold for the Negative pop
+# FPR = False Positive Rate (FPR) = area to the right of the threshold for the Negative pop
+# FNR = False Negative Rate (FNR) = area to the left of the threshold for the Positive pop
+# TPR = True Positive Rate (TPR) = area to the right of the threshold for the Positive pop
+
+thresholds <- seq(-10, 10, by = 0.1)
+
+rates <- data.frame(
+t = numeric(),
+tnr = numeric(),
+fpr = numeric(),
+fnr = numeric(),
+tpr = numeric()
+)
+for (t in thresholds) {
+tnr <- plogis(t, location = mu_n, scale = sigma_n)
+fpr <- 1 - tnr
+
+fnr <- plogis(t, location = mu_p, scale = sigma_p)
+tpr <- 1 - fnr
+
+rates <- rbind.data.frame(rates, data.frame(t, tnr, fpr, fnr, tpr))
+}
+
+
+calc_precision <- function(tpr, fpr, pi = 0.05) {
+if (missing(tpr) || missing(fpr)) {
+stop("Both TPR and FPR must be provided")
+}
+
+if (pi <= 0 || pi > 0.5) {
+stop("Base rate (pi) must be in the range (0, 0.5]")
+}
+
+precision <- (tpr * pi) / (tpr * pi + fpr * (1 - pi))
+return(precision)
+}
+
+
+prevalence <- 0.1
+rates$precision <- calc_precision(rates$tpr, rates$fpr, pi = prevalence)
+
+
+
+ggplot(aes(x = fpr, y = tpr), data = rates) +
+geom_line(color = "orange", size = 2) +
+labs(title = "ROC Curve", x = "False Positive Rate", y = "True Positive Rate") +
+expand_limits(x = c(0, 1), y = c(0, 1)) +
+theme_bw() +
+geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") # Add diagonal line for reference
+
+
+ggplot(aes(x = tpr, y = precision), data = rates) +
+geom_line(color = "purple", size = 2) +
+labs(title = "Precision-tpr Curve", x = "tpr (TPR)", y = "Precision") +
+expand_limits(x = c(0, 1), y = c(0, 1)) +
+theme_bw() +
+geom_hline(yintercept = prevalence, linetype = "dashed", color = "gray")
+
+# pnorm => norm.cdf
+# qnorm => norm.ppf
+# dnorm => norm.pdf  -->
+
+
+
+
+
+```{r}
+
+
+
+```
