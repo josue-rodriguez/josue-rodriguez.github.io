@@ -1,7 +1,7 @@
 ---
-title: Why base rates cap 
+title: Why base rates cap your precision
 description: |
- I go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one.
+ Even strong classifiers suffer low precision when the positive class is rare. I walk through the math and show what's actually achievable.
 tags: ["classification", "latent variables"]
 date: "2026-03-31"
 format:
@@ -21,27 +21,21 @@ from scipy.stats import logistic, norm, bernoulli
 
 # Takeaway
 
-**Even models with strong classification abilities will suffer in terms of precision if there is a strong class imbalance**
+**The base rate of the positive class puts a ceiling on what precision is achievable, regardless of how good your model is. If you don't understand your base rates, you don't understand what precision is even feasible.**
 
 # Introduction
 
-A very common data problem is that there's some binary outcome that you'd like to predict, say, whether a transaction was fraudulent. Typically, you have a model that takes in some features and outputs a probability that the features represent the positive class. You then classify observations into the positive or negative classes if the probabilities exceed a threshold, %t%.
+Say you're building a model to flag fraudulent credit card transactions. Your model takes in some features, outputs a probability, and you classify a transaction as fraudulent if that probability exceeds some threshold $t$. To evaluate this model, you'd naturally look at two things: the *true positive rate* (what fraction of actual frauds does the model catch?) and the *false positive rate* (what fraction of legitimate transactions does the model incorrectly flag?).
 
-In this set-up, there's a few quantities that tend to stand-out:
+But there's a third quantity worth paying attention to: *precision*. Of all the transactions my model flagged, how many are actually fraudulent? If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false alarms.
 
-1. True positive rate (how frequently are you predicting a positive class, when the observation really belongs to the positive class?)
-2. False positive rate (how frequently are you predicting a positive class, when the observation really belongs to the *negative* class?)
-3. Precision (what proportion of all positive predictions really belong to the positive class?)
+Here's the problem. [Fraudulent transactions make up less than 1% of all credit card activity](https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725). When the positive class is that rare, even a model with strong TPR and low FPR can have terrible precision — most of its flags will be false alarms. Such is life with low *base rates*.
 
-These quantities matter because you'd probably like to (a) maximize the number of fraudelent transactions you catch (true positive rate) while simultaneously (b) minimizing the number of legimate transactions you flag as fraudlent (false positive rate). This objective is captured by precision.
-
-However, when the positive class makes up a very small proportion of the population (e.g., [fraudelent credit card transactions can be < 1% of all CC transactions](https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725) ), it can be very difficult to achieve high precision without a near-perfect model. In many settings, false positives have a cost associated to them (e.g., human review time) so it's very important to maximize precision. However, it's equally important to understand what's even achievable in the first place
-
-The post explores aims to demonstrate what kind of precision is realistic when the positive class is rare for binary classification problems.
+This post walks through why that happens and what precision you can realistically expect when the positive class is rare.
 
 # Why base rates matter
 
-To understand this trade-off, it will be helpful to define the four probabilities described by the standard confusion matrix. Below, $y$ defines an observation's true class and $\hat{y}$ defines a model's predicted class. Both variables can take on a value of $1$ (positive class) or $0$ (negative class). Note that all for 4 probabilities are model predictions, conditional the true class.
+To understand this trade-off, let's start by defining the four probabilities in the standard confusion matrix. Below, $y$ is an observation's true class and $\hat{y}$ is the model's predicted class — both take a value of $1$ (positive) or $0$ (negative). Note that all four probabilities are conditional on the true class, so each row sums to 1.
 
 
 $$
@@ -54,19 +48,19 @@ $$
 $$
 
 
-Using these rates, we can imagine a strong model that at some threshold $t$, achieves the following probabilities:
+With these definitions in hand, let's imagine a strong model that, at some threshold $t$, achieves the following probabilities:
 
 |         | $\hat{y} = 1$ | $\hat{y} = 0$ |                |
 |---------|---------------|--------------------------------|
 | $y = 1$ | 0.95          | 0.05          | $p(y=1)$ |
 | $y = 0$ | 0.05          | 0.95          | $p(y=0)$ |
 
-That is, this model has a true positive rate of 0.95 and a false positive rate of 0.05. Sticking with the credit card transaction example, this means that this model
+That is, this model has a TPR of 0.95 and an FPR of 0.05. Sticking with our credit card example, this means the model
 
 1. Correctly catches 95% of all fraudulent transactions
-2. Incorrectly misclassifies 5% of legimate transactions as fraudlent
+2. Incorrectly flags 5% of legitimate transactions as fraudulent
 
-Prima facie, this model is looking good. I think most practitioners would be proud about a model that achieves these numbers. But remember, each positive prediction generates a costly human review, so it's of interest to understand how costly this model is. To do that, we need to work out the precision.
+At first glance, this looks great. I think most practitioners would be proud of these numbers. But remember — each positive prediction generates a costly human review. So how costly is this model, really? To find out, we need to work out the precision.
 
 ___
 
@@ -77,9 +71,9 @@ $$
 $$
 
 
-or, the probability that an observation that the model flagged as fraudulent is indeed, fraudulent. 
+or, the probability that a transaction the model flagged as fraudulent is *actually* fraudulent.
 
-You might notice that this is a conditional probability that we can work out by applying Bayes' theorem. If we do this we get the following equation a
+You might notice that this is a conditional probability we can work out with Bayes' theorem. If we do that, we get
 
 $$
 \begin{align}
@@ -91,9 +85,9 @@ p(y = 1 | \hat{y} = 1) &= \frac{%
 \end{align}
 $$
 
-and can plug in the numbers from the above table. However, we can't actually compute precision until we've defined the prior probability, or *prevalence*, of the positive and negative classes. We know from existing data that the prevalence of fraudulent transaction is less than 1%, but let's round up to 1% just for good measure so that $p(y=1) = 0.01$ and $p(y=0) = 0.99$.
+and plug in the numbers from our table. But we can't actually compute precision until we've specified the *prevalence* of the positive and negative classes — that's $p(y=1)$ and $p(y=0)$. We know from existing data that the prevalence of fraudulent transactions is less than 1%, but let's be generous and round up to 1% so that $p(y=1) = 0.01$ and $p(y=0) = 0.99$.
 
-With prevalence specified, we can finally go on to compute the precision for our high true positive rate / low false positive rate model
+Now we can finally compute precision for our seemingly strong model
 
 
 ```{python}
@@ -110,18 +104,17 @@ print(f"{precision = :.2}")
 ```
 
 
-If you've seen the classical [disease testing example](https://math.hmc.edu/funfacts/medical-tests-and-bayes-theorem/), then this result comes as no surprise to you:
+If you've seen the classical [disease testing example](https://math.hmc.edu/funfacts/medical-tests-and-bayes-theorem/), this result won't surprise you:
 
-**A precision of 0.16 indicates that 84% of observations flagged as fraudulent would be false positive**, despite having a true positive rate of 0.95 and a false positive rate of 0.05! Such is life when the positive class makes up only a small fraction of the population.
+**A precision of 0.16 means that 84% of transactions flagged as fraudulent would be false positives** — despite a TPR of 0.95 and an FPR of 0.05! Such is life when the positive class makes up only a tiny fraction of the population.
 
 
 
 ## Sweeping through different rates
 
-Okay, so in the above case we see just how terrible precision can be with a very low positive class and a fairly strong model. We can build some intuition for what precision looks like for other combinations of true positive rate, false positive rate, and prevalence. We can intuit that increasing any of these three should lead to a higher precision, but by how much?
+Okay, so we've seen just how bad precision can get with a low base rate and a model that otherwise looks strong. Let's build some intuition for what precision looks like across different combinations of TPR, FPR, and prevalence. You'd expect that increasing TPR or prevalence, or *decreasing* FPR, should improve precision — but by how much?
 
-
-We'll do this by applying the Bayes' theorem logic as above to different combinations of these rates to observe
+To find out, we'll apply the same Bayes' theorem calculation to a grid of these rates.
 
 ```{python}
 def get_precision(tpr: np.array, fpr: float, prevalence: float = 0.05) -> np.array:
@@ -184,50 +177,24 @@ precision_df = pl.concat(precision_dfs)
 )
 ```
 
-It's worth sitting with this plot for a moment to see what it takes to achieve a high precision. 
+It's worth sitting with this plot for a moment.
 
-Even when your false positive rate is 0.01 , you never do better than 0.5 precision even with a perfect true positive rate, when your prevalence is 0.1!
+Consider the best-case panel (FPR = 0.01). Even with a *perfect* TPR of 1.0, a prevalence of 0.01 gets you only about 50% precision — half of your flagged cases are still false positives. To break 80% precision at that prevalence, you'd need an FPR well below 0.01.
 
-In an "optimistic" case, you false where your false positive rate is 0.05, you still have precision much lower tha
+Now look at the middle panel (FPR = 0.05). At a prevalence of 0.05 and a TPR of 0.95, precision lands around 0.50. That means for every real fraud you catch, you're also flagging one legitimate transaction. And it only gets worse as prevalence drops: at 1% prevalence in that same panel, precision barely clears 0.15 regardless of how high your TPR goes.
+
+The pattern is clear: when the positive class is rare, even small false positive rates generate a flood of false alarms that overwhelm the true positives. The base rate acts as a hard ceiling on precision.
 
 
-# Evaluating ROC & Precision-Recall Curves
+# Digging deeper: from one operating point to a full model
 
-<!--
-TRANSITION NOTE (remove before publishing):
+Everything above treated TPR and FPR as knobs you can set independently: "suppose a model has 95% TPR and 5% FPR." But a real model doesn't work that way. TPR and FPR are both determined by a single decision threshold $t$. If you increase $t$ to cut down on false positives, you'll inevitably miss more true positives too. The 0.95/0.05 operating point we examined is just one point along this trade-off.
 
-The tricky thing to communicate clearly:
+To see the full picture, we need an actual model that produces scores we can threshold. We'll use a simple theoretical setup called the [*bilogistic model*](https://www.columbia.edu/~ld208/psymeth98.pdf): the negative class yields scores from a Logistic$(0, 1)$ distribution and the positive class from a Logistic$(\mu, 1)$ distribution. The separation $\mu$ controls how good the model is — larger $\mu$ means the two classes are easier to tell apart.
 
-Part 1 treated tpr and trn as knobs you can set independently —
-"suppose you have a model with 95% tpr and 95% trn." But those
-numbers describe a model at a *specific decision threshold*. Move the threshold
-and both change.
+We can calibrate $\mu$ so that there *exists* a threshold where TPR = 0.95 and TNR = 0.95 simultaneously — matching the model from Part 1. But once the model is fixed, we can slide the threshold anywhere and see what happens to TPR, FPR, and precision at every point along the way.
 
-Part 2 flips the question: instead of assuming tpr/trn, we
-*construct* two class distributions (negative ~ Logistic(0,1), positive ~
-Logistic(μ,1)) such that there EXISTS a threshold where tpr=0.95 and
-trn=0.95 simultaneously. The separation μ encodes how good the model is.
-
-But once the model (i.e., the separation) is fixed, we can sweep the threshold
-across the entire range. Each threshold gives a *different* (tpr, trn)
-pair — the 0.95/0.95 point is just one stop along the curve. This is what
-generates the full precision-tpr curve.
-
-So the narrative is:
-  - Part 1: "Even at one impressive-sounding operating point, precision is bad."
-  - Part 2: "Let's build a model that *achieves* that operating point, then look
-    at the full picture. The entire precision-tpr curve shifts based on
-    prevalence — not model quality."
-
-The challenge: readers may not realize that "a model with 95% tpr" doesn't
-mean the model *always* has 95% tpr. It has 95% tpr at one threshold. The
-bilogistic framing makes this concrete because you can see the threshold moving
-along the x-axis.
--->
-
-Now, the plots above were considering precision at different combinations of TPR and FPR, but those numbers typically only exist at some threshold $t$ on the probability output of a model. The choice of $t$ affects the trade-off between TPR and FPR. Usually, values of $t$ near zero usually result in high TPR at the cost of a high FPR and higher values of $t$ result in lower values of FPR at the cost of lower TPR.  
-
-With this in mind, I want to dig into the TPR - precision trade-off for a strong classification model, but look at the kinds of trade-offs it allows.
+## The bilogistic model
 
 ```{python}
 def get_loc_p(trn: float, tpr: float) -> float:
@@ -250,10 +217,6 @@ xrange_p = xrange_n + loc_p
 ```
 
 
-```{r}
-n <- c(4, 6)
-(2 * 4 * n) / 16
-```
 ```{python}
 neg_df = pl.DataFrame({
   "x": xrange_n,
@@ -268,61 +231,64 @@ pos_df = pl.DataFrame({
 
 dist_df = pl.concat([neg_df, pos_df])
 
-dist_df = dist_df.with_columns(
-   pl.from_numpy(
-    logistic.cdf(dist_df.select("x").to_numpy()),
-    schema=["p"]
-   )
-)
 ```
 
 
 ```{python}
-(
-    ggplot(dist_df, aes(x="x", y="p", color="class"))
-    + geom_line()
-    # + labs(title="Class-Conditional Densities", x="Score", y="Density")
-    + facet_wrap("~ class")
-    + theme_bw()
-)
-```
-
-```{python}
-neg_df = pl.DataFrame({
-  "x": xrange_n,
-  "y": (1-prevalence) * logistic.pdf(xrange_n),
-  "class": "0"
-})
-pos_df = pl.DataFrame({
-  "x": xrange_p,
-  "y": prevalence * logistic.pdf(xrange_p, loc=loc_p),
-  "class": "1"
-})
-
-dist_df = pl.concat([neg_df, pos_df])
-
-```
-
-
-```{python}
+#| code-fold: true
+#| fig-align: center
 (
     ggplot(dist_df, aes(x="x", y="y", color="class"))
-    + geom_line()
-    + labs(title="Class-Conditional Densities", x="Score", y="Density")
-    + theme_bw()
+    + geom_line(size=1.5)
+    + labs(x="Score", y="Density", color="Class")
+    + theme_bw(base_size=14)
+    + theme(legend_position="top", figure_size=(8, 5))
 )
 ```
 
 
+## The ROC curve
 
-## Need $f(x)$ to get TPR, FPR, TNR, and FNR
+Let's now sweep the threshold across the full range and plot the ROC curve.
 
 ```{python}
 thresholds = np.arange(-10, 14, 0.01)
 
 # TPR and FPR are coupled by the threshold
-tpr = 1 - logistic.cdf(thresholds, loc=loc_p)  # tpr
-fpr = 1 - logistic.cdf(thresholds, loc=loc_n)  # 1 - trn
+tpr = 1 - logistic.cdf(thresholds, loc=loc_p)
+fpr = 1 - logistic.cdf(thresholds, loc=loc_n)
+```
+
+
+```{python}
+#| code-fold: true
+#| fig-align: center
+
+roc_df = pl.DataFrame({"fpr": fpr, "tpr": tpr})
+
+(
+    ggplot(roc_df, aes("fpr", "tpr"))
+    + geom_line(size=1.5)
+    + geom_abline(slope=1, intercept=0, linetype="dashed", color="gray")
+    + labs(x="False Positive Rate", y="True Positive Rate")
+    + scale_x_continuous(limits=(0, 1))
+    + scale_y_continuous(limits=(0, 1))
+    + theme_bw(base_size=14)
+    + theme(figure_size=(6, 6))
+)
+```
+
+The ROC curve looks excellent — it hugs the top-left corner, AUROC near 1.0. If you stopped here, you'd feel good about this model. That's the same "looks great at first glance" feeling from Part 1.
+
+But here's the thing: the ROC curve is completely invariant to prevalence. TPR and FPR are both conditional on the true class, so the base rate never enters the picture. Whether 1% or 50% of transactions are fraudulent, the ROC curve looks identical. That's useful for some purposes, but it means the ROC curve can't tell you how many of your flags will be false alarms in practice.
+
+## The Precision-Recall curve
+
+For that, we need the Precision-Recall curve. We'll use the same threshold sweep and compute precision at each point via the Bayes' theorem formula from Part 1 — but now at every threshold, not just one.
+
+```{python}
+#| code-fold: true
+#| fig-align: center
 
 dfs = []
 for prev in [0.01, 0.05, 0.1, 0.2]:
@@ -337,57 +303,72 @@ pr_df = pl.concat(dfs)
 
 (
     ggplot(pr_df, aes("tpr", "precision", color="prevalence"))
-    + geom_line()
-    + labs(
-        title="Precision-tpr Curves (0.95/0.95 Bilogistic Model)",
-        x="tpr (TPR)",
-        y="Precision",
-    )
-    + theme_bw()
+    + geom_line(size=1.5)
+    + scale_colour_cmap_d()
+    + scale_x_continuous(limits=(0, 1))
+    + scale_y_continuous(limits=(0, 1), breaks=np.arange(0, 1.1, 0.1))
+    + labs(x="Recall (TPR)", y="Precision", color="Prevalence")
+    + theme_bw(base_size=14)
+    + theme(legend_position="top", figure_size=(8, 6))
 )
 ```
 
+The ROC curve was identical regardless of base rate. The PR curve is not. At 1% prevalence, the curve collapses — there's no threshold that gives you both high recall and high precision. To push precision above 0.5, you have to sacrifice most of your recall. At 20% prevalence, the trade-off is much more forgiving.
+
+This is the same problem from Part 1, but now we can see it across *every possible threshold*, not just one. The base rate doesn't just hurt precision at a single operating point — it reshapes the entire trade-off curve.
 
 
+## Connection to logistic regression
 
-# Connection to LR
 
+You might have noticed that the x-axis in the bilogistic density plots doesn't have obvious units. It represents the model's *logit* output — the log-odds score a classifier produces before converting to a probability. The threshold $t$ is just a cutoff on this logit scale: everything above $t$ gets classified as positive.
 
-::: {.callout-tip title="Connecting to Logistic Regression" collapse=true icon=false}
+This connects directly to logistic regression through its [*latent variable* formulation](https://en.wikipedia.org/wiki/Logistic_regression#As_a_latent-variable_model). The idea is that behind every observed binary outcome $y \in \{0, 1\}$, there's a continuous latent variable $y^*$ that determines the class:
 
 $$
 \begin{align}
-y* = X\beta + \epsilon \\
-\epsilon \sim \text{Logistic}(\mu, s) \\
-y = \begin{cases}
-    1 & \text{if } y* > c \\
+y_i^* &= X\beta + \epsilon_i, \quad \epsilon_i \sim \text{Logistic}(0, 1) \\
+y_i &= \begin{cases}
+    1 & \text{if } y_i^* > 0 \\
     0  & \text{otherwise}
 \end{cases}
 \end{align}
 $$
 
+The latent score $y^*$ is exactly the logit-scale quantity from our bilogistic model. For the negative class ($X\beta = 0$), latent scores follow a Logistic$(0, 1)$ distribution. For the positive class ($X\beta = \mu$), they follow a Logistic$(\mu, 1)$. The threshold at 0 plays the role of our decision boundary.
+
+Let's verify this correspondence by simulating data from the latent variable model using the same separation $\mu$ we calibrated earlier, then fitting a logistic regression to recover $\mu$.
 
 ```{python}
 n = 10_000
-group = np.repeat([0, 1], n//2)
+group = np.repeat([0, 1], n // 2)
 X = np.column_stack([np.ones(n), group])
 B = np.array([0, loc_p])
 
 e = logistic.rvs(size=n)
-# e = norm.rvs(size=n)
-
 ystar = X @ B + e
 
 latent_df = pl.DataFrame({
   "group": [str(i) for i in group],
   "y": ystar,
 })
+```
 
+The density of the latent scores by group recovers the same two-distribution picture we saw earlier:
 
+```{python}
+#| code-fold: true
+#| fig-align: center
 (
-    ggplot(latent_df, aes(x="y", fill="group")) + geom_density()
+    ggplot(latent_df, aes(x="y", fill="group"))
+    + geom_density(alpha=0.5)
+    + labs(x="Latent score (logit)", y="Density", fill="Group")
+    + theme_bw(base_size=14)
+    + theme(legend_position="top", figure_size=(8, 5))
 )
 ```
+
+Now let's threshold $y^*$ at 0 to get the observed binary outcome and fit a logistic regression. If the models correspond, the estimated group coefficient should land close to $\mu \approx$ `{python} f"{loc_p:.2f}"`.
 
 ```{python}
 import statsmodels.api as sm
@@ -397,79 +378,4 @@ model = sm.Logit(yobs, X).fit()
 print(model.summary())
 ```
 
-:::
-
-
-<!-- 
-# TNR = True Negative Rate (TNR) = area to the left of the threshold for the Negative pop
-# FPR = False Positive Rate (FPR) = area to the right of the threshold for the Negative pop
-# FNR = False Negative Rate (FNR) = area to the left of the threshold for the Positive pop
-# TPR = True Positive Rate (TPR) = area to the right of the threshold for the Positive pop
-
-thresholds <- seq(-10, 10, by = 0.1)
-
-rates <- data.frame(
-t = numeric(),
-tnr = numeric(),
-fpr = numeric(),
-fnr = numeric(),
-tpr = numeric()
-)
-for (t in thresholds) {
-tnr <- plogis(t, location = mu_n, scale = sigma_n)
-fpr <- 1 - tnr
-
-fnr <- plogis(t, location = mu_p, scale = sigma_p)
-tpr <- 1 - fnr
-
-rates <- rbind.data.frame(rates, data.frame(t, tnr, fpr, fnr, tpr))
-}
-
-
-calc_precision <- function(tpr, fpr, pi = 0.05) {
-if (missing(tpr) || missing(fpr)) {
-stop("Both TPR and FPR must be provided")
-}
-
-if (pi <= 0 || pi > 0.5) {
-stop("Base rate (pi) must be in the range (0, 0.5]")
-}
-
-precision <- (tpr * pi) / (tpr * pi + fpr * (1 - pi))
-return(precision)
-}
-
-
-prevalence <- 0.1
-rates$precision <- calc_precision(rates$tpr, rates$fpr, pi = prevalence)
-
-
-
-ggplot(aes(x = fpr, y = tpr), data = rates) +
-geom_line(color = "orange", size = 2) +
-labs(title = "ROC Curve", x = "False Positive Rate", y = "True Positive Rate") +
-expand_limits(x = c(0, 1), y = c(0, 1)) +
-theme_bw() +
-geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") # Add diagonal line for reference
-
-
-ggplot(aes(x = tpr, y = precision), data = rates) +
-geom_line(color = "purple", size = 2) +
-labs(title = "Precision-tpr Curve", x = "tpr (TPR)", y = "Precision") +
-expand_limits(x = c(0, 1), y = c(0, 1)) +
-theme_bw() +
-geom_hline(yintercept = prevalence, linetype = "dashed", color = "gray")
-
-# pnorm => norm.cdf
-# qnorm => norm.ppf
-# dnorm => norm.pdf  -->
-
-
-
-
-
-```{r}
-
-
-
-```
+The estimated coefficient for `x1` (the group indicator) lands close to the true $\mu$ we used to generate the data. The logistic regression recovers the separation between the two distributions — the same parameter that controls model quality in the bilogistic framework. That's it.
