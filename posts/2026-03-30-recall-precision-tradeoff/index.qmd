@@ -367,10 +367,7 @@ This is the same problem from the single-threshold example, but now we can see i
 
 # Conclusion
 
-A high AUROC tells you the model can *separate* the classes. It doesn't tell you what happens when you deploy it into a world where one class vastly outnumbers the other. And remember — the curves in this post used a *very* strong model. Most real classifiers will do worse, which means the precision ceilings shown here are optimistic.
-
-Before you celebrate a strong ROC curve, check your base rates. They determine whether your model's flags will be mostly signal or mostly noise — and if each flag triggers a costly action (a human review, an account freeze, a follow-up test), low precision means you're burning resources on false positives. Understanding your base rates isn't just a statistical nicety; it's how you figure out whether the model is worth deploying at all.
-
+That's really the whole story. Base rates set a ceiling on precision, and no amount of model improvement can break through it. If you're working in a low-prevalence setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning hyperparameters. You might find that the precision you need simply isn't reachable at your base rate, and that's useful to know early.
 
 ::: {.callout-note collapse="true"}
 ## Appendix: Connection to logistic regression
