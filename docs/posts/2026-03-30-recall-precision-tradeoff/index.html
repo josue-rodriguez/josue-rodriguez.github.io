@@ -227,15 +227,6 @@ window.Quarto = {
 
 
 
-<div id="b4decc5e" class="cell" data-execution_count="1">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> logistic, norm, bernoulli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
 <section id="takeaway" class="level1">
 <h1>Takeaway</h1>
 <p><strong>The base rate of the positive class puts a ceiling on what precision is achievable, regardless of how good your model is. If you don’t understand your base rates, you don’t understand what precision is even feasible.</strong></p>
@@ -244,7 +235,7 @@ window.Quarto = {
 <h1>Introduction</h1>
 <p>Say you’re building a model to flag fraudulent credit card transactions. Your model takes in some features, outputs a probability, and you classify a transaction as fraudulent if that probability crosses some threshold <span class="math inline">\(t\)</span>. To evaluate it, you’d naturally look at two things: the <em>true positive rate</em> (what fraction of actual frauds does the model catch?) and the <em>false positive rate</em> (what fraction of legitimate transactions does the model incorrectly flag?).</p>
 <p>But there’s a third quantity worth paying attention to: <em>precision</em>. Of all the transactions the model flagged, how many are actually fraudulent? If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false alarms.</p>
-<p>Here’s the problem. <a href="https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725">Fraudulent transactions make up less than 1% of all credit card activity</a>. When the positive class is that rare, even a model with strong TPR and low FPR can have terrible precision — most of its flags will be false alarms.</p>
+<p>Here’s the problem. <a href="https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725">Fraudulent transactions make up less than 1% of all credit card activity</a>. When the positive class is that rare, even a model with strong TPR and low FPR can have terrible precision — most of its flags will be false positives.</p>
 <p>This post walks through why that happens, and what precision you can realistically expect when the positive class is rare.</p>
 </section>
 <section id="why-base-rates-matter" class="level1">
@@ -304,83 +295,86 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 \]</span></p>
 <p>and plug in the numbers from our table. But we can’t actually compute precision until we’ve specified the <em>prevalence</em> of the positive and negative classes — that’s <span class="math inline">\(p(y=1)\)</span> and <span class="math inline">\(p(y=0)\)</span>. We know from existing data that the prevalence of fraudulent transactions is less than 1%, but let’s be generous and round up to 1% so that <span class="math inline">\(p(y=1) = 0.01\)</span> and <span class="math inline">\(p(y=0) = 0.99\)</span>.</p>
 <p>Now we can finally compute precision for our seemingly strong model</p>
-<div id="a2b51cb2" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tpr <span class="op">=</span> <span class="fl">0.95</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fpr <span class="op">=</span> <span class="fl">0.05</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>prevalence <span class="op">=</span> <span class="fl">0.01</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="08ec2fb1" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>precision <span class="op">=</span> tpr <span class="op">*</span> prevalence <span class="op">/</span> (tpr <span class="op">*</span> prevalence <span class="op">+</span> fpr <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prevalence))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>precision <span class="op">=</span> <span class="sc">:.2}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="abc32a16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tpr <span class="op">=</span> <span class="fl">0.95</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fpr <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>prevalence <span class="op">=</span> <span class="fl">0.01</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>precision <span class="op">=</span> tpr <span class="op">*</span> prevalence <span class="op">/</span> (tpr <span class="op">*</span> prevalence <span class="op">+</span> fpr <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prevalence))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>precision <span class="op">=</span> <span class="sc">:.2}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>precision = 0.16</code></pre>
 </div>
 </div>
 <p>If you’ve seen the classical <a href="https://math.hmc.edu/funfacts/medical-tests-and-bayes-theorem/">disease testing example</a>, this result won’t surprise you:</p>
-<p><strong>A precision of 0.16 means that 84% of transactions flagged as fraudulent would be false positives</strong> — despite a TPR of 0.95 and an FPR of 0.05! The 95/5 split <em>feels</em> like a strong model, but Bayes’ theorem undermines that intuition when the classes are this imbalanced: the 99% of legitimate transactions, each with a small chance of being falsely flagged, easily outnumber the 1% of actual frauds.</p>
+<p><strong>A precision of 0.16 means that 84% of transactions flagged as fraudulent would be false positives</strong> — despite a TPR of 0.95 and an FPR of 0.05! The 0.95/0.05 split <em>feels</em> like a strong model, but Bayes’ theorem undermines that intuition when the classes are this imbalanced: the 99% of legitimate transactions, each with a small chance of being falsely flagged, easily outnumber the 1% of actual frauds.</p>
 <section id="sweeping-through-different-rates" class="level2">
 <h2 class="anchored" data-anchor-id="sweeping-through-different-rates">Sweeping through different rates</h2>
 <p>Okay, so we’ve seen just how bad precision can get with a low base rate and a model that otherwise looks strong. Let’s build some intuition for what precision looks like across different combinations of TPR, FPR, and prevalence. You’d expect that increasing TPR or prevalence, or <em>decreasing</em> FPR, should improve precision — but by how much?</p>
 <p>To find out, we’ll apply the same Bayes’ theorem calculation to a grid of these rates. In the plot below, each panel fixes the FPR; the colored lines show how precision varies with TPR at different prevalences.</p>
-<div id="86eda139" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_precision(tpr: np.array, fpr: <span class="bu">float</span>, prevalence: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.05</span>) <span class="op">-&gt;</span> np.array:</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">"""compute conditional precision, given true positive rate, false positve rate, and positive class prevalence"""</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  precision <span class="op">=</span> tpr <span class="op">*</span> prevalence <span class="op">/</span> (tpr <span class="op">*</span> prevalence <span class="op">+</span> fpr <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prevalence))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> precision</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="34bcc959" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tprs <span class="op">=</span> np.arange(<span class="fl">0.0</span>, <span class="fl">1.0</span>, step<span class="op">=</span><span class="fl">0.01</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fprs <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">0.05</span>, <span class="fl">0.01</span>]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>prevalences <span class="op">=</span> [<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="621bd135" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>precision_dfs <span class="op">=</span> []</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> fpr <span class="kw">in</span> fprs:</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> prevalence <span class="kw">in</span> prevalences:</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cast tpr array </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    precision <span class="op">=</span> get_precision(tprs, fpr, prevalence)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(tprs) <span class="op">!=</span> <span class="bu">len</span>(precision):</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(tprs) <span class="op">=</span> <span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(precision) <span class="op">=</span> <span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    _df <span class="op">=</span> pl.DataFrame({</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"tpr"</span>: tprs,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"precision"</span>: precision,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fpr"</span>: <span class="st">"FPR = "</span> <span class="op">+</span> <span class="bu">str</span>(fpr),</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"prevalence"</span>: <span class="bu">str</span>(prevalence),</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    precision_dfs.append(_df)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>precision_df <span class="op">=</span> pl.concat(precision_dfs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="a3d77adf" class="cell" data-execution_count="7">
+<div id="73a5cef3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  ggplot(precision_df, aes(<span class="st">"tpr"</span>, <span class="st">"precision"</span>, color<span class="op">=</span><span class="st">"prevalence"</span>))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_line(size<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_vline(xintercept<span class="op">=</span><span class="fl">0.95</span>, color<span class="op">=</span><span class="st">"gray"</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_hline(yintercept<span class="op">=</span><span class="fl">0.8</span>, color<span class="op">=</span><span class="st">"gray"</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> facet_wrap(<span class="st">"~ fpr"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> scale_colour_cmap_d() </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> scale_y_continuous(breaks<span class="op">=</span>np.arange(<span class="dv">0</span>, <span class="fl">1.1</span>, <span class="fl">0.1</span>))</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">6</span>))</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> labs(</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      x<span class="op">=</span><span class="st">"True Positive Rate"</span>,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      y<span class="op">=</span><span class="st">"Precision"</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      color<span class="op">=</span><span class="st">"Prevalence"</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      caption<span class="op">=</span><span class="st">"*Dashed vertical line is TPR=0.95</span><span class="ch">\n</span><span class="st">*Dashed horizontal line is Precision=0.8"</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> logistic</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_precision(tpr: np.array, fpr: <span class="bu">float</span>, prevalence: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.05</span>) <span class="op">-&gt;</span> np.array:</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">"""compute conditional precision, given true positive rate, false positve rate, and positive class prevalence"""</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  precision <span class="op">=</span> tpr <span class="op">*</span> prevalence <span class="op">/</span> (tpr <span class="op">*</span> prevalence <span class="op">+</span> fpr <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prevalence))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> precision</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>tprs <span class="op">=</span> np.arange(<span class="fl">0.0</span>, <span class="fl">1.0</span>, step<span class="op">=</span><span class="fl">0.01</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>fprs <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">0.05</span>, <span class="fl">0.01</span>]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>prevalences <span class="op">=</span> [<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>precision_dfs <span class="op">=</span> []</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> fpr <span class="kw">in</span> fprs:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> prevalence <span class="kw">in</span> prevalences:</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cast tpr array </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    precision <span class="op">=</span> get_precision(tprs, fpr, prevalence)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(tprs) <span class="op">!=</span> <span class="bu">len</span>(precision):</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(tprs) <span class="op">=</span> <span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(precision) <span class="op">=</span> <span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    _df <span class="op">=</span> pl.DataFrame({</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="st">"tpr"</span>: tprs,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      <span class="st">"precision"</span>: precision,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fpr"</span>: <span class="st">"FPR = "</span> <span class="op">+</span> <span class="bu">str</span>(fpr),</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">"prevalence"</span>: <span class="bu">str</span>(prevalence),</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    precision_dfs.append(_df)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>precision_df <span class="op">=</span> pl.concat(precision_dfs)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  ggplot(precision_df, aes(<span class="st">"tpr"</span>, <span class="st">"precision"</span>, color<span class="op">=</span><span class="st">"prevalence"</span>))</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_line(size<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_vline(xintercept<span class="op">=</span><span class="fl">0.95</span>, color<span class="op">=</span><span class="st">"gray"</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_hline(yintercept<span class="op">=</span><span class="fl">0.8</span>, color<span class="op">=</span><span class="st">"gray"</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> facet_wrap(<span class="st">"~ fpr"</span>)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> scale_colour_cmap_d() </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> scale_y_continuous(breaks<span class="op">=</span>np.arange(<span class="dv">0</span>, <span class="fl">1.1</span>, <span class="fl">0.1</span>))</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">6</span>))</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> labs(</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>      x<span class="op">=</span><span class="st">"True Positive Rate"</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>      y<span class="op">=</span><span class="st">"Precision"</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>      color<span class="op">=</span><span class="st">"Prevalence"</span>,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>      caption<span class="op">=</span><span class="st">"*Dashed vertical line is TPR=0.95</span><span class="ch">\n</span><span class="st">*Dashed horizontal line is Precision=0.8"</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="189">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-8-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="864" height="576"></p>
+<p><img src="index_files/figure-html/cell-3-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="864" height="576"></p>
 </figure>
 </div>
 </div>
@@ -397,110 +391,111 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <p>To see the full picture, we’ll use a theoretical model that produces scores we can threshold. The simplest setup that lets us do this is the <a href="https://www.columbia.edu/~ld208/psymeth98.pdf"><em>bilogistic SDT model</em></a>. The bilogistic model represents a binary classifier where the negative class yields scores from a <span class="math inline">\(\text{Logistic}(0, 1)\)</span> distribution and the positive class from a <span class="math inline">\(\text{Logistic}(\mu, 1)\)</span> distribution. The separation <span class="math inline">\(\mu\)</span> controls how good the model is — a larger <span class="math inline">\(\mu\)</span> indicates that the model is better at telling the two classes apart.</p>
 <section id="the-bilogistic-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-bilogistic-model">The bilogistic model</h2>
-<p>Here’s what this looks like with an arbitrary separation of <span class="math inline">\(\mu = 3\)</span>. Any vertical line we draw becomes a decision threshold <span class="math inline">\(t\)</span>: everything to the right gets classified as positive. Sliding <span class="math inline">\(t\)</span> left catches more true positives but also more false positives; sliding it right does the opposite.</p>
-<div id="697424d9" class="cell" data-execution_count="8">
+<p>Here’s what this looks like with an arbitrary separation of <span class="math inline">\(\mu = 5\)</span>. Any vertical line we draw becomes a decision threshold <span class="math inline">\(t\)</span>: everything to the right gets classified as positive. Sliding <span class="math inline">\(t\)</span> left catches more true positives but also more false positives; sliding it right does the opposite.</p>
+<div id="372f2360" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the general idea with an arbitrary mu</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mu_demo <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>xrange_demo <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">8</span>, <span class="dv">12</span>, <span class="fl">0.1</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>demo_df <span class="op">=</span> pl.concat([</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    pl.DataFrame({<span class="st">"x"</span>: xrange_demo, <span class="st">"y"</span>: logistic.pdf(xrange_demo), <span class="st">"class"</span>: <span class="st">"0"</span>}),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    pl.DataFrame({<span class="st">"x"</span>: xrange_demo, <span class="st">"y"</span>: logistic.pdf(xrange_demo, loc<span class="op">=</span>mu_demo), <span class="st">"class"</span>: <span class="st">"1"</span>}),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>threshold_demo <span class="op">=</span> <span class="fl">2.5</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Build shaded region dataframes</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>x_left <span class="op">=</span> xrange_demo[xrange_demo <span class="op">&lt;=</span> threshold_demo]</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>x_right <span class="op">=</span> xrange_demo[xrange_demo <span class="op">&gt;=</span> threshold_demo]</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>shade_tn <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_left, <span class="st">"y"</span>: logistic.pdf(x_left), <span class="st">"region"</span>: <span class="st">"TN"</span>})</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>shade_fp <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_right, <span class="st">"y"</span>: logistic.pdf(x_right), <span class="st">"region"</span>: <span class="st">"FP"</span>})</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>shade_fn <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_left, <span class="st">"y"</span>: logistic.pdf(x_left, loc<span class="op">=</span>mu_demo), <span class="st">"region"</span>: <span class="st">"FN"</span>})</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>shade_tp <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_right, <span class="st">"y"</span>: logistic.pdf(x_right, loc<span class="op">=</span>mu_demo), <span class="st">"region"</span>: <span class="st">"TP"</span>})</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    ggplot()</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw larger correct regions first, then smaller error regions on top</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_tn, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_tp, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_fn, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_fp, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">"x"</span>, y<span class="op">=</span><span class="st">"y"</span>, linetype<span class="op">=</span><span class="st">"class"</span>), data<span class="op">=</span>demo_df, size<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_vline(xintercept<span class="op">=</span>threshold_demo, linetype<span class="op">=</span><span class="st">"dashed"</span>, color<span class="op">=</span><span class="st">"gray"</span>, size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span>threshold_demo <span class="op">+</span> <span class="fl">0.2</span>, y<span class="op">=</span><span class="fl">0.27</span>, label<span class="op">=</span><span class="st">"threshold t"</span>, color<span class="op">=</span><span class="st">"gray"</span>, size<span class="op">=</span><span class="dv">10</span>, ha<span class="op">=</span><span class="st">"left"</span>)</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_fill_manual(values<span class="op">=</span>{<span class="st">"TN"</span>: <span class="st">"#4a90d9"</span>, <span class="st">"TP"</span>: <span class="st">"#5cb85c"</span>, <span class="st">"FP"</span>: <span class="st">"#e8935a"</span>, <span class="st">"FN"</span>: <span class="st">"#d9534f"</span>})</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Score"</span>, y<span class="op">=</span><span class="st">"Density"</span>, color<span class="op">=</span><span class="st">"Class"</span>, fill<span class="op">=</span><span class="st">"Region"</span>)</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the general idea with an arbitrary mu</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mu_demo <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>xrange_demo <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">8</span>, <span class="dv">12</span>, <span class="fl">0.1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>demo_df <span class="op">=</span> pl.concat([</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    pl.DataFrame({<span class="st">"x"</span>: xrange_demo, <span class="st">"y"</span>: logistic.pdf(xrange_demo), <span class="st">"class"</span>: <span class="st">"0"</span>}),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    pl.DataFrame({<span class="st">"x"</span>: xrange_demo, <span class="st">"y"</span>: logistic.pdf(xrange_demo, loc<span class="op">=</span>mu_demo), <span class="st">"class"</span>: <span class="st">"1"</span>}),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>threshold_demo <span class="op">=</span> <span class="fl">2.5</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Build shaded region dataframes</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>x_left <span class="op">=</span> xrange_demo[xrange_demo <span class="op">&lt;=</span> threshold_demo]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>x_right <span class="op">=</span> xrange_demo[xrange_demo <span class="op">&gt;=</span> threshold_demo]</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>shade_tn <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_left, <span class="st">"y"</span>: logistic.pdf(x_left), <span class="st">"region"</span>: <span class="st">"TN"</span>})</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>shade_fp <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_right, <span class="st">"y"</span>: logistic.pdf(x_right), <span class="st">"region"</span>: <span class="st">"FP"</span>})</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>shade_fn <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_left, <span class="st">"y"</span>: logistic.pdf(x_left, loc<span class="op">=</span>mu_demo), <span class="st">"region"</span>: <span class="st">"FN"</span>})</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>shade_tp <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: x_right, <span class="st">"y"</span>: logistic.pdf(x_right, loc<span class="op">=</span>mu_demo), <span class="st">"region"</span>: <span class="st">"TP"</span>})</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    ggplot()</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw larger correct regions first, then smaller error regions on top</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_tn, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_tp, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_fn, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_ribbon(aes(x<span class="op">=</span><span class="st">"x"</span>, ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"region"</span>), data<span class="op">=</span>shade_fp, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">"x"</span>, y<span class="op">=</span><span class="st">"y"</span>, linetype<span class="op">=</span><span class="st">"class"</span>), data<span class="op">=</span>demo_df, size<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_vline(xintercept<span class="op">=</span>threshold_demo, color<span class="op">=</span><span class="st">"gray"</span>, size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> annotate(<span class="st">"text"</span>, x<span class="op">=</span>threshold_demo <span class="op">+</span> <span class="fl">0.2</span>, y<span class="op">=</span><span class="fl">0.27</span>, label<span class="op">=</span><span class="st">"threshold t"</span>, color<span class="op">=</span><span class="st">"gray"</span>, size<span class="op">=</span><span class="dv">12</span>, ha<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_fill_manual(values<span class="op">=</span>{<span class="st">"TN"</span>: <span class="st">"#4a90d9"</span>, <span class="st">"TP"</span>: <span class="st">"#5cb85c"</span>, <span class="st">"FN"</span>: <span class="st">"#e8935a"</span>, <span class="st">"FP"</span>: <span class="st">"#d9534f"</span>})</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Score"</span>, y<span class="op">=</span><span class="st">"Density"</span>, color<span class="op">=</span><span class="st">"Class"</span>, fill<span class="op">=</span><span class="st">"Region"</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="190">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-9-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
+<p><img src="index_files/figure-html/cell-4-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Because TPR, FPR, and precision are all determined by where we place that threshold, we can sweep <span class="math inline">\(t\)</span> across the full range and trace out the complete trade-off.</p>
 <p>Now let’s calibrate <span class="math inline">\(\mu\)</span> so that there exists a threshold where TPR = 0.95 and TNR = 0.95 simultaneously — matching the model from the previous section. Once calibrated, we can see what happens at every operating point, not just the one we started with.</p>
-<p>One thing to keep in mind: a model that can simultaneously achieve 0.95 TPR and 0.95 TNR is <em>very</em> strong. In practice, most classifiers won’t reach that level of separation — so the curves that follow should be treated as optimistic upper bounds on what precision is achievable. The real-world picture is often worse.</p>
-<div id="c9f50b40" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_loc_p(tnr: <span class="bu">float</span>, tpr: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">"""Helper function that determines what location parameter we need for the positive </span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">  class distribution. The TNR is determined by the quantile function of the logistic distribution."""</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  z_n <span class="op">=</span> logistic.ppf(tnr)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  alpha <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> tpr</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  loc_p <span class="op">=</span> z_n <span class="op">+</span> np.log((<span class="dv">1</span> <span class="op">-</span> alpha) <span class="op">/</span> alpha)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> loc_p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="3c598266" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>loc_n <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>loc_p <span class="op">=</span> get_loc_p(tnr<span class="op">=</span><span class="fl">0.95</span>, tpr<span class="op">=</span><span class="fl">0.95</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>loc_p <span class="op">=</span> <span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>scale <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>xrange_n <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">8</span>, <span class="dv">8</span>, <span class="fl">0.1</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>xrange_p <span class="op">=</span> xrange_n <span class="op">+</span> loc_p</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>neg_df <span class="op">=</span> pl.DataFrame({</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"x"</span>: xrange_n,</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>: logistic.pdf(xrange_n),</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"class"</span>: <span class="st">"0"</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>pos_df <span class="op">=</span> pl.DataFrame({</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"x"</span>: xrange_p,</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>: logistic.pdf(xrange_p, loc<span class="op">=</span>loc_p),</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"class"</span>: <span class="st">"1"</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>dist_df <span class="op">=</span> pl.concat([neg_df, pos_df])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>One thing to keep in mind: a model that can simultaneously achieve 0.95 TPR and 0.05 TPR is very strong. In practice, most classifiers won’t reach that level of separation —- so the curves that follow should be treated as optimistic upper bounds on what precision is achievable. The real-world picture is often messier.</p>
+<div id="f06570c3" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_loc_p(tnr: <span class="bu">float</span>, tpr: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">"""Find the location parameter mu for the positive class such that a single threshold t</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">  simultaneously satisfies both TNR and TPR. The threshold is fixed by the negative class:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">  t = Logistic(0,1).ppf(TNR). Then mu is chosen so that the positive class CDF at t equals</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">  1 - TPR, i.e., Logistic(mu,1).cdf(t) = 1 - TPR."""</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  z_n <span class="op">=</span> logistic.ppf(tnr)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  alpha <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> tpr</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  loc_p <span class="op">=</span> z_n <span class="op">+</span> np.log((<span class="dv">1</span> <span class="op">-</span> alpha) <span class="op">/</span> alpha)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> loc_p</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>loc_n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>loc_p <span class="op">=</span> get_loc_p(tnr<span class="op">=</span><span class="fl">0.95</span>, tpr<span class="op">=</span><span class="fl">0.95</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>loc_p <span class="op">=</span> <span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>scale <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>xrange_n <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">8</span>, <span class="dv">8</span>, <span class="fl">0.1</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>xrange_p <span class="op">=</span> xrange_n <span class="op">+</span> loc_p</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>neg_df <span class="op">=</span> pl.DataFrame({</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"x"</span>: xrange_n,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>: logistic.pdf(xrange_n),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"class"</span>: <span class="st">"0"</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>pos_df <span class="op">=</span> pl.DataFrame({</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"x"</span>: xrange_p,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>: logistic.pdf(xrange_p, loc<span class="op">=</span>loc_p),</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"class"</span>: <span class="st">"1"</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>dist_df <span class="op">=</span> pl.concat([neg_df, pos_df])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>loc_p = 5.89</code></pre>
 </div>
 </div>
 <p>Here’s our calibrated model — the distributions are slightly further apart than in the demo above, reflecting the strong 0.95/0.95 performance:</p>
-<div id="03a95a2b" class="cell" data-execution_count="11">
+<div id="24ca7da0" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    ggplot(dist_df, aes(x<span class="op">=</span><span class="st">"x"</span>, y<span class="op">=</span><span class="st">"y"</span>, color<span class="op">=</span><span class="st">"class"</span>))</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(size<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Score"</span>, y<span class="op">=</span><span class="st">"Density"</span>, color<span class="op">=</span><span class="st">"Class"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(dist_df, aes(x<span class="op">=</span><span class="st">"x"</span>, y<span class="op">=</span><span class="st">"y"</span>, color<span class="op">=</span><span class="st">"class"</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(size<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Score"</span>, y<span class="op">=</span><span class="st">"Density"</span>, color<span class="op">=</span><span class="st">"Class"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="192">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-12-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
+<p><img src="index_files/figure-html/cell-6-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
 </figure>
 </div>
 </div>
@@ -509,72 +504,72 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <section id="the-roc-curve" class="level2">
 <h2 class="anchored" data-anchor-id="the-roc-curve">The ROC curve</h2>
 <p>Let’s now sweep the threshold across the full range and plot the ROC curve.</p>
-<div id="5b8c9007" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>thresholds <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">10</span>, <span class="dv">14</span>, <span class="fl">0.01</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># TPR and FPR are coupled by the threshold</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>tpr <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> logistic.cdf(thresholds, loc<span class="op">=</span>loc_p)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>fpr <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> logistic.cdf(thresholds, loc<span class="op">=</span>loc_n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="6b9ecee5" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>thresholds <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">10</span>, <span class="dv">14</span>, <span class="fl">0.01</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># TPR and FPR are coupled by the threshold</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>tpr <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> logistic.cdf(thresholds, loc<span class="op">=</span>loc_p)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>fpr <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> logistic.cdf(thresholds, loc<span class="op">=</span>loc_n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="8d2a8d92" class="cell" data-execution_count="13">
+<div id="a9808b5f" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>roc_df <span class="op">=</span> pl.DataFrame({<span class="st">"fpr"</span>: fpr, <span class="st">"tpr"</span>: tpr})</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    ggplot(roc_df, aes(<span class="st">"fpr"</span>, <span class="st">"tpr"</span>))</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(size<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_abline(slope<span class="op">=</span><span class="dv">1</span>, intercept<span class="op">=</span><span class="dv">0</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"False Positive Rate"</span>, y<span class="op">=</span><span class="st">"True Positive Rate"</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>roc_df <span class="op">=</span> pl.DataFrame({<span class="st">"fpr"</span>: fpr, <span class="st">"tpr"</span>: tpr})</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    ggplot(roc_df, aes(<span class="st">"fpr"</span>, <span class="st">"tpr"</span>))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(size<span class="op">=</span><span class="fl">1.5</span>, color<span class="op">=</span><span class="st">"orange"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_abline(slope<span class="op">=</span><span class="dv">1</span>, intercept<span class="op">=</span><span class="dv">0</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"False Positive Rate"</span>, y<span class="op">=</span><span class="st">"True Positive Rate"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="194">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-14-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="576" height="576"></p>
+<p><img src="index_files/figure-html/cell-8-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="576" height="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The ROC curve looks excellent — it hugs the top-left corner, AUROC near 1.0. If you stopped here, you’d feel good about this model. That’s the same “looks great at first glance” feeling from the single-threshold example above.</p>
-<p>But here’s the thing: the ROC curve is completely invariant to prevalence. TPR and FPR are both conditional on the true class, so the base rate never enters the picture. Whether 1% or 50% of transactions are fraudulent, the ROC curve looks identical. That’s useful for some purposes, but it means the ROC curve can’t tell you how many of your flags will be false alarms in practice.</p>
+<p>But here’s the thing: the ROC curve is completely invariant to prevalence. TPR and FPR are both conditional on the true class, so the base rate never enters the picture. Whether 1% or 50% of transactions are fraudulent, the ROC curve looks identical. That’s useful for some purposes, but it means the ROC curve can’t tell you how many of your flags will be false positives in practice.</p>
 </section>
 <section id="the-precision-recall-curve" class="level2">
 <h2 class="anchored" data-anchor-id="the-precision-recall-curve">The Precision-Recall curve</h2>
 <p>For that, we need the Precision-Recall curve. We’ll use the same threshold sweep and compute precision at each point via the Bayes’ theorem formula from earlier — but now at every threshold, not just one.</p>
-<div id="d201a7ff" class="cell" data-execution_count="14">
+<div id="92169041" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="op">=</span> []</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> prev <span class="kw">in</span> [<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>]:</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    precision <span class="op">=</span> (tpr <span class="op">*</span> prev) <span class="op">/</span> (tpr <span class="op">*</span> prev <span class="op">+</span> fpr <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prev))</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    dfs.append(pl.DataFrame({</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"tpr"</span>: tpr,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"precision"</span>: precision,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prevalence"</span>: <span class="bu">str</span>(prev),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    }))</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>pr_df <span class="op">=</span> pl.concat(dfs)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    ggplot(pr_df, aes(<span class="st">"tpr"</span>, <span class="st">"precision"</span>, color<span class="op">=</span><span class="st">"prevalence"</span>))</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(size<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_colour_cmap_d()</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>), breaks<span class="op">=</span>np.arange(<span class="dv">0</span>, <span class="fl">1.1</span>, <span class="fl">0.1</span>))</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Recall (TPR)"</span>, y<span class="op">=</span><span class="st">"Precision"</span>, color<span class="op">=</span><span class="st">"Prevalence"</span>)</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="op">=</span> []</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> prev <span class="kw">in</span> [<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>]:</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    precision <span class="op">=</span> (tpr <span class="op">*</span> prev) <span class="op">/</span> (tpr <span class="op">*</span> prev <span class="op">+</span> fpr <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prev))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    dfs.append(pl.DataFrame({</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"tpr"</span>: tpr,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"precision"</span>: precision,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prevalence"</span>: <span class="bu">str</span>(prev),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    }))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>pr_df <span class="op">=</span> pl.concat(dfs)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    ggplot(pr_df, aes(<span class="st">"tpr"</span>, <span class="st">"precision"</span>, color<span class="op">=</span><span class="st">"prevalence"</span>))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(size<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_colour_cmap_d()</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>), breaks<span class="op">=</span>np.arange(<span class="dv">0</span>, <span class="fl">1.1</span>, <span class="fl">0.1</span>))</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Recall (TPR)"</span>, y<span class="op">=</span><span class="st">"Precision"</span>, color<span class="op">=</span><span class="st">"Prevalence"</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="195">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-15-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="576"></p>
+<p><img src="index_files/figure-html/cell-9-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="576"></p>
 </figure>
 </div>
 </div>
@@ -586,7 +581,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
 <p>A high AUROC tells you the model can <em>separate</em> the classes. It doesn’t tell you what happens when you deploy it into a world where one class vastly outnumbers the other. And remember — the curves in this post used a <em>very</em> strong model. Most real classifiers will do worse, which means the precision ceilings shown here are optimistic.</p>
-<p>Before you celebrate a strong ROC curve, check your base rates. They determine whether your model’s flags will be mostly signal or mostly noise — and if each flag triggers a costly action (a human review, an account freeze, a follow-up test), low precision means you’re burning resources on false alarms. Understanding your base rates isn’t just a statistical nicety; it’s how you figure out whether the model is worth deploying at all.</p>
+<p>Before you celebrate a strong ROC curve, check your base rates. They determine whether your model’s flags will be mostly signal or mostly noise — and if each flag triggers a costly action (a human review, an account freeze, a follow-up test), low precision means you’re burning resources on false positives. Understanding your base rates isn’t just a statistical nicety; it’s how you figure out whether the model is worth deploying at all.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -612,65 +607,65 @@ y_i &amp;= \begin{cases}
 \]</span></p>
 <p>The latent score <span class="math inline">\(y^*\)</span> is exactly the logit-scale quantity from our bilogistic model. For the negative class (<span class="math inline">\(X\beta = 0\)</span>), latent scores follow a Logistic<span class="math inline">\((0, 1)\)</span> distribution. For the positive class (<span class="math inline">\(X\beta = \mu\)</span>), they follow a Logistic<span class="math inline">\((\mu, 1)\)</span>. The threshold at 0 plays the role of our decision boundary. In other words, every time you fit a logistic regression, you’re implicitly working inside the bilogistic framework — and the base-rate ceiling on precision applies directly to your model’s predictions.</p>
 <p>Let’s verify this correspondence by simulating data from the latent variable model using the same separation <span class="math inline">\(\mu\)</span> we calibrated earlier, then fitting a logistic regression to recover <span class="math inline">\(\mu\)</span>.</p>
-<div id="065beb9a" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">10_000</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>group <span class="op">=</span> np.repeat([<span class="dv">0</span>, <span class="dv">1</span>], n <span class="op">//</span> <span class="dv">2</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.column_stack([np.ones(n), group])</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> np.array([<span class="dv">0</span>, loc_p])</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> logistic.rvs(size<span class="op">=</span>n)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>ystar <span class="op">=</span> X <span class="op">@</span> B <span class="op">+</span> e</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>latent_df <span class="op">=</span> pl.DataFrame({</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"group"</span>: [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> group],</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>: ystar,</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="870ab72b" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">10_000</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>group <span class="op">=</span> np.repeat([<span class="dv">0</span>, <span class="dv">1</span>], n <span class="op">//</span> <span class="dv">2</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.column_stack([np.ones(n), group])</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> np.array([<span class="dv">0</span>, loc_p])</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> logistic.rvs(size<span class="op">=</span>n)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ystar <span class="op">=</span> X <span class="op">@</span> B <span class="op">+</span> e</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>latent_df <span class="op">=</span> pl.DataFrame({</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"group"</span>: [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> group],</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>: ystar,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The density of the latent scores by group recovers the same two-distribution picture we saw earlier:</p>
-<div id="2f503ef1" class="cell" data-execution_count="16">
+<div id="71516603" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    ggplot(latent_df, aes(x<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"group"</span>))</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_density(alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Latent score (logit)"</span>, y<span class="op">=</span><span class="st">"Density"</span>, fill<span class="op">=</span><span class="st">"Group"</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ggplot(latent_df, aes(x<span class="op">=</span><span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"group"</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_density(alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Latent score (logit)"</span>, y<span class="op">=</span><span class="st">"Density"</span>, fill<span class="op">=</span><span class="st">"Group"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_bw(base_size<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="16">
+<div class="cell-output cell-output-display" data-execution_count="197">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-17-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
+<p><img src="index_files/figure-html/cell-11-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Now let’s threshold <span class="math inline">\(y^*\)</span> at 0 to get the observed binary outcome and fit a logistic regression. If the models correspond, the estimated group coefficient should land close to <span class="math inline">\(\mu \approx\)</span> 5.89.</p>
-<div id="da5501fc" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>yobs <span class="op">=</span> (ystar <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.Logit(yobs, X).fit()</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="2dd097c4" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>yobs <span class="op">=</span> (ystar <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.Logit(yobs, X).fit()</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Optimization terminated successfully.
-         Current function value: 0.356776
+         Current function value: 0.356777
          Iterations 10
                            Logit Regression Results                           
 ==============================================================================
 Dep. Variable:                      y   No. Observations:                10000
 Model:                          Logit   Df Residuals:                     9998
 Method:                           MLE   Df Model:                            1
-Date:                Sun, 05 Apr 2026   Pseudo R-squ.:                  0.3655
-Time:                        20:23:30   Log-Likelihood:                -3567.8
-converged:                       True   LL-Null:                       -5623.4
+Date:                Sun, 05 Apr 2026   Pseudo R-squ.:                  0.3657
+Time:                        20:43:50   Log-Likelihood:                -3567.8
+converged:                       True   LL-Null:                       -5624.4
 Covariance Type:            nonrobust   LLR p-value:                     0.000
 ==============================================================================
                  coef    std err          z      P&gt;|z|      [0.025      0.975]
 ------------------------------------------------------------------------------
-const          0.0120      0.028      0.424      0.671      -0.043       0.067
-x1             5.7941      0.260     22.274      0.000       5.284       6.304
+const          0.0112      0.028      0.396      0.692      -0.044       0.067
+x1             5.7949      0.260     22.277      0.000       5.285       6.305
 ==============================================================================</code></pre>
 </div>
 </div>
