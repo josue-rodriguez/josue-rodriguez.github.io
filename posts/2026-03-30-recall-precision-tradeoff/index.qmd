@@ -1,7 +1,7 @@
 ---
 title: Why base rates cap your precision
 description: |
- Even strong classifiers suffer low precision when the positive class is rare. I walk through the math and show what's actually achievable.
+ Even strong classifiers suffer low precision when the positive class is rare. I walk through some math to show what's actually achievable in this setting.
 tags: ["classification", "latent variables"]
 date: "2026-03-31"
 format:
@@ -340,13 +340,22 @@ for prev in [0.01, 0.05, 0.1, 0.2]:
 
 pr_df = pl.concat(dfs)
 
+# Mark the 0.95 TPR / 0.05 FPR operating point for each prevalence
+dot_rows = []
+for prev in [0.01, 0.05, 0.1, 0.2]:
+    prec_at_point = (0.95 * prev) / (0.95 * prev + 0.05 * (1 - prev))
+    dot_rows.append({"tpr": 0.95, "precision": prec_at_point, "prevalence": str(prev)})
+dot_df = pl.DataFrame(dot_rows)
+
 (
     ggplot(pr_df, aes("tpr", "precision", color="prevalence"))
     + geom_line(size=1.5)
+    + geom_point(data=dot_df, size=3, color="red")
     + scale_colour_cmap_d()
     + scale_x_continuous(limits=(0, 1))
     + scale_y_continuous(limits=(0, 1), breaks=np.arange(0, 1.1, 0.1))
-    + labs(x="Recall (TPR)", y="Precision", color="Prevalence")
+    + labs(x="Recall (TPR)", y="Precision", color="Prevalence",
+           caption="*Red dots mark the TPR=0.95 / FPR=0.05 operating point")
     + theme_bw(base_size=14)
     + theme(legend_position="top", figure_size=(8, 6))
 )
