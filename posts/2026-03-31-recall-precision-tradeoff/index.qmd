@@ -20,7 +20,7 @@ jupyter: python3
 
 Say you're building a model to flag fraudulent credit card transactions. Your model takes in some features, outputs a probability, and you classify a transaction as fraudulent if that probability crosses some threshold $t$. To evaluate it, you'd naturally look at two things: the *true positive rate* (what fraction of actual frauds does the model catch?) and the *false positive rate* (what fraction of legitimate transactions does the model incorrectly flag?).
 
-But there's a third quantity worth paying attention to: *precision*. Of all the transactions the model flagged, how many are actually fraudulent? If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false alarms.
+But there's a third quantity worth paying attention to: *precision*. Of all the transactions the model flagged, how many are actually fraudulent? If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false positives.
 
 Here's the problem. [Fraudulent transactions make up less than 1% of all credit card activity](https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725). When the positive class is that rare, even a model with strong TPR and low FPR can have terrible precision — most of its flags will be false positives.
 
