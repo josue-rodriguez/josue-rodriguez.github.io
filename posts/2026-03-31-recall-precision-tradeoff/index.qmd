@@ -1,7 +1,7 @@
 ---
 title: Why base rates cap your precision
 description: |
- Even strong classifiers suffer low precision when the positive class is rare. I walk through some math to show what's actually achievable in this setting.
+ Even strong classifiers suffer low precision when the positive class is rare. I walk through some simple math to show what's actually achievable in this setting.
 tags: ["classification", "latent variables"]
 date: "2026-03-31"
 format:
@@ -43,15 +43,17 @@ $$
 
 With these definitions in hand, let's imagine a strong model that, at some threshold $t$, achieves the following probabilities:
 
-|         | $\hat{y} = 1$ | $\hat{y} = 0$ |                |
-|---------|---------------|--------------------------------|
-| $y = 1$ | 0.95          | 0.05          | $p(y=1)$ |
-| $y = 0$ | 0.05          | 0.95          | $p(y=0)$ |
+|         | $\hat{y} = 1$ | $\hat{y} = 0$ | Prior    |
+|---------|---------------|----------------|----------|
+| $y = 1$ | 0.95          | 0.05           | $p(y=1)$ |
+| $y = 0$ | 0.05          | 0.95           | $p(y=0)$ |
 
-That is, this model has a TPR of 0.95 and an FPR of 0.05. (For now, we're treating these as independent knobs — in practice they're coupled through the decision threshold, which we'll get to later.) Sticking with our credit card example, this means the model
+That is, this model has a TPR of 0.95 and an FPR of 0.05. Sticking with our credit card example, this means the model
 
 1. Correctly catches 95% of all fraudulent transactions
 2. Incorrectly flags 5% of legitimate transactions as fraudulent
+
+For now, we're treating TPR & FPR as independent knob, but in practice they're coupled through the decision threshold (which we'll get to later).
 
 At first glance, this looks great. I think most practitioners would be proud of these numbers. But remember — each positive prediction generates a costly human review. So how costly is this model, really? To find out, we need to work out the precision.
 
@@ -168,13 +170,15 @@ precision_df = pl.concat(precision_dfs)
 )
 ```
 
-It's worth sitting with this plot for a moment.
+It's worth sitting with this plot for a moment. The dashed line at 0.80 marks a common practical target — the point where at least 4 out of 5 flags are true positives.
 
 Consider the best-case panel (FPR = 0.01). Even with a *perfect* TPR of 1.0, a prevalence of 0.01 gets you only 50% precision — half of your flagged cases are still false positives. To break 80% precision at that prevalence, you'd need an FPR well below 0.01.
 
 Now look at the middle panel (FPR = 0.05). At a prevalence of 0.05 and a TPR of 0.95, precision again lands around 0.50. That means for every real fraud you catch, you're also flagging one legitimate transaction. And it only gets worse as prevalence drops: at 1% prevalence in that same panel, precision barely clears 0.15 regardless of how high your TPR goes.
 
-The pattern is clear: when the positive class is rare, even small false positive rates can generate a flood of false positive that overwhelm the true positives. The base rate acts as a hard ceiling on precision.
+The pattern is clear: when the positive class is rare, even small false positive rates generate a flood of false positives that overwhelm the true positives. The base rate acts as a hard ceiling on precision. And that ceiling has direct cost implications. 
+
+Going back to our 1% prevalence example with precision at 0.16 — that means 84 out of every 100 flagged transactions trigger unnecessary human reviews. **If each review costs your team 15 minutes, you're burning 21 hours of analyst time for every 100 flags, and the base rate guarantees you can't do better than that without changing the population you're screening.**
 
 
 # Digging deeper: from one operating point to a full model
@@ -185,7 +189,7 @@ To see the full picture, we'll use a theoretical model that produces scores we c
 
 ## The bilogistic model
 
-Here's what this model looks like with an arbitrary separation of $\mu = 5$. Any vertical line we draw becomes a decision threshold $t$. Everything to the right gets classified as positive and everything to the left gets classied as negative. Sliding $t$ left catches more true positives but also more false positives; sliding $t$ right does the opposite.
+Here's what this model looks like with an arbitrary separation of $\mu = 5$. Any vertical line we draw becomes a decision threshold $t$. Everything to the right gets classified as positive and everything to the left gets classified as negative. Sliding $t$ left catches more true positives but also more false positives; sliding $t$ right does the opposite.
 
 ```{python}
 #| code-fold: true
@@ -232,7 +236,7 @@ Because TPR, FPR, and precision are all determined by where we place that thresh
 
 Now let's calibrate $\mu$ so that there exists a threshold where TPR = 0.95 and TNR = 0.95 simultaneously — matching the model from the previous section. Once calibrated, we can see what happens at every operating point, not just the one we started with.
 
-One thing to keep in mind: a model that can simultaneously achieve 0.95 TPR and 0.05 TPR is very strong. In practice, most classifiers won't reach that level of separation —- so the curves that follow should be treated as optimistic upper bounds on what precision is achievable. The real-world picture is often messier.
+One thing to keep in mind: a model that can simultaneously achieve 0.95 TPR and 0.05 FPR is very strong. In practice, most classifiers won't reach that level of separation - so the curves that follow should be treated as optimistic upper bounds on what precision is achievable. The real-world picture is often messier.
 
 ```{python}
 def get_loc_p(tnr: float, tpr: float) -> float:
@@ -286,9 +290,9 @@ Here's our calibrated model — the distributions are slightly further apart tha
 ```
 
 
-## The ROC curve
+## ROC and Precision-Recall curves
 
-Let's now sweep the threshold across the full range and plot the ROC curve.
+Let's now sweep the threshold across the full range and see what the full trade-off looks like.
 
 ```{python}
 t = np.arange(-10, 14, 0.01)
@@ -298,44 +302,28 @@ tpr = 1 - logistic.cdf(t, loc=loc_p)
 fpr = 1 - logistic.cdf(t, loc=loc_n)
 ```
 
+You might be tempted to look at the ROC curve first — and it looks excellent. It hugs the top-left corner, AUROC near 1.0. But here's the thing: the ROC curve is completely invariant to prevalence. TPR and FPR are both conditioned on the true class, so the base rate never enters the picture. The ROC curve looks identical whether 1% or 50% of transactions are fraudulent. That's useful for some purposes, but it can't tell you how many of your flags will be false positives in practice.
+
+For that, we need the Precision-Recall curve. We'll compute both curves from the same threshold sweep and show them side by side — ROC on the left, PR at different prevalences on the right.
 
 ```{python}
 #| code-fold: true
 #| fig-align: center
 
-roc_df = pl.DataFrame({"fpr": fpr, "tpr": tpr})
+from plotnine import facet_grid
+import warnings
+warnings.filterwarnings("ignore")
 
-(
-    ggplot(roc_df, aes("fpr", "tpr"))
-    + geom_line(size=1.5, color="orange")
-    + geom_abline(slope=1, intercept=0, linetype="dashed", color="gray")
-    + labs(x="False Positive Rate", y="True Positive Rate")
-    + scale_x_continuous(limits=(0, 1))
-    + scale_y_continuous(limits=(0, 1))
-    + theme_bw(base_size=14)
-    + theme(figure_size=(6, 6))
-)
-```
-
-The ROC curve looks excellent — it hugs the top-left corner, AUROC near 1.0. If you stopped here, you'd feel good about this model. That's the same "looks great at first glance" feeling from the single-threshold example above.
-
-However, the ROC curve is completely invariant to prevalence! TPR and FPR are both conditional probabilities - conditioned on the true class - so the base rate never enters the picture. The ROC  curve will look identical regardless of whether 1% or 50% of transactions are fraudulent. That's useful for some purposes, but it means the ROC curve can't tell you how many of your flags will be false positives in practice.
-
-## The Precision-Recall curve
-
-For that, we need the Precision-Recall curve. We'll use the same threshold sweep and compute precision at each point via the Bayes' theorem formula from earlier — but now at every threshold, not just one.
-
-```{python}
-#| code-fold: true
-#| fig-align: center
+roc_df = pl.DataFrame({"x": fpr, "y": tpr, "curve": "ROC", "prevalence": "—"})
 
 pr_dfs = []
-dot_rows = [] # Mark the 0.95 TPR / 0.05 FPR operating point for each prevalence
+dot_rows = []
 for prev in prevalences:
     precision = (tpr * prev) / (tpr * prev + fpr * (1 - prev))
     pr_dfs.append(pl.DataFrame({
-        "tpr": tpr,
-        "precision": precision,
+        "x": tpr,
+        "y": precision,
+        "curve": "Precision-Recall",
         "prevalence": str(prev),
     }))
 
@@ -345,12 +333,12 @@ pr_df = pl.concat(pr_dfs)
 dot_rows = []
 for prev in [0.01, 0.05, 0.1, 0.2]:
     prec_at_point = (0.95 * prev) / (0.95 * prev + 0.05 * (1 - prev))
-    dot_rows.append({"tpr": 0.95, "precision": prec_at_point, "prevalence": str(prev)})
+    dot_rows.append({"x": 0.95, "y": prec_at_point, "curve": "Precision-Recall", "prevalence": str(prev)})
 
 dot_df = pl.DataFrame(dot_rows)
 
 (
-    ggplot(pr_df, aes("tpr", "precision", color="prevalence"))
+    ggplot(pr_df, aes("x", "y", color="prevalence"))
     + geom_line(size=1.5)
     + geom_point(data=dot_df, size=3, color="red")
     + scale_colour_cmap_d()
@@ -363,16 +351,18 @@ dot_df = pl.DataFrame(dot_rows)
 )
 ```
 
-The ROC curve was identical regardless of base rate. The PR curve is not. At 1% prevalence, the curve collapses — there's no threshold that gives you both high recall and high precision. To push precision above 0.5, you have to sacrifice most of your recall. As prevalence increases, the trade-off becomes much more forgiving.
+The contrast is stark. A ROC curve for this model would look identical at every prevalence — always hugging the top-left corner. But the PR curve tells a different story. At 1% prevalence, the curve collapses — there's no threshold that gives you both high recall and high precision. To push precision above 0.5, you have to sacrifice most of your recall. As prevalence increases, the trade-off becomes much more forgiving.
 
 This is the same problem from the single-threshold example, but now we can see it across *every possible threshold*, not just one. The base rate doesn't just hurt precision at a single operating point — it reshapes the entire trade-off curve.
 
 # Conclusion
 
-That's really the whole story. Base rates set a ceiling on precision, and no amount of model improvement can break through it. If you're working in a low-prevalence setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning hyperparameters. You might find that the precision you need simply isn't reachable at your base rate, and that's useful to know early.
+Base rates set a ceiling on precision, and no amount of model improvement can break through it. That ceiling is also a cost floor — it tells you the minimum fraction of false positives you'll have to absorb, and the review budget that comes with it.
+
+If you're working in a low-prevalence setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning hyperparameters. You might find that the precision you need simply isn't reachable at your base rate. And if the ceiling is below what your use case requires, the fix isn't a better model — it's changing the population you apply it to. Pre-filtering to raise effective prevalence, multi-stage classifiers that narrow the candidate pool, or accepting lower recall in exchange for usable precision are all ways to work within the constraint rather than against it.
 
 ::: {.callout-note collapse="true"}
-## Appendix: Connection to logistic regression
+## Appendix: Why this applies to your logistic regression
 
 You might have noticed that the x-axis in the bilogistic density plots doesn't have obvious units. It represents the model's *logit* output — the log-odds score a classifier produces before converting to a probability. The threshold $t$ is just a cutoff on this logit scale: everything above $t$ gets classified as positive.
 

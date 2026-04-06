@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>posts – josue rodriguez</title>
+<title>review_notes – josue rodriguez</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,25 +26,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-975e726794ce811e14261b5ab5acfd7c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5db9caf45bf9d99a0d1c00983c14abb5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-975e726794ce811e14261b5ab5acfd7c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5db9caf45bf9d99a0d1c00983c14abb5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,76 +70,18 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
 <body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">josue rodriguez</span>
     </a>
   </div>
@@ -152,15 +92,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">about</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./posts.html" aria-current="page"> 
+    <a class="nav-link" href="../../posts.html"> 
 <span class="menu-text">posts</span></a>
   </li>  
 </ul>
@@ -171,206 +111,135 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#copyedit-review-why-base-rates-cap-your-precision" id="toc-copyedit-review-why-base-rates-cap-your-precision" class="nav-link active" data-scroll-target="#copyedit-review-why-base-rates-cap-your-precision">Copyedit Review: “Why base rates cap your precision”</a>
+  <ul class="collapse">
+  <li><a href="#major-issues" id="toc-major-issues" class="nav-link" data-scroll-target="#major-issues">Major Issues</a>
+  <ul class="collapse">
+  <li><a href="#the-cost-thread-is-introduced-and-then-abandoned" id="toc-the-cost-thread-is-introduced-and-then-abandoned" class="nav-link" data-scroll-target="#the-cost-thread-is-introduced-and-then-abandoned">1. The cost thread is introduced and then abandoned</a></li>
+  <li><a href="#the-conclusion-underdelivers-relative-to-the-setup" id="toc-the-conclusion-underdelivers-relative-to-the-setup" class="nav-link" data-scroll-target="#the-conclusion-underdelivers-relative-to-the-setup">2. The conclusion underdelivers relative to the setup</a></li>
+  <li><a href="#the-bilogistic-sections-purpose-is-unclear-on-first-read" id="toc-the-bilogistic-sections-purpose-is-unclear-on-first-read" class="nav-link" data-scroll-target="#the-bilogistic-sections-purpose-is-unclear-on-first-read">3. The bilogistic section’s purpose is unclear on first read</a></li>
+  </ul></li>
+  <li><a href="#minor-issues" id="toc-minor-issues" class="nav-link" data-scroll-target="#minor-issues">Minor Issues</a>
+  <ul class="collapse">
+  <li><a href="#typo-on-line-234" id="toc-typo-on-line-234" class="nav-link" data-scroll-target="#typo-on-line-234">4. Typo on line 234</a></li>
+  <li><a href="#typo-on-line-188" id="toc-typo-on-line-188" class="nav-link" data-scroll-target="#typo-on-line-188">5. Typo on line 188</a></li>
+  <li><a href="#table-formatting-lines-46-49" id="toc-table-formatting-lines-46-49" class="nav-link" data-scroll-target="#table-formatting-lines-46-49">6. Table formatting (lines 46-49)</a></li>
+  <li><a href="#the-80-precision-line-line-156-appears-without-motivation" id="toc-the-80-precision-line-line-156-appears-without-motivation" class="nav-link" data-scroll-target="#the-80-precision-line-line-156-appears-without-motivation">7. The 80% precision line (line 156) appears without motivation</a></li>
+  <li><a href="#the-pattern-is-clear-line-177-is-a-missed-opportunity-to-reinforce-cost" id="toc-the-pattern-is-clear-line-177-is-a-missed-opportunity-to-reinforce-cost" class="nav-link" data-scroll-target="#the-pattern-is-clear-line-177-is-a-missed-opportunity-to-reinforce-cost">8. “The pattern is clear” (line 177) is a missed opportunity to reinforce cost</a></li>
+  <li><a href="#precision-of-language-around-independent-knobs-line-51" id="toc-precision-of-language-around-independent-knobs-line-51" class="nav-link" data-scroll-target="#precision-of-language-around-independent-knobs-line-51">9. Precision of language around “independent knobs” (line 51)</a></li>
+  <li><a href="#thats-really-the-whole-story-line-372" id="toc-thats-really-the-whole-story-line-372" class="nav-link" data-scroll-target="#thats-really-the-whole-story-line-372">10. “That’s really the whole story” (line 372)</a></li>
+  <li><a href="#the-appendix-title-undersells-its-content" id="toc-the-appendix-title-undersells-its-content" class="nav-link" data-scroll-target="#the-appendix-title-undersells-its-content">11. The appendix title undersells its content</a></li>
+  </ul></li>
+  <li><a href="#what-works-well" id="toc-what-works-well" class="nav-link" data-scroll-target="#what-works-well">What works well</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">posts</h1>
-</div>
-
-
-
-<div class="quarto-title-meta column-page">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
 
 
 
+<section id="copyedit-review-why-base-rates-cap-your-precision" class="level1">
+<h1>Copyedit Review: “Why base rates cap your precision”</h1>
+<section id="major-issues" class="level2">
+<h2 class="anchored" data-anchor-id="major-issues">Major Issues</h2>
+<section id="the-cost-thread-is-introduced-and-then-abandoned" class="level3">
+<h3 class="anchored" data-anchor-id="the-cost-thread-is-introduced-and-then-abandoned">1. The cost thread is introduced and then abandoned</h3>
+<p>The post’s stated intent is to tie precision to costs and show that a precision ceiling implies a minimum cost. The introduction sets this up well — “costly human review,” “how much of that effort is wasted on false positives,” and the great question “how costly is this model, really?” But after computing precision = 0.16, the post pivots entirely to the math of precision itself and never returns to cost.</p>
+<p>Specifically: - The “Sweeping through different rates” section is pure precision math with no cost framing. - The bilogistic model section discusses operating points and trade-off curves but never asks: what does this mean for the review budget? - The conclusion says “That’s really the whole story” and mentions computing the ceiling — but never says <em>why</em> you’d want to know the ceiling (i.e., because it tells you the minimum false-positive cost you’ll have to eat).</p>
+<p><strong>Suggestion:</strong> The cost payoff doesn’t need to be heavy, but it needs to land somewhere. Two options:</p>
+<ul>
+<li>After the sweeping plot (around line 177), add a sentence or two that translates a precision number back into cost. Something like: “At 1% prevalence and 0.16 precision, for every 100 transactions flagged, 84 trigger unnecessary reviews. If each review costs $X, that’s $Y wasted per 100 flags — and the base rate guarantees you can’t do better than Z.”</li>
+<li>In the conclusion, close the loop: the precision ceiling <em>is</em> a cost floor. A model can’t save you from the economics of a rare positive class, and that’s the thing worth knowing before you start tuning.</li>
+</ul>
+</section>
+<section id="the-conclusion-underdelivers-relative-to-the-setup" class="level3">
+<h3 class="anchored" data-anchor-id="the-conclusion-underdelivers-relative-to-the-setup">2. The conclusion underdelivers relative to the setup</h3>
+<p>The introduction promises practical insight for practitioners working in low-prevalence domains. The conclusion restates the ceiling result but doesn’t land the “so what.” It reads as “base rates matter, compute the ceiling, the end.”</p>
+<p>What’s missing is the actionable implication: if the ceiling is too low for your use case, what are your options? You don’t need to solve the problem, but gesturing at the levers (enrichment/filtering to raise effective prevalence, multi-stage classifiers, accepting lower recall for usable precision) would give the reader somewhere to go. Even a single sentence like “if the ceiling is below what you need, the fix isn’t a better model — it’s changing the population you apply it to” would close the loop.</p>
+<p><strong>Suggestion:</strong> Expand the conclusion by 2-3 sentences. Restate the cost implication, then briefly name the escape hatches without elaborating.</p>
+</section>
+<section id="the-bilogistic-sections-purpose-is-unclear-on-first-read" class="level3">
+<h3 class="anchored" data-anchor-id="the-bilogistic-sections-purpose-is-unclear-on-first-read">3. The bilogistic section’s purpose is unclear on first read</h3>
+<p>The transition at line 180 (“Everything above treated TPR and FPR as knobs you can set independently”) is good motivation. But the section then spends significant space on the mechanics of the bilogistic model — calibrating mu, plotting densities, showing the ROC curve — before arriving at the actual payoff: the PR curve at different prevalences (line 328).</p>
+<p>The ROC curve subsection (lines 289-322) is where the pacing stalls. The ROC plot itself is useful mainly as a foil (“looks great, but misses the point”), yet it gets a full subsection with its own plot and several paragraphs. The key insight — “ROC is prevalence-invariant, PR is not” — could be delivered in two sentences alongside the PR curve, rather than as a standalone section.</p>
+<p><strong>Suggestion:</strong> Consider folding the ROC discussion into the PR curve section. Show both curves side by side and let the PR curve carry the weight. This tightens the narrative and gets to the payoff faster.</p>
+<hr>
+</section>
+</section>
+<section id="minor-issues" class="level2">
+<h2 class="anchored" data-anchor-id="minor-issues">Minor Issues</h2>
+<section id="typo-on-line-234" class="level3">
+<h3 class="anchored" data-anchor-id="typo-on-line-234">4. Typo on line 234</h3>
+<blockquote class="blockquote">
+<p>“a model that can simultaneously achieve 0.95 TPR and 0.05 TPR”</p>
+</blockquote>
+<p>Should be “0.05 FPR.”</p>
+</section>
+<section id="typo-on-line-188" class="level3">
+<h3 class="anchored" data-anchor-id="typo-on-line-188">5. Typo on line 188</h3>
+<blockquote class="blockquote">
+<p>“everything to the left gets classied as negative”</p>
+</blockquote>
+<p>Should be “classified.”</p>
+</section>
+<section id="table-formatting-lines-46-49" class="level3">
+<h3 class="anchored" data-anchor-id="table-formatting-lines-46-49">6. Table formatting (lines 46-49)</h3>
+<p>The confusion matrix table has an empty third column header, which reads awkwardly in rendered output. The <code>$p(y=1)$</code> and <code>$p(y=0)$</code> annotations sit in a column with no label, which may confuse readers who expect a standard 2x2 layout.</p>
+<p><strong>Suggestion:</strong> Either add a header like “Prior” for the third column, or move the prior annotations outside the table entirely (e.g., as a note below).</p>
+</section>
+<section id="the-80-precision-line-line-156-appears-without-motivation" class="level3">
+<h3 class="anchored" data-anchor-id="the-80-precision-line-line-156-appears-without-motivation">7. The 80% precision line (line 156) appears without motivation</h3>
+<p>The dashed horizontal line at Precision = 0.8 in the sweeping plot is referenced in the caption but never explained in the text. Why 0.8? Is it a common practical target? If so, say that. If it’s arbitrary, it’s visual clutter.</p>
+<p><strong>Suggestion:</strong> Add a brief aside: “The dashed line at 0.80 marks a common practical target — the point where at least 4 out of 5 flags are true positives.”</p>
+</section>
+<section id="the-pattern-is-clear-line-177-is-a-missed-opportunity-to-reinforce-cost" class="level3">
+<h3 class="anchored" data-anchor-id="the-pattern-is-clear-line-177-is-a-missed-opportunity-to-reinforce-cost">8. “The pattern is clear” (line 177) is a missed opportunity to reinforce cost</h3>
+<p>This is the natural landing spot for the first section’s cost question. Instead, the paragraph ends with “the base rate acts as a hard ceiling on precision,” which restates the title. Connecting back to cost here — even one clause — would keep that thread alive.</p>
+</section>
+<section id="precision-of-language-around-independent-knobs-line-51" class="level3">
+<h3 class="anchored" data-anchor-id="precision-of-language-around-independent-knobs-line-51">9. Precision of language around “independent knobs” (line 51)</h3>
+<blockquote class="blockquote">
+<p>“For now, we’re treating these as independent knobs — in practice they’re coupled through the decision threshold, which we’ll get to later.”</p>
+</blockquote>
+<p>This is good foreshadowing, but the parenthetical feels like a caveat that slightly undermines the example before the reader has even absorbed it. Consider moving it to the end of the section or making it a brief footnote, so the main argument lands cleanly first.</p>
+</section>
+<section id="thats-really-the-whole-story-line-372" class="level3">
+<h3 class="anchored" data-anchor-id="thats-really-the-whole-story-line-372">10. “That’s really the whole story” (line 372)</h3>
+<p>This opener deflates the conclusion. It signals “nothing left to say,” which undercuts whatever follows. A conclusion should feel like arrival, not dismissal.</p>
+<p><strong>Suggestion:</strong> Cut this sentence entirely and open with “Base rates set a ceiling on precision…”</p>
+</section>
+<section id="the-appendix-title-undersells-its-content" class="level3">
+<h3 class="anchored" data-anchor-id="the-appendix-title-undersells-its-content">11. The appendix title undersells its content</h3>
+<p>“Connection to logistic regression” is accurate but flat. The appendix actually shows something nice: that every logistic regression implicitly lives inside the bilogistic framework. A more specific title like “Why this applies to your logistic regression” would signal practical relevance and encourage readers to expand the callout.</p>
+<hr>
+</section>
+</section>
+<section id="what-works-well" class="level2">
+<h2 class="anchored" data-anchor-id="what-works-well">What works well</h2>
+<ul>
+<li>The fraud example is well-chosen and immediately grounding.</li>
+<li>The Bayes’ theorem reveal (precision = 0.16) is effective — the gap between intuition and reality lands hard.</li>
+<li>The progression from single operating point to full model to PR curve is logically sound.</li>
+<li>The writing is clear and appropriately paced for the technical content (with the exception of the ROC detour noted above).</li>
+<li>The appendix on latent variable connection is genuinely interesting and well-executed.</li>
+</ul>
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1775496807438" data-listing-reading-time-sort="6" data-listing-word-count-sort="1061">
-<div class="thumbnail"><a href="./posts/2026-03-31-recall-precision-tradeoff/review_notes.html" class="no-external">
+</section>
+</section>
 
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2026-03-31-recall-precision-tradeoff/review_notes.html" class="no-external">Copyedit Review: “Why base rates cap your precision”</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/2026-03-31-recall-precision-tradeoff/review_notes.html" class="no-external">
-The post’s stated intent is to tie precision to costs and show that a precision ceiling implies a minimum cost. The introduction sets this up well — “costly human review,”…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/2026-03-31-recall-precision-tradeoff/review_notes.html" class="no-external">
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1774940400000" data-listing-file-modified-sort="1775500670094" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3133">
-<div class="thumbnail"><a href="./posts/2026-03-31-recall-precision-tradeoff/index.html" class="no-external">
-
-<p class="card-img-top"><img loading='lazy' src="posts/2026-03-31-recall-precision-tradeoff/index_files/figure-html/cell-3-output-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2026-03-31-recall-precision-tradeoff/index.html" class="no-external">Why base rates cap your precision</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/2026-03-31-recall-precision-tradeoff/index.html" class="no-external">
-<p>Even strong classifiers suffer low precision when the positive class is rare. I walk through some simple math to show what’s actually achievable in this setting.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/2026-03-31-recall-precision-tradeoff/index.html" class="no-external">
-<div class="listing-date">
-Mar 31, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1743404400000" data-listing-file-modified-sort="1775448568896" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1917">
-<div class="thumbnail"><a href="./posts/2025-03-30-prediction-intervals/index.html" class="no-external">
-
-<p class="card-img-top"><img loading='lazy' src="posts/2025-03-30-prediction-intervals/index_files/figure-html/unnamed-chunk-8-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2025-03-30-prediction-intervals/index.html" class="no-external">Prediction Intervals</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/2025-03-30-prediction-intervals/index.html" class="no-external">
-<p>What is a prediction interval? How would you use one?</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/2025-03-30-prediction-intervals/index.html" class="no-external">
-<div class="listing-date">
-Mar 31, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="c3RhdGlzdGljcyUyQ3VuY2VydGFpbnR5" data-listing-date-sort="1734336000000" data-listing-file-modified-sort="1743885502943" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3508">
-<div class="thumbnail"><a href="./posts/2024-11-27-confidence-interval-alt-definition/index.html" class="no-external">
-
-<p class="card-img-top"><img loading='lazy' src="posts/2024-11-27-confidence-interval-alt-definition/index_files/figure-html/unnamed-chunk-4-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-11-27-confidence-interval-alt-definition/index.html" class="no-external">Interpreting the confidence interval in front of you</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/2024-11-27-confidence-interval-alt-definition/index.html" class="no-external">
-<p>I go over the most common interpretation of a confidence interval, and discuss an alternative, potentially more useful one.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-11-27-confidence-interval-alt-definition/index.html" class="no-external">
-<div class="listing-date">
-Dec 16, 2024
-</div>
-<div class="listing-author">
-Josue Rodriguez
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="c3RhdGlzdGljcyUyQ3JlZ3Jlc3Npb24=" data-listing-date-sort="1731744000000" data-listing-file-modified-sort="1743368929046" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2001">
-<div class="thumbnail"><a href="./posts/2024-11-16-matrix-ols/index.html" class="no-external">
-
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-11-16-matrix-ols/index.html" class="no-external">Connecting Scalar and Matrix Notation in OLS Regression</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/2024-11-16-matrix-ols/index.html" class="no-external">
-<p>I go over OLS regression in matrix notation, and show how it connects to the scalar notation of OLS regression.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-11-16-matrix-ols/index.html" class="no-external">
-<div class="listing-date">
-Nov 16, 2024
-</div>
-<div class="listing-author">
-Josue Rodriguez
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="c3RhdGlzdGljcyUyQ3JlZ3Jlc3Npb24=" data-listing-date-sort="1727593200000" data-listing-file-modified-sort="1732155241882" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1892">
-<div class="thumbnail"><a href="./posts/2024-09-15-simple-linear-regression/index.html" class="no-external">
-
-<p class="card-img-top"><img loading='lazy' src="posts/2024-09-15-simple-linear-regression/index_files/figure-html/unnamed-chunk-2-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-09-15-simple-linear-regression/index.html" class="no-external">(simple) Linear regression</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/2024-09-15-simple-linear-regression/index.html" class="no-external">
-<p>A “warm up” post covering simple ordinary least squares regression.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-09-15-simple-linear-regression/index.html" class="no-external">
-<div class="listing-date">
-Sep 29, 2024
-</div>
-<div class="listing-author">
-Josue Rodriguez
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1592463600000" data-listing-file-modified-sort="1734324521075" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2140">
-<div class="thumbnail"><a href="./posts/2020-6-18-model-selection-bias/model-selection-bias.html" class="no-external">
-
-<p class="card-img-top"><img loading='lazy' src="posts/2020-6-18-model-selection-bias/model-selection-bias_files/figure-html/unnamed-chunk-1-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2020-6-18-model-selection-bias/model-selection-bias.html" class="no-external">Model Selection Bias</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/2020-6-18-model-selection-bias/model-selection-bias.html" class="no-external">
-Over the last few months, a frequent topic of conversation with my lab mate Donny has been the issue of <em>valid</em> inference following model selection, or model selection bias.…<sup></sup>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/2020-6-18-model-selection-bias/model-selection-bias.html" class="no-external">
-<div class="listing-date">
-Jun 18, 2020
-</div>
-<div class="listing-author">
-Josue Rodriguez
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
