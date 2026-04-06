@@ -18,11 +18,11 @@ jupyter: python3
 
 # Introduction
 
-Say you're building a model to flag fraudulent credit card transactions. Your model takes in some features, outputs a probability, and you classify a transaction as fraudulent if that probability crosses some threshold $t$. To evaluate it, you'd naturally look at two things: the *true positive rate* (what fraction of actual frauds does the model catch?) and the *false positive rate* (what fraction of legitimate transactions does the model incorrectly flag?).
+Say you're building a model to flag fraudulent credit card transactions. Your model takes in some features, outputs a probability, and you classify a transaction as fraudulent if that probability exceeds some threshold $t$. To evaluate it, you'd naturally look at two things: the *true positive rate* (what fraction of actual frauds does the model catch?) and the *false positive rate* (what fraction of legitimate transactions does the model incorrectly flag?).
 
 But there's a third quantity worth paying attention to: *precision*. Of all the transactions the model flagged, how many are actually fraudulent? If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false positives.
 
-Here's the problem. [Fraudulent transactions make up less than 1% of all credit card activity](https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725). When the positive class is that rare, even a model with strong TPR and low FPR can have terrible precision — most of its flags will be false positives.
+Here's the problem. [Fraudulent transactions make up less than 1% of all credit card activity](https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725). When the positive class is that rare, even a model with strong TPR and low FPR can have very low precision — most of its flags will be false positives.
 
 This post walks through why that happens, and what precision you can realistically expect when the positive class is rare.
 
@@ -78,7 +78,7 @@ p(y = 1 | \hat{y} = 1) &= \frac{%
 \end{align}
 $$
 
-and plug in the numbers from our table. But we can't actually compute precision until we've specified the *prevalence* of the positive and negative classes — that's $p(y=1)$ and $p(y=0)$. We know from existing data that the prevalence of fraudulent transactions is less than 1%, but let's be generous and round up to 1% so that $p(y=1) = 0.01$ and $p(y=0) = 0.99$.
+and plug in the numbers from our table. But we can't actually compute precision until we've specified the *prevalence* of the positive and negative classes — that's $p(y=1)$ and $p(y=0)$. We know from existing data that the prevalence of fraudulent transactions is less than 1%. Let's round that up to 1% so that $p(y=1) = 0.01$ and $p(y=0) = 0.99$.
 
 Now we can finally compute precision for our seemingly strong model
 
@@ -97,7 +97,7 @@ print(f"{precision = :.2}")
 
 If you've seen the classical [disease testing example](https://math.hmc.edu/funfacts/medical-tests-and-bayes-theorem/), this result won't surprise you:
 
-**A precision of 0.16 means that 84% of transactions flagged as fraudulent would be false positives** — despite a TPR of 0.95 and an FPR of 0.05! The 0.95/0.05 split *feels* like a strong model, but Bayes' theorem undermines that intuition when the classes are this imbalanced: the 99% of legitimate transactions, each with a small chance of being falsely flagged, easily outnumber the 1% of actual frauds.
+**A precision of 0.16 means that 84% of transactions flagged as fraudulent would be false positives** — despite a TPR of 0.95 and an FPR of 0.05! The 0.95/0.05 split *feels* like a strong model, but Bayes' theorem undermines that intuition when the classes are this imbalanced. The 99% of legitimate transactions, each with a small chance of being falsely flagged, easily outnumber the 1% of actual frauds.
 
 
 
@@ -170,22 +170,22 @@ precision_df = pl.concat(precision_dfs)
 
 It's worth sitting with this plot for a moment.
 
-Consider the best-case panel (FPR = 0.01). Even with a *perfect* TPR of 1.0, a prevalence of 0.01 gets you only about 50% precision — half of your flagged cases are still false positives. To break 80% precision at that prevalence, you'd need an FPR well below 0.01.
+Consider the best-case panel (FPR = 0.01). Even with a *perfect* TPR of 1.0, a prevalence of 0.01 gets you only 50% precision — half of your flagged cases are still false positives. To break 80% precision at that prevalence, you'd need an FPR well below 0.01.
 
-Now look at the middle panel (FPR = 0.05). At a prevalence of 0.05 and a TPR of 0.95, precision lands around 0.50. That means for every real fraud you catch, you're also flagging one legitimate transaction. And it only gets worse as prevalence drops: at 1% prevalence in that same panel, precision barely clears 0.15 regardless of how high your TPR goes.
+Now look at the middle panel (FPR = 0.05). At a prevalence of 0.05 and a TPR of 0.95, precision again lands around 0.50. That means for every real fraud you catch, you're also flagging one legitimate transaction. And it only gets worse as prevalence drops: at 1% prevalence in that same panel, precision barely clears 0.15 regardless of how high your TPR goes.
 
 The pattern is clear: when the positive class is rare, even small false positive rates can generate a flood of false positive that overwhelm the true positives. The base rate acts as a hard ceiling on precision.
 
 
 # Digging deeper: from one operating point to a full model
 
-Everything above treated TPR and FPR as knobs you can set independently: "suppose a model has 95% TPR and 5% FPR." But a real model doesn't work that way. TPR and FPR are both determined by a single decision threshold $t$. If you increase $t$ to cut down on false positives, you'll inevitably miss more true positives too. The 0.95/0.05 operating point we examined is just one point along this trade-off.
+Everything above treated TPR and FPR as knobs you can set independently: "suppose a model has 95% TPR and 5% FPR." But a real model doesn't work that way. TPR and FPR are both determined by a single decision threshold $t$. If you increase $t$ to cut down on false positives, you'll inevitably miss more true positives too. The 0.95/0.05 "operating point" we examined is just one point along this trade-off.
 
 To see the full picture, we'll use a theoretical model that produces scores we can threshold. The simplest setup that lets us do this is the [*bilogistic SDT model*](https://www.columbia.edu/~ld208/psymeth98.pdf). The bilogistic model represents a binary classifier where the negative class yields scores from a $\text{Logistic}(0, 1)$ distribution and the positive class from a $\text{Logistic}(\mu, 1)$ distribution. The separation $\mu$ controls how good the model is — a larger $\mu$ indicates that the model is better at telling the two classes apart.
 
 ## The bilogistic model
 
-Here's what this looks like with an arbitrary separation of $\mu = 5$. Any vertical line we draw becomes a decision threshold $t$: everything to the right gets classified as positive. Sliding $t$ left catches more true positives but also more false positives; sliding it right does the opposite.
+Here's what this model looks like with an arbitrary separation of $\mu = 5$. Any vertical line we draw becomes a decision threshold $t$. Everything to the right gets classified as positive and everything to the left gets classied as negative. Sliding $t$ left catches more true positives but also more false positives; sliding $t$ right does the opposite.
 
 ```{python}
 #| code-fold: true
@@ -291,11 +291,11 @@ Here's our calibrated model — the distributions are slightly further apart tha
 Let's now sweep the threshold across the full range and plot the ROC curve.
 
 ```{python}
-thresholds = np.arange(-10, 14, 0.01)
+t = np.arange(-10, 14, 0.01)
 
 # TPR and FPR are coupled by the threshold
-tpr = 1 - logistic.cdf(thresholds, loc=loc_p)
-fpr = 1 - logistic.cdf(thresholds, loc=loc_n)
+tpr = 1 - logistic.cdf(t, loc=loc_p)
+fpr = 1 - logistic.cdf(t, loc=loc_n)
 ```
 
 
@@ -319,7 +319,7 @@ roc_df = pl.DataFrame({"fpr": fpr, "tpr": tpr})
 
 The ROC curve looks excellent — it hugs the top-left corner, AUROC near 1.0. If you stopped here, you'd feel good about this model. That's the same "looks great at first glance" feeling from the single-threshold example above.
 
-But here's the thing: the ROC curve is completely invariant to prevalence. TPR and FPR are both conditional on the true class, so the base rate never enters the picture. Whether 1% or 50% of transactions are fraudulent, the ROC curve looks identical. That's useful for some purposes, but it means the ROC curve can't tell you how many of your flags will be false positives in practice.
+However, the ROC curve is completely invariant to prevalence! TPR and FPR are both conditional probabilities - conditioned on the true class - so the base rate never enters the picture. The ROC  curve will look identical regardless of whether 1% or 50% of transactions are fraudulent. That's useful for some purposes, but it means the ROC curve can't tell you how many of your flags will be false positives in practice.
 
 ## The Precision-Recall curve
 
@@ -329,22 +329,24 @@ For that, we need the Precision-Recall curve. We'll use the same threshold sweep
 #| code-fold: true
 #| fig-align: center
 
-dfs = []
-for prev in [0.01, 0.05, 0.1, 0.2]:
+pr_dfs = []
+dot_rows = [] # Mark the 0.95 TPR / 0.05 FPR operating point for each prevalence
+for prev in prevalences:
     precision = (tpr * prev) / (tpr * prev + fpr * (1 - prev))
-    dfs.append(pl.DataFrame({
+    pr_dfs.append(pl.DataFrame({
         "tpr": tpr,
         "precision": precision,
         "prevalence": str(prev),
     }))
 
-pr_df = pl.concat(dfs)
+pr_df = pl.concat(pr_dfs)
 
 # Mark the 0.95 TPR / 0.05 FPR operating point for each prevalence
 dot_rows = []
 for prev in [0.01, 0.05, 0.1, 0.2]:
     prec_at_point = (0.95 * prev) / (0.95 * prev + 0.05 * (1 - prev))
     dot_rows.append({"tpr": 0.95, "precision": prec_at_point, "prevalence": str(prev)})
+
 dot_df = pl.DataFrame(dot_rows)
 
 (
@@ -361,7 +363,7 @@ dot_df = pl.DataFrame(dot_rows)
 )
 ```
 
-The ROC curve was identical regardless of base rate. The PR curve is not. At 1% prevalence, the curve collapses — there's no threshold that gives you both high recall and high precision. To push precision above 0.5, you have to sacrifice most of your recall. At 20% prevalence, the trade-off is much more forgiving.
+The ROC curve was identical regardless of base rate. The PR curve is not. At 1% prevalence, the curve collapses — there's no threshold that gives you both high recall and high precision. To push precision above 0.5, you have to sacrifice most of your recall. As prevalence increases, the trade-off becomes much more forgiving.
 
 This is the same problem from the single-threshold example, but now we can see it across *every possible threshold*, not just one. The base rate doesn't just hurt precision at a single operating point — it reshapes the entire trade-off curve.
 
