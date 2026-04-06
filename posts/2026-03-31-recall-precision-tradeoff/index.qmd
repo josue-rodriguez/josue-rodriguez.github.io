@@ -293,7 +293,7 @@ Let's now sweep the threshold across the full range and plot the ROC curve.
 ```{python}
 t = np.arange(-10, 14, 0.01)
 
-# TPR and FPR are coupled by the threshold
+# TPR and FPR are the RHS of the curve for the pos & neg distributions
 tpr = 1 - logistic.cdf(t, loc=loc_p)
 fpr = 1 - logistic.cdf(t, loc=loc_n)
 ```
