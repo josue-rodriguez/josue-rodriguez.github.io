@@ -53,7 +53,7 @@ That is, this model has a TPR of 0.95 and an FPR of 0.05. Sticking with our cred
 1. Correctly catches 95% of all fraudulent transactions
 2. Incorrectly flags 5% of legitimate transactions as fraudulent
 
-For now, we're treating TPR & FPR as independent knob, but in practice they're coupled through the decision threshold (which we'll get to later).
+For now, we're treating TPR & FPR as independent knobs, but in practice they're coupled through the decision threshold (which we'll get to later).
 
 At first glance, this looks great. I think most practitioners would be proud of these numbers. But remember — each positive prediction generates a costly human review. So how costly is this model, really? To find out, we need to work out the precision.
 
@@ -304,15 +304,13 @@ fpr = 1 - logistic.cdf(t, loc=loc_n)
 
 You might be tempted to look at the ROC curve first — and it looks excellent. It hugs the top-left corner, AUROC near 1.0. But here's the thing: the ROC curve is completely invariant to prevalence. TPR and FPR are both conditioned on the true class, so the base rate never enters the picture. The ROC curve looks identical whether 1% or 50% of transactions are fraudulent. That's useful for some purposes, but it can't tell you how many of your flags will be false positives in practice.
 
-For that, we need the Precision-Recall curve. We'll compute both curves from the same threshold sweep and show them side by side — ROC on the left, PR at different prevalences on the right.
+For that, we need the Precision-Recall curve (where recall is just another name for TPR). We'll compute both curves from the same threshold sweep and show them side by side — ROC on the left, PR at different prevalences on the right.
 
 ```{python}
 #| code-fold: true
 #| fig-align: center
 
 from plotnine import facet_grid
-import warnings
-warnings.filterwarnings("ignore")
 
 roc_df = pl.DataFrame({"x": fpr, "y": tpr, "curve": "ROC", "prevalence": "—"})
 
@@ -331,7 +329,7 @@ pr_df = pl.concat(pr_dfs)
 
 # Mark the 0.95 TPR / 0.05 FPR operating point for each prevalence
 dot_rows = []
-for prev in [0.01, 0.05, 0.1, 0.2]:
+for prev in prevalences:
     prec_at_point = (0.95 * prev) / (0.95 * prev + 0.05 * (1 - prev))
     dot_rows.append({"x": 0.95, "y": prec_at_point, "curve": "Precision-Recall", "prevalence": str(prev)})
 
@@ -359,7 +357,7 @@ This is the same problem from the single-threshold example, but now we can see i
 
 Base rates set a ceiling on precision, and no amount of model improvement can break through it. That ceiling is also a cost floor — it tells you the minimum fraction of false positives you'll have to absorb, and the review budget that comes with it.
 
-If you're working in a low-prevalence setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning hyperparameters. You might find that the precision you need simply isn't reachable at your base rate. And if the ceiling is below what your use case requires, the fix isn't a better model — it's changing the population you apply it to. Pre-filtering to raise effective prevalence, multi-stage classifiers that narrow the candidate pool, or accepting lower recall in exchange for usable precision are all ways to work within the constraint rather than against it.
+If you're working in a low-prevalence setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning hyperparameters. If each flagged case costs $C$ to review and precision can't exceed $P$, then the minimum wasted review cost per flag is $(1 - P) \times C$ — and no model improvement will change that. That number should be on the table before the first experiment runs, not discovered after deployment.
 
 ::: {.callout-note collapse="true"}
 ## Appendix: Why this applies to your logistic regression
