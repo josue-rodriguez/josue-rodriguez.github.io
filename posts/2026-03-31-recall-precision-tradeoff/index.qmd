@@ -14,7 +14,7 @@ jupyter: python3
 
 # Takeaway
 
-**The base rate of the positive class puts a ceiling on what precision is achievable, regardless of how good your model is. If you don't understand your base rates, you don't understand what precision is even feasible.**
+**In classification tasks, the base rate of the positive class (how rare the thing you're detecting is) puts a ceiling on your model's *precision* — the fraction of positive predictions that are actually correct. When the base rate is low enough, even a strong model will flood you with false positives, and no amount of model improvement can break through that ceiling.**
 
 # Introduction
 
