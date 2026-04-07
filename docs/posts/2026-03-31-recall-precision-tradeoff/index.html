@@ -305,7 +305,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 \]</span></p>
 <p>and plug in the numbers from our table. But we can’t actually compute precision until we’ve specified the base rate of the positive and negative classes<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. That’s <span class="math inline">\(p(y=1)\)</span> and <span class="math inline">\(p(y=0)\)</span> in the equation above. We know from existing data that the base rate of fraudulent transactions is less than 1%. Let’s round that up to 1% so that <span class="math inline">\(p(y=1) = 0.01\)</span> and <span class="math inline">\(p(y=0) = 0.99\)</span>.</p>
 <p>Now we can finally compute precision for our seemingly strong model</p>
-<div id="99e8ceb0" class="cell" data-execution_count="1">
+<div id="3e67bdd7" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tpr <span class="op">=</span> <span class="fl">0.95</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fpr <span class="op">=</span> <span class="fl">0.05</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -323,7 +323,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <h2 class="anchored" data-anchor-id="sweeping-through-different-rates">Sweeping through different rates</h2>
 <p>Okay, so we’ve seen just how bad precision can get with a very low base rate and a model that otherwise looks strong. Let’s build some intuition for what precision looks like across different combinations of TPR, FPR, and base rate. You’d expect that increasing TPR or base rate, or <em>decreasing</em> FPR, should improve precision — but by how much?</p>
 <p>To find out, we’ll apply the same Bayes’ theorem calculation to a grid of these rates. In the plot below, each panel fixes the FPR. The colored lines show how precision varies with TPR at different base rates.</p>
-<div id="4b1d15fc" class="cell" data-execution_count="2">
+<div id="e247c715" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -381,7 +381,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="319">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/cell-3-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="864" height="576"></p>
@@ -403,8 +403,8 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <p>To trace out the full trade-off, we need a model that produces actual scores we can threshold — not just a single pair of rates. A simple theoretical setup that lets us do this is the <a href="https://www.columbia.edu/~ld208/psymeth98.pdf"><em>bilogistic model</em></a>. The bilogistic model represents a binary classifier where the negative class yields scores from a <span class="math inline">\(\text{Logistic}(0, 1)\)</span> distribution and the positive class from a <span class="math inline">\(\text{Logistic}(\mu, 1)\)</span> distribution. The separation <span class="math inline">\(\mu\)</span> controls how good the model is — a larger <span class="math inline">\(\mu\)</span> indicates that the model is better at telling the two classes apart.</p>
 <section id="the-bilogistic-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-bilogistic-model">The bilogistic model</h2>
-<p>Here’s what this model looks like with an arbitrary separation of <span class="math inline">\(\mu = 5\)</span>. Any vertical line we draw becomes a decision threshold <span class="math inline">\(t\)</span>. Everything to the right gets classified as positive and everything to the left gets classified as negative. Sliding <span class="math inline">\(t\)</span> left catches more true positives but also more false positives; sliding <span class="math inline">\(t\)</span> right does the opposite.</p>
-<div id="216ace4b" class="cell" data-execution_count="3">
+<p>Here’s what this model looks like with an arbitrary separation of <span class="math inline">\(\mu = 4\)</span>. Any vertical line we draw becomes a decision threshold <span class="math inline">\(t\)</span>. Everything to the right gets classified as positive and everything to the left gets classified as negative. Sliding <span class="math inline">\(t\)</span> left catches more true positives but also more false positives; sliding <span class="math inline">\(t\)</span> right does the opposite.</p>
+<div id="8e468aa4" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mu_demo <span class="op">=</span> <span class="dv">4</span></span>
@@ -442,7 +442,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="320">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/cell-4-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
@@ -453,7 +453,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <p>Because TPR, FPR, and precision are all determined by where we place that threshold, we can sweep <span class="math inline">\(t\)</span> across the full range and trace out the complete trade-off.</p>
 <p>Using the bilogistic model, we can pick a <span class="math inline">\(\mu\)</span> such that there exists a threshold where TPR = 0.95 and FPR = 0.05 simultaneously — matching the model from the previous section. Once calibrated, we can see what happens at every operating point as we move <span class="math inline">\(t\)</span> from all the way to the left to all the way to the right.</p>
 <p>Here’s what the curves look like for our calibrated bilogistic model:</p>
-<div id="f87dfb9f" class="cell" data-execution_count="4">
+<div id="3dc2ccb4" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_loc_p(tnr: <span class="bu">float</span>, tpr: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
@@ -498,7 +498,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="321">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/cell-5-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
@@ -510,7 +510,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <section id="roc-and-precision-recall-curves" class="level2">
 <h2 class="anchored" data-anchor-id="roc-and-precision-recall-curves">ROC and Precision-Recall curves</h2>
 <p>Let’s compute both the ROC curve and the so-called Precision-Recall curve (where recall is just another name for TPR) by computing the TPR, FPR, and precision as we sweep <span class="math inline">\(t\)</span> across the two distribution.</p>
-<div id="8e7a9318" class="cell" data-execution_count="5">
+<div id="68fb66e1" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">10</span>, <span class="dv">14</span>, <span class="fl">0.01</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># TPR and FPR are the RHS of the curve for the pos &amp; neg distributions</span></span>
@@ -519,7 +519,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>auroc <span class="op">=</span> <span class="op">-</span>np.trapezoid(tpr, fpr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="7ba8abff" class="cell" data-execution_count="6">
+<div id="c5efc1ec" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>roc_df <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: fpr, <span class="st">"y"</span>: tpr})</span>
@@ -570,7 +570,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>(roc_p <span class="op">/</span> pr_p) <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="323">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/cell-7-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="768"></p>
@@ -614,7 +614,7 @@ y_i &amp;= \begin{cases}
 \]</span></p>
 <p>The latent score <span class="math inline">\(y^*\)</span> is exactly the logit-scale quantity from our bilogistic model. For the negative class (<span class="math inline">\(X\beta = 0\)</span>), latent scores follow a Logistic<span class="math inline">\((0, 1)\)</span> distribution. For the positive class (<span class="math inline">\(X\beta = \mu\)</span>), they follow a Logistic<span class="math inline">\((\mu, 1)\)</span>. The threshold at 0 plays the role of our decision boundary. In other words, every time you fit a logistic regression, you’re implicitly working inside the bilogistic framework — and the base-rate ceiling on precision applies directly to your model’s predictions.</p>
 <p>Let’s verify this correspondence by simulating data from the latent variable model using the same separation <span class="math inline">\(\mu\)</span> we calibrated earlier, then fitting a logistic regression to recover <span class="math inline">\(\mu\)</span>.</p>
-<div id="6d6ea515" class="cell" data-execution_count="7">
+<div id="635dc3e9" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">10_000</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>group <span class="op">=</span> np.repeat([<span class="dv">0</span>, <span class="dv">1</span>], n <span class="op">//</span> <span class="dv">2</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.column_stack([np.ones(n), group])</span>
@@ -629,7 +629,7 @@ y_i &amp;= \begin{cases}
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The density of the latent scores by group recovers the same two-distribution picture we saw earlier:</p>
-<div id="4d4a4f5d" class="cell" data-execution_count="8">
+<div id="c461c890" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -640,7 +640,7 @@ y_i &amp;= \begin{cases}
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(legend_position<span class="op">=</span><span class="st">"top"</span>, figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="325">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/cell-9-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="768" height="480"></p>
@@ -649,7 +649,7 @@ y_i &amp;= \begin{cases}
 </div>
 </div>
 <p>Now let’s threshold <span class="math inline">\(y^*\)</span> at 0 to get the observed binary outcome and fit a logistic regression. If the models correspond, the estimated group coefficient should land close to <span class="math inline">\(\mu \approx\)</span> 5.89.</p>
-<div id="af6ebf0a" class="cell" data-execution_count="9">
+<div id="331785fb" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>yobs <span class="op">=</span> (ystar <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
@@ -657,22 +657,22 @@ y_i &amp;= \begin{cases}
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Optimization terminated successfully.
-         Current function value: 0.358479
+         Current function value: 0.354399
          Iterations 10
                            Logit Regression Results                           
 ==============================================================================
 Dep. Variable:                      y   No. Observations:                10000
 Model:                          Logit   Df Residuals:                     9998
 Method:                           MLE   Df Model:                            1
-Date:                Mon, 06 Apr 2026   Pseudo R-squ.:                  0.3620
-Time:                        20:28:11   Log-Likelihood:                -3584.8
-converged:                       True   LL-Null:                       -5619.0
+Date:                Mon, 06 Apr 2026   Pseudo R-squ.:                  0.3725
+Time:                        20:38:54   Log-Likelihood:                -3544.0
+converged:                       True   LL-Null:                       -5647.4
 Covariance Type:            nonrobust   LLR p-value:                     0.000
 ==============================================================================
                  coef    std err          z      P&gt;|z|      [0.025      0.975]
 ------------------------------------------------------------------------------
-const          0.0176      0.028      0.622      0.534      -0.038       0.073
-x1             5.6056      0.238     23.571      0.000       5.140       6.072
+const         -0.0088      0.028     -0.311      0.756      -0.064       0.047
+x1             6.1259      0.303     20.206      0.000       5.532       6.720
 ==============================================================================</code></pre>
 </div>
 </div>
