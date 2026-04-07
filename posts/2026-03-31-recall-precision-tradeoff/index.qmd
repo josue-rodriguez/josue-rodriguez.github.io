@@ -199,7 +199,7 @@ To trace out the full trade-off, we need a model that produces actual scores we 
 
 ## The bilogistic model
 
-Here's what this model looks like with an arbitrary separation of $\mu = 5$. Any vertical line we draw becomes a decision threshold $t$. Everything to the right gets classified as positive and everything to the left gets classified as negative. Sliding $t$ left catches more true positives but also more false positives; sliding $t$ right does the opposite.
+Here's what this model looks like with an arbitrary separation of $\mu = 4$. Any vertical line we draw becomes a decision threshold $t$. Everything to the right gets classified as positive and everything to the left gets classified as negative. Sliding $t$ left catches more true positives but also more false positives; sliding $t$ right does the opposite.
 
 ```{python}
 #| code-fold: true
