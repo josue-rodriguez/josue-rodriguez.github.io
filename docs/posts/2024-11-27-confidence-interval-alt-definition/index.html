@@ -490,7 +490,7 @@ C(x_1, \dots, x_n) = \left[\bar{x} - \frac{s}{\sqrt{n}}t_{crit, \alpha},~ \bar{x
 <h1>Why does this work?</h1>
 <p>To understand why values inside of the confidence interval are not statistically significantly different from the point estimate, we’ll need to consider the relationship between hypothesis tests and confidence intervals. Recall that we are testing hypotheses regarding a population mean <span class="math inline">\(H_0{:\;} \mu = \theta \text{ vs. } H_1{:\;} \mu \neq \theta\)</span> at significance level <span class="math inline">\(\alpha\)</span>, and we fail to reject <span class="math inline">\(H_0\)</span> whenever</p>
 <p><span class="math display">\[
-t_{obs} &lt; t_{crit, \alpha}.
+|t_{obs}| &lt; t_{crit, \alpha}.
 \]</span></p>
 <p>We can expand on that inequality to see that we fail to reject <span class="math inline">\(H_0\)</span> whenever</p>
 <p><span class="math display">\[
@@ -586,8 +586,6 @@ We are saying that we can approximate the sampling distribution of $\bar{x}$ as 
 Let's take the 0.025 and 0.975 quantiles of this distribution, i.e., the bounds capturing the middle 95% of the distribution. We can use the `extraDistr` package find the quantiles of the [location-scale formulation of the $\text{Student-}t$ distribution](https://en.wikipedia.org/wiki/Student%27s_t-distribution#Location-scale_t_distribution).
 
 
-
-
 ::: {.cell}
 
 ```{.r .cell-code  code-fold="false"}
@@ -625,6 +623,7 @@ ci
 :::
 :::
 
+
 ::: {.cell layout-align="center"}
 
 ```{.r .cell-code}
@@ -661,6 +660,8 @@ ggplot(df, aes(x = x, y = y)) +
 :::
 :::
 
+
+
 ::: {.cell}
 
 ```{.r .cell-code}
@@ -690,8 +691,6 @@ print(ci)
 
 :::
 :::
-
-
 
 
 
