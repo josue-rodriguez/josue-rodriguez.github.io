@@ -1,3 +1,7 @@
 _symlink_posts.r
 
 /.quarto/
+
+.venv
+
+**/*.quarto_ipynb
