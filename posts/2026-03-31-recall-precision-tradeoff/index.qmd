@@ -1,7 +1,7 @@
 ---
 title: Why base rates cap your precision
 description: |
- Even strong classifiers can suffer low precision when the positive class is rare. I walk through some simple math to show what precision can look like iwth low base rates.
+ Even strong classifiers can suffer low precision when the positive class is rare. I walk through some simple math to show what precision can look like with low base rates.
 tags: ["classification", "latent variables"]
 date: "2026-03-31"
 format:
@@ -25,13 +25,13 @@ jupyter: python3
 
 # Takeaway
 
-**In classification tasks, the base rate of the positive class (or the rarity of positive cases) puts a ceiling on your model's *precision*, or how often its positive class predictions correct. When the base rate is low enough, even a strong model will flood you with false positives. Understanding your base rates lets you understand what precision is even feasible.**
+**In classification tasks, the base rate of the positive class (or the rarity of positive cases) puts a ceiling on your model's *precision*, or how often its positive class predictions are correct. When the base rate is low enough, even a strong model will flood you with false positives. If you're working in a low base rate setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning your model.**
 
 # Introduction
 
 Say you're building a model to flag fraudulent credit card transactions. Your model takes in some features, outputs a probability, and you classify a transaction as fraudulent if that probability exceeds some threshold $t$. To evaluate your model, you'd naturally want to look at two things: the *true positive rate*, also called *recall* (what fraction of actual frauds does the model catch?) and the *false positive rate* (what fraction of legitimate transactions does the model incorrectly flag?).
 
-But there's a third quantity worth paying attention to: *precision*. Of all the transactions the model flagged, how many are actually fraudulent? If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false positives.
+But there's a third quantity worth paying attention to: *precision*. Precision answers the question "of all the transactions the model flagged, how many are actually fraudulent?" If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false positives.
 
 Here's the problem. [Fraudulent transactions make up less than 1% of all credit card activity](https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725). When the positive class is that rare, even a model with strong TPR and low FPR can have very low precision — most of its flags will be false positives.
 
@@ -381,7 +381,7 @@ If you're working in a low-base-rate domain, the PR curve should be your primary
 
 Base rates can set a ceiling on precision that's far lower than most practitioners expect — and the model improvement needed to overcome it grows steeply as the base rate drops. You *can* push past the ceiling with a better model (lower FPR), but the required improvement is typically much larger than people intuit. That ceiling is also a cost floor: if most of your flags are false positives, every flag carries the cost of a review.
 
-If you're working in a low base rate setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning hyperparameters. 
+If you're working in a low base rate setting — fraud detection, rare disease screening, content moderation — it's worth computing that ceiling before you start tuning your model. 
 
 ::: {.callout-note collapse="true"}
 ## Appendix: Why this applies to your logistic regression

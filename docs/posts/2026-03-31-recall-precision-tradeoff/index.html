@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2026-03-31">
-<meta name="description" content="Even strong classifiers can suffer low precision when the positive class is rare. I walk through some simple math to show what precision can look like iwth low base rates.">
+<meta name="description" content="Even strong classifiers can suffer low precision when the positive class is rare. I walk through some simple math to show what precision can look like with low base rates.">
 
 <title>Why base rates cap your precision – josue rodriguez</title>
 <style>
@@ -183,7 +183,7 @@ window.Quarto = {
       <h1 class="title">Why base rates cap your precision</h1>
                   <div>
         <div class="description">
-          <p>Even strong classifiers can suffer low precision when the positive class is rare. I walk through some simple math to show what precision can look like iwth low base rates.</p>
+          <p>Even strong classifiers can suffer low precision when the positive class is rare. I walk through some simple math to show what precision can look like with low base rates.</p>
         </div>
       </div>
                 </div>
@@ -238,12 +238,12 @@ window.Quarto = {
 </style>
 <section id="takeaway" class="level1">
 <h1>Takeaway</h1>
-<p><strong>In classification tasks, the base rate of the positive class (or the rarity of positive cases) puts a ceiling on your model’s <em>precision</em>, or how often its positive class predictions correct. When the base rate is low enough, even a strong model will flood you with false positives. Understanding your base rates lets you understand what precision is even feasible.</strong></p>
+<p><strong>In classification tasks, the base rate of the positive class (or the rarity of positive cases) puts a ceiling on your model’s <em>precision</em>, or how often its positive class predictions are correct. When the base rate is low enough, even a strong model will flood you with false positives. If you’re working in a low base rate setting — fraud detection, rare disease screening, content moderation — it’s worth computing that ceiling before you start tuning your model.</strong></p>
 </section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>Say you’re building a model to flag fraudulent credit card transactions. Your model takes in some features, outputs a probability, and you classify a transaction as fraudulent if that probability exceeds some threshold <span class="math inline">\(t\)</span>. To evaluate your model, you’d naturally want to look at two things: the <em>true positive rate</em>, also called <em>recall</em> (what fraction of actual frauds does the model catch?) and the <em>false positive rate</em> (what fraction of legitimate transactions does the model incorrectly flag?).</p>
-<p>But there’s a third quantity worth paying attention to: <em>precision</em>. Of all the transactions the model flagged, how many are actually fraudulent? If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false positives.</p>
+<p>But there’s a third quantity worth paying attention to: <em>precision</em>. Precision answers the question “of all the transactions the model flagged, how many are actually fraudulent?” If each flag triggers a costly human review, precision tells you how much of that effort is wasted on false positives.</p>
 <p>Here’s the problem. <a href="https://wallethub.com/edu/cc/credit-card-fraud-statistics/25725">Fraudulent transactions make up less than 1% of all credit card activity</a>. When the positive class is that rare, even a model with strong TPR and low FPR can have very low precision — most of its flags will be false positives.</p>
 <p>This post walks through why that happens — first with a single example, then with a full model — and what precision you can realistically expect when the positive class is rare.</p>
 </section>
@@ -305,7 +305,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 \]</span></p>
 <p>and plug in the numbers from our table. But we can’t actually compute precision until we’ve specified the base rate of the positive and negative classes<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. That’s <span class="math inline">\(p(y=1)\)</span> and <span class="math inline">\(p(y=0)\)</span> in the equation above. We know from existing data that the base rate of fraudulent transactions is less than 1%. Let’s round that up to 1% so that <span class="math inline">\(p(y=1) = 0.01\)</span> and <span class="math inline">\(p(y=0) = 0.99\)</span>.</p>
 <p>Now we can finally compute precision for our seemingly strong model</p>
-<div id="3e67bdd7" class="cell" data-execution_count="1">
+<div id="7b205d20" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tpr <span class="op">=</span> <span class="fl">0.95</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fpr <span class="op">=</span> <span class="fl">0.05</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -323,7 +323,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <h2 class="anchored" data-anchor-id="sweeping-through-different-rates">Sweeping through different rates</h2>
 <p>Okay, so we’ve seen just how bad precision can get with a very low base rate and a model that otherwise looks strong. Let’s build some intuition for what precision looks like across different combinations of TPR, FPR, and base rate. You’d expect that increasing TPR or base rate, or <em>decreasing</em> FPR, should improve precision — but by how much?</p>
 <p>To find out, we’ll apply the same Bayes’ theorem calculation to a grid of these rates. In the plot below, each panel fixes the FPR. The colored lines show how precision varies with TPR at different base rates.</p>
-<div id="e247c715" class="cell" data-execution_count="2">
+<div id="73ee1b05" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -404,7 +404,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <section id="the-bilogistic-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-bilogistic-model">The bilogistic model</h2>
 <p>Here’s what this model looks like with an arbitrary separation of <span class="math inline">\(\mu = 4\)</span>. Any vertical line we draw becomes a decision threshold <span class="math inline">\(t\)</span>. Everything to the right gets classified as positive and everything to the left gets classified as negative. Sliding <span class="math inline">\(t\)</span> left catches more true positives but also more false positives; sliding <span class="math inline">\(t\)</span> right does the opposite.</p>
-<div id="8e468aa4" class="cell" data-execution_count="3">
+<div id="220971e5" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mu_demo <span class="op">=</span> <span class="dv">4</span></span>
@@ -453,7 +453,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <p>Because TPR, FPR, and precision are all determined by where we place that threshold, we can sweep <span class="math inline">\(t\)</span> across the full range and trace out the complete trade-off.</p>
 <p>Using the bilogistic model, we can pick a <span class="math inline">\(\mu\)</span> such that there exists a threshold where TPR = 0.95 and FPR = 0.05 simultaneously — matching the model from the previous section. Once calibrated, we can see what happens at every operating point as we move <span class="math inline">\(t\)</span> from all the way to the left to all the way to the right.</p>
 <p>Here’s what the curves look like for our calibrated bilogistic model:</p>
-<div id="3dc2ccb4" class="cell" data-execution_count="4">
+<div id="1f1d90e6" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_loc_p(tnr: <span class="bu">float</span>, tpr: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
@@ -510,7 +510,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <section id="roc-and-precision-recall-curves" class="level2">
 <h2 class="anchored" data-anchor-id="roc-and-precision-recall-curves">ROC and Precision-Recall curves</h2>
 <p>Let’s compute both the ROC curve and the so-called Precision-Recall curve (where recall is just another name for TPR) by computing the TPR, FPR, and precision as we sweep <span class="math inline">\(t\)</span> across the two distribution.</p>
-<div id="68fb66e1" class="cell" data-execution_count="5">
+<div id="96f0b83b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">10</span>, <span class="dv">14</span>, <span class="fl">0.01</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># TPR and FPR are the RHS of the curve for the pos &amp; neg distributions</span></span>
@@ -519,7 +519,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>auroc <span class="op">=</span> <span class="op">-</span>np.trapezoid(tpr, fpr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="c5efc1ec" class="cell" data-execution_count="6">
+<div id="32c1b758" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>roc_df <span class="op">=</span> pl.DataFrame({<span class="st">"x"</span>: fpr, <span class="st">"y"</span>: tpr})</span>
@@ -588,7 +588,7 @@ p(y = 1 | \hat{y} = 1) &amp;= \frac{%
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
 <p>Base rates can set a ceiling on precision that’s far lower than most practitioners expect — and the model improvement needed to overcome it grows steeply as the base rate drops. You <em>can</em> push past the ceiling with a better model (lower FPR), but the required improvement is typically much larger than people intuit. That ceiling is also a cost floor: if most of your flags are false positives, every flag carries the cost of a review.</p>
-<p>If you’re working in a low base rate setting — fraud detection, rare disease screening, content moderation — it’s worth computing that ceiling before you start tuning hyperparameters.</p>
+<p>If you’re working in a low base rate setting — fraud detection, rare disease screening, content moderation — it’s worth computing that ceiling before you start tuning your model.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -614,7 +614,7 @@ y_i &amp;= \begin{cases}
 \]</span></p>
 <p>The latent score <span class="math inline">\(y^*\)</span> is exactly the logit-scale quantity from our bilogistic model. For the negative class (<span class="math inline">\(X\beta = 0\)</span>), latent scores follow a Logistic<span class="math inline">\((0, 1)\)</span> distribution. For the positive class (<span class="math inline">\(X\beta = \mu\)</span>), they follow a Logistic<span class="math inline">\((\mu, 1)\)</span>. The threshold at 0 plays the role of our decision boundary. In other words, every time you fit a logistic regression, you’re implicitly working inside the bilogistic framework — and the base-rate ceiling on precision applies directly to your model’s predictions.</p>
 <p>Let’s verify this correspondence by simulating data from the latent variable model using the same separation <span class="math inline">\(\mu\)</span> we calibrated earlier, then fitting a logistic regression to recover <span class="math inline">\(\mu\)</span>.</p>
-<div id="635dc3e9" class="cell" data-execution_count="7">
+<div id="c3f8c721" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">10_000</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>group <span class="op">=</span> np.repeat([<span class="dv">0</span>, <span class="dv">1</span>], n <span class="op">//</span> <span class="dv">2</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.column_stack([np.ones(n), group])</span>
@@ -629,7 +629,7 @@ y_i &amp;= \begin{cases}
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The density of the latent scores by group recovers the same two-distribution picture we saw earlier:</p>
-<div id="c461c890" class="cell" data-execution_count="8">
+<div id="34be8086" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -649,7 +649,7 @@ y_i &amp;= \begin{cases}
 </div>
 </div>
 <p>Now let’s threshold <span class="math inline">\(y^*\)</span> at 0 to get the observed binary outcome and fit a logistic regression. If the models correspond, the estimated group coefficient should land close to <span class="math inline">\(\mu \approx\)</span> 5.89.</p>
-<div id="331785fb" class="cell" data-execution_count="9">
+<div id="34196ca4" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>yobs <span class="op">=</span> (ystar <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
@@ -657,22 +657,22 @@ y_i &amp;= \begin{cases}
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Optimization terminated successfully.
-         Current function value: 0.354399
+         Current function value: 0.359601
          Iterations 10
                            Logit Regression Results                           
 ==============================================================================
 Dep. Variable:                      y   No. Observations:                10000
 Model:                          Logit   Df Residuals:                     9998
 Method:                           MLE   Df Model:                            1
-Date:                Mon, 06 Apr 2026   Pseudo R-squ.:                  0.3725
-Time:                        20:38:54   Log-Likelihood:                -3544.0
-converged:                       True   LL-Null:                       -5647.4
+Date:                Tue, 14 Apr 2026   Pseudo R-squ.:                  0.3609
+Time:                        20:42:56   Log-Likelihood:                -3596.0
+converged:                       True   LL-Null:                       -5626.6
 Covariance Type:            nonrobust   LLR p-value:                     0.000
 ==============================================================================
                  coef    std err          z      P&gt;|z|      [0.025      0.975]
 ------------------------------------------------------------------------------
-const         -0.0088      0.028     -0.311      0.756      -0.064       0.047
-x1             6.1259      0.303     20.206      0.000       5.532       6.720
+const          0.0136      0.028      0.481      0.631      -0.042       0.069
+x1             5.5039      0.226     24.371      0.000       5.061       5.946
 ==============================================================================</code></pre>
 </div>
 </div>
